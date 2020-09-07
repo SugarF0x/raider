@@ -1,10 +1,6 @@
 <template>
   <v-row justify="center" align="center">
-    <v-spacer></v-spacer>
-    <v-col>
-      <canvas-testspace></canvas-testspace>
-    </v-col>
-    <v-spacer></v-spacer>
+    <canvas-testspace></canvas-testspace>
   </v-row>
 </template>
 
@@ -16,6 +12,8 @@ export default Vue.extend({
 })
 </script>
 
-<style lang="less">
-
+<style lang="less" scoped>
+  .row {
+    height: 100%;
+  }
 </style>
