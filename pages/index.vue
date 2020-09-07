@@ -1,6 +1,6 @@
 <template>
   <v-row justify="center" align="center">
-    <canvas-testspace></canvas-testspace>
+    <gamespace></gamespace>
   </v-row>
 </template>
 
