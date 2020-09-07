@@ -21,11 +21,7 @@ export default Vue.extend({
   methods: {
 
   },
-
   mounted() {
-    /**
-     * this here is just positioning testing
-     */
     this.canvas = document.querySelector('canvas');
     if (this.canvas) {
       this.ctx = this.canvas.getContext('2d');
