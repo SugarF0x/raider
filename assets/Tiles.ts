@@ -1,3 +1,6 @@
+// tile type can only equal to one of these
+type TileType = 'coin' | 'skull' | 'potion' | 'sword' | 'shield' | 'boss';
+
 interface Chain {
   type:  TileType;
   array: number[]; // contain Tile ids
@@ -9,10 +12,7 @@ interface TileState {
   attack: number;
 }
 
-// tile type can only equal to one of these
-type TileType = 'coin' | 'skull' | 'potion' | 'sword' | 'shield' | 'boss';
-
-class Tile {
+export class Tile {
   type: TileType;
   isSelected = false;
   id = Math.floor(Math.random()*1000);
@@ -28,7 +28,7 @@ class Tile {
   }
 }
 
-class Skull extends Tile {
+export class Skull extends Tile {
   state: TileState;
   base:  TileState;
 

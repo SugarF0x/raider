@@ -7,6 +7,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { Tile, Skull } from '@/assets/Tiles.ts'
 
 export default Vue.extend({
   name: "gamespace",
