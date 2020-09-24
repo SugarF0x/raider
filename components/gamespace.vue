@@ -43,8 +43,10 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
-canvas {
-  background-color: white;
-  height: 90%;
-}
+  canvas {
+    background-color: white;
+    min-height: 90%;
+    max-height: 100%;
+    max-width: 100%;
+  }
 </style>
