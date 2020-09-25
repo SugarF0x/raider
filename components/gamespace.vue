@@ -18,53 +18,53 @@ export default Vue.extend({
   data() {
     return {
       konva: {
-        width: 450,  // 450
-        height: 800, // 800
+        width: 450,
+        height: 800,
       },
       elements: {
-        header: {
+        header:  {
           x: 10,
           y: 10,
           width: 430,
           height: 40,
           stroke: 'black'
         },
-        spell1: {
+        spell1:  {
           x: 10,
           y: 60,
           width: 80,
           height: 80,
           stroke: "black"
         },
-        spell2: {
+        spell2:  {
           x: 100,
           y: 60,
           width: 80,
           height: 80,
           stroke: "black"
         },
-        spell3: {
+        spell3:  {
           x: 190,
           y: 60,
           width: 80,
           height: 80,
           stroke: "black"
         },
-        spell4: {
+        spell4:  {
           x: 280,
           y: 60,
           width: 80,
           height: 80,
           stroke: "black"
         },
-        menu: {
+        menu:    {
           x: 370,
           y: 60,
           width: 70,
           height: 35,
           stroke: "black"
         },
-        stats: {
+        stats:   {
           x: 370,
           y: 105,
           width: 70,
@@ -78,14 +78,14 @@ export default Vue.extend({
           height: 430,
           stroke: "black"
         },
-        gold: {
+        gold:    {
           x: 10,
           y: 590,
           width: 130,
           height: 150,
           stroke: "black"
         },
-        enemy: {
+        enemy:   {
           x: 150,
           y: 590,
           width: 43,
@@ -99,7 +99,7 @@ export default Vue.extend({
           height: 50,
           stroke: "black"
         },
-        attack: {
+        attack:  {
           x: 256,
           y: 590,
           width: 43,
@@ -113,21 +113,21 @@ export default Vue.extend({
           height: 40,
           stroke: "black"
         },
-        level: {
+        level:   {
           x: 150,
           y: 700,
           width: 150,
           height: 40,
           stroke: "black"
         },
-        health: {
+        health:  {
           x: 310,
           y: 590,
           width: 130,
           height: 150,
           stroke: "black"
         },
-        footer: {
+        footer:  {
           x: 10,
           y: 750,
           width: 430,
@@ -138,15 +138,21 @@ export default Vue.extend({
     };
   },
 
-  mounted() {
-    let canvas = document.querySelector('canvas');
-    if (canvas) {
-      canvas.removeAttribute('style');
-      canvas.setAttribute('width',  this.konva.width.toString());
-      canvas.setAttribute('height', this.konva.height.toString());
+  methods: {
+    removeInlineStyles(): void {
+      let canvas = document.querySelector('canvas');
+      if (canvas) {
+        canvas.removeAttribute('style');
+        canvas.setAttribute('width',  this.konva.width.toString());
+        canvas.setAttribute('height', this.konva.height.toString());
+      }
+      let konvas = document.querySelector('.konvajs-content');
+      if (konvas) konvas.removeAttribute('style');
     }
-    let konvas = document.querySelector('.konvajs-content');
-    if (konvas) konvas.removeAttribute('style');
+  },
+
+  mounted() {
+    this.removeInlineStyles();
   }
 })
 </script>
