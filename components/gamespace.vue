@@ -2,7 +2,13 @@
   <v-row justify="center" align="center">
     <v-stage :config="konva" id="konva">
       <v-layer>
-        <v-rect v-for="(e,i,n) in elements" :key="n" :config="e"></v-rect>
+        <v-rect :config="{height: 800, width: 450, fill: 'white'}"/>
+      </v-layer>
+      <v-layer>
+        <v-rect v-for="(e,i,n) in background" :key="n" :config="e"/>
+      </v-layer>
+      <v-layer>
+        <v-circle v-for="(e,i,n) in dungeon" :key="n" :config="e"/>
       </v-layer>
     </v-stage>
   </v-row>
@@ -19,9 +25,9 @@ export default Vue.extend({
     return {
       konva: {
         width: 450,
-        height: 800,
+        height: 800
       },
-      elements: {
+      background: {
         header:  {
           x: 10,
           y: 10,
@@ -135,16 +141,21 @@ export default Vue.extend({
           stroke: "black"
         }
       },
+      dungeon: {
+        test: {}
+      }
     };
   },
 
   methods: {
     removeInlineStyles(): void {
-      let canvas = document.querySelector('canvas');
-      if (canvas) {
-        canvas.removeAttribute('style');
-        canvas.setAttribute('width',  this.konva.width.toString());
-        canvas.setAttribute('height', this.konva.height.toString());
+      let canvas = document.querySelectorAll('canvas');
+      if (canvas.length) {
+        canvas.forEach(e => {
+          e.removeAttribute('style');
+          e.setAttribute('width',  this.konva.width.toString());
+          e.setAttribute('height', this.konva.height.toString());
+        })
       }
       let konvas = document.querySelector('.konvajs-content');
       if (konvas) konvas.removeAttribute('style');
@@ -153,6 +164,15 @@ export default Vue.extend({
 
   mounted() {
     this.removeInlineStyles();
+    setTimeout(() => {
+      this.dungeon.test = {
+        x: 250,
+        y: 250,
+        radius: 25,
+        fill: 'red'
+      }
+      console.log('gay')
+    }, 2500)
   }
 })
 </script>
@@ -169,6 +189,7 @@ export default Vue.extend({
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
   }
   width: 100%;
   height: 100%;
@@ -181,7 +202,7 @@ export default Vue.extend({
 
 <style>
 #konva canvas {
-  background-color: white;
+  position: absolute;
   max-height: min(100%, 800px);
   max-width: min(100%, 450px);
 }
