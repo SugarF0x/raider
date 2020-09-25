@@ -1,7 +1,5 @@
 <template>
-  <v-row justify="center" align="center">
-    <gamespace></gamespace>
-  </v-row>
+  <gamespace></gamespace>
 </template>
 
 <script lang="ts">
@@ -13,7 +11,5 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
-  .row {
-    height: 100%;
-  }
+
 </style>
