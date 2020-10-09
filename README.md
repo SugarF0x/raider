@@ -21,10 +21,13 @@ $ npm run generate
 
 ## Commit syntax 
 
-* :blue_book: Documentation
-* :white_check_mark: Feature
-* :hammer_and_wrench: Fix
-* :corn: Miscellaneous
-* :recycle: Refactor
-* :art: Style
-* :milky_way: Release
+* :blue_book: Documentation - General documentation changes, in both .md and JsDoc
+* :white_check_mark: Feature - A new functional feature for end-user
+* :hammer_and_wrench: Fix - A bugfix of any kind
+* :corn: Miscellaneous - Uncategorized changes
+* :recycle: Refactor - Under the hood code changes - nothing new for end-user
+* :milky_way: Release - End of dev cycle
+* :art: Style - Style changes, no new functionality
+* :pill: Testing - Completion and maintenance of test units
+* :construction: WIP - A stepping stone for a Work in Progress change
+
