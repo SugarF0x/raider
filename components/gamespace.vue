@@ -43,7 +43,9 @@ export default Vue.extend({
     return {
       konva: {
         width: 450,
-        height: 800
+        height: 800,
+        scaleX: 1,
+        scaleY: 1
       },
       background: {
         header:  {
@@ -160,43 +162,43 @@ export default Vue.extend({
         }
       },
       dungeon: {
-        X0Y0: {x: 46, y: 186, radius: 25, fill: "red"},
-        X0Y1: {x: 46, y: 258, radius: 25, fill: "red"},
-        X0Y2: {x: 46, y: 330, radius: 25, fill: "red"},
-        X0Y3: {x: 46, y: 402, radius: 25, fill: "red"},
-        X0Y4: {x: 46, y: 474, radius: 25, fill: "red"},
-        X0Y5: {x: 46, y: 546, radius: 25, fill: "red"},
-        X1Y0: {x: 118, y: 186, radius: 25, fill: "red"},
-        X1Y1: {x: 118, y: 258, radius: 25, fill: "red"},
-        X1Y2: {x: 118, y: 330, radius: 25, fill: "red"},
-        X1Y3: {x: 118, y: 402, radius: 25, fill: "red"},
-        X1Y4: {x: 118, y: 474, radius: 25, fill: "red"},
-        X1Y5: {x: 118, y: 546, radius: 25, fill: "red"},
-        X2Y0: {x: 190, y: 186, radius: 25, fill: "red"},
-        X2Y1: {x: 190, y: 258, radius: 25, fill: "red"},
-        X2Y2: {x: 190, y: 330, radius: 25, fill: "red"},
-        X2Y3: {x: 190, y: 402, radius: 25, fill: "red"},
-        X2Y4: {x: 190, y: 474, radius: 25, fill: "red"},
-        X2Y5: {x: 190, y: 546, radius: 25, fill: "red"},
-        X3Y0: {x: 262, y: 186, radius: 25, fill: "red"},
-        X3Y1: {x: 262, y: 258, radius: 25, fill: "red"},
-        X3Y2: {x: 262, y: 330, radius: 25, fill: "red"},
-        X3Y3: {x: 262, y: 402, radius: 25, fill: "red"},
-        X3Y4: {x: 262, y: 474, radius: 25, fill: "red"},
-        X3Y5: {x: 262, y: 546, radius: 25, fill: "red"},
-        X4Y0: {x: 334, y: 186, radius: 25, fill: "red"},
-        X4Y1: {x: 334, y: 258, radius: 25, fill: "red"},
-        X4Y2: {x: 334, y: 330, radius: 25, fill: "red"},
-        X4Y3: {x: 334, y: 402, radius: 25, fill: "red"},
-        X4Y4: {x: 334, y: 474, radius: 25, fill: "red"},
-        X4Y5: {x: 334, y: 546, radius: 25, fill: "red"},
-        X5Y0: {x: 406, y: 186, radius: 25, fill: "red"},
-        X5Y1: {x: 406, y: 258, radius: 25, fill: "red"},
-        X5Y2: {x: 406, y: 330, radius: 25, fill: "red"},
-        X5Y3: {x: 406, y: 402, radius: 25, fill: "red"},
-        X5Y4: {x: 406, y: 474, radius: 25, fill: "red"},
-        X5Y5: {x: 406, y: 546, radius: 25, fill: "red"},
-      } as IDungeon,
+               X0Y0: {x: 46, y: 186, radius: 25, fill: "red"},
+               X0Y1: {x: 46, y: 258, radius: 25, fill: "red"},
+               X0Y2: {x: 46, y: 330, radius: 25, fill: "red"},
+               X0Y3: {x: 46, y: 402, radius: 25, fill: "red"},
+               X0Y4: {x: 46, y: 474, radius: 25, fill: "red"},
+               X0Y5: {x: 46, y: 546, radius: 25, fill: "red"},
+               X1Y0: {x: 118, y: 186, radius: 25, fill: "red"},
+               X1Y1: {x: 118, y: 258, radius: 25, fill: "red"},
+               X1Y2: {x: 118, y: 330, radius: 25, fill: "red"},
+               X1Y3: {x: 118, y: 402, radius: 25, fill: "red"},
+               X1Y4: {x: 118, y: 474, radius: 25, fill: "red"},
+               X1Y5: {x: 118, y: 546, radius: 25, fill: "red"},
+               X2Y0: {x: 190, y: 186, radius: 25, fill: "red"},
+               X2Y1: {x: 190, y: 258, radius: 25, fill: "red"},
+               X2Y2: {x: 190, y: 330, radius: 25, fill: "red"},
+               X2Y3: {x: 190, y: 402, radius: 25, fill: "red"},
+               X2Y4: {x: 190, y: 474, radius: 25, fill: "red"},
+               X2Y5: {x: 190, y: 546, radius: 25, fill: "red"},
+               X3Y0: {x: 262, y: 186, radius: 25, fill: "red"},
+               X3Y1: {x: 262, y: 258, radius: 25, fill: "red"},
+               X3Y2: {x: 262, y: 330, radius: 25, fill: "red"},
+               X3Y3: {x: 262, y: 402, radius: 25, fill: "red"},
+               X3Y4: {x: 262, y: 474, radius: 25, fill: "red"},
+               X3Y5: {x: 262, y: 546, radius: 25, fill: "red"},
+               X4Y0: {x: 334, y: 186, radius: 25, fill: "red"},
+               X4Y1: {x: 334, y: 258, radius: 25, fill: "red"},
+               X4Y2: {x: 334, y: 330, radius: 25, fill: "red"},
+               X4Y3: {x: 334, y: 402, radius: 25, fill: "red"},
+               X4Y4: {x: 334, y: 474, radius: 25, fill: "red"},
+               X4Y5: {x: 334, y: 546, radius: 25, fill: "red"},
+               X5Y0: {x: 406, y: 186, radius: 25, fill: "red"},
+               X5Y1: {x: 406, y: 258, radius: 25, fill: "red"},
+               X5Y2: {x: 406, y: 330, radius: 25, fill: "red"},
+               X5Y3: {x: 406, y: 402, radius: 25, fill: "red"},
+               X5Y4: {x: 406, y: 474, radius: 25, fill: "red"},
+               X5Y5: {x: 406, y: 546, radius: 25, fill: "red"},
+             } as IDungeon,
       arrow: {
         points: [-10,-10],
         fill: "blue",
@@ -216,21 +218,6 @@ export default Vue.extend({
 
   methods: {
     /**
-     * Remove inline styles messing up alignment
-     */
-    removeInlineStyles(): void {
-      let canvas = document.querySelectorAll('canvas');
-      if (canvas.length) {
-        canvas.forEach(e => {
-          e.removeAttribute('style');
-          e.setAttribute('width',  this.konva.width.toString());
-          e.setAttribute('height', this.konva.height.toString());
-        })
-      }
-      let konvas = document.querySelector('.konvajs-content');
-      if (konvas) konvas.removeAttribute('style');
-    },
-    /**
      * add sample tiles to the dungeon
      */
     // populateDungeon(): void {
@@ -247,10 +234,6 @@ export default Vue.extend({
     // },
     /**
      * Check if a new point can be added and do add if so
-     *
-     * @param {number} x
-     * @param {number} y
-     * @returns {boolean}
      */
     dragArrow(x: number, y: number): boolean {
       if (this.arrow.points[0] === -10) {
@@ -271,12 +254,62 @@ export default Vue.extend({
         }
         return returns;
       }
+    },
+
+    /**
+     * Set new sizes based on current screen
+     */
+    resize(): void {
+      let konva   = document.getElementById("konva");
+      let konvajs = document.querySelector('.konvajs-content');
+      let canvas  = document.querySelectorAll('canvas');
+
+      let style, height, width;
+
+      if (konva) style = window.getComputedStyle(konva, null);
+      if (style) {
+        let sHeight = style.getPropertyValue("height");
+        let sWidth  = style.getPropertyValue("width");
+        height = parseInt(sHeight.slice(0, sHeight.length-2));
+        width  = parseInt(sWidth.slice(0, sWidth.length-2));
+      }
+
+      if (konvajs && canvas.length && height && width) {
+        let x = 450;
+        let y = 800;
+
+        if (width/x > height/y) {
+          this.konva.scaleY = height/y;
+          this.konva.scaleX = height/y;
+
+          y = height;
+          x = height*0.5625;
+        } else {
+          this.konva.scaleY = width/x;
+          this.konva.scaleX = width/x;
+
+          x = width;
+          y = width/9*16;
+        }
+
+        this.konva.width = x;
+        this.konva.height = y;
+
+        let style = `width: ${x}px; height: ${y}px`;
+        konvajs.setAttribute('style', style);
+        canvas.forEach(e => {
+          e.setAttribute('style', style)
+          e.setAttribute('width', `${x}px`);
+          e.setAttribute('height', `${y}px`);
+        })
+      }
     }
   },
 
   mounted() {
-    this.removeInlineStyles();
     // this.populateDungeon();
+    this.resize();
+    window.addEventListener('resize', this.resize);
   }
 })
 </script>
@@ -284,7 +317,6 @@ export default Vue.extend({
 <style lang="less" scoped>
   .row {
     height: 100%;
-    width: 100%;
   }
 </style>
 <style lang="less">
@@ -296,23 +328,17 @@ export default Vue.extend({
   justify-content: center;
   .konvajs-content {
     position: relative;
+    user-select: none;
   }
   canvas {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background-color: transparent;
     position: absolute;
     top: 0;
     left: 0;
+    display: block;
   }
-}
-</style>
-<style>
-#konva .konvajs-content {
-  height: 100%;
-  width: calc(100%*0.5625);
-}
-#konva canvas {
-  /*min-height: min(100%, 800px);*/
-  /*min-width: min(100%, 450px);*/
-  /*height: min(100%, 800px);*/
-  /*width: min(100%, 450px);*/
 }
 </style>
