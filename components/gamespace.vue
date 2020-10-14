@@ -244,7 +244,7 @@ export default Vue.extend({
         let base = [] as string[];
         let returns = true;
         for (let i=0; i<this.arrow.points.length/2; i++) {
-          base.push(''+this.arrow.points[i*2]+this.arrow.points[i+1])
+          base.push(''+this.arrow.points[i*2]+this.arrow.points[i*2+1])
         }
         base.forEach(e => {
           if (e === sample) returns = false;
