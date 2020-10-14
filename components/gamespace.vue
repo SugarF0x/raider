@@ -13,6 +13,8 @@
                   :config="e"
                   @mousedown="printArrow(e.x,e.y)"
                   @mouseenter="dragArrow(e.x,e.y)"
+                  @touchstart="printArrow(e.x,e.y)"
+                  @touchmove="dragArrow(e.x,e.y)"
         />
       </v-layer>
       <v-layer>
@@ -292,6 +294,12 @@ export default Vue.extend({
       this.mouseDown = true;
     });
     document.addEventListener('mouseup', () => {
+      this.mouseDown = false;
+    });
+    document.addEventListener("touchstart", () => {
+      this.mouseDown = true;
+    });
+    document.addEventListener("touchend", () => {
       this.mouseDown = false;
     });
   },
