@@ -12,8 +12,6 @@
                   :key="n"
                   :config="e"
                   @mousedown="printArrow(e.x,e.y)"
-                  @mouseover="dungeon[n].fill='blue'"
-                  @mouseout="dungeon[n].fill='cyan'"
                   @mouseenter="dragArrow(e.x,e.y)"
         />
       </v-layer>
