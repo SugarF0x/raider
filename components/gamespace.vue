@@ -11,9 +11,10 @@
         <v-circle v-for="(e,n) in dungeon"
                   :key="n"
                   :config="e"
-                  @mousedown="dragArrow(e.x,e.y)"
+                  @mousedown="printArrow(e.x,e.y)"
                   @mouseover="dungeon[n].fill='blue'"
                   @mouseout="dungeon[n].fill='cyan'"
+                  @mouseenter="dragArrow(e.x,e.y)"
         />
       </v-layer>
       <v-layer>
@@ -205,7 +206,8 @@ export default Vue.extend({
         stroke: "black",
         strokeWidth: 10,
         lineCap: 'round'
-      }
+      },
+      mouseDown: false
     };
   },
 
@@ -235,7 +237,7 @@ export default Vue.extend({
     /**
      * Check if a new point can be added and do add if so
      */
-    dragArrow(x: number, y: number): boolean {
+    printArrow(x: number, y: number): boolean {
       if (this.arrow.points[0] === -10) {
         this.arrow.points=[x,y];
         return true
@@ -253,6 +255,12 @@ export default Vue.extend({
           this.arrow.points.push(x,y)
         }
         return returns;
+      }
+    },
+
+    dragArrow(x: number, y: number): void {
+      if (this.mouseDown) {
+        this.printArrow(x,y);
       }
     },
 
@@ -310,6 +318,8 @@ export default Vue.extend({
     // this.populateDungeon();
     this.resize();
     window.addEventListener('resize', this.resize);
+    document.addEventListener('mousedown', () => { this.mouseDown = true });
+    document.addEventListener('mouseup', () => { this.mouseDown = false });
   }
 })
 </script>
