@@ -161,42 +161,7 @@ export default Vue.extend({
         }
       },
       dungeon: {
-               X0Y0: {x: 46, y: 186, radius: 25, fill: "red"},
-               X0Y1: {x: 46, y: 258, radius: 25, fill: "red"},
-               X0Y2: {x: 46, y: 330, radius: 25, fill: "red"},
-               X0Y3: {x: 46, y: 402, radius: 25, fill: "red"},
-               X0Y4: {x: 46, y: 474, radius: 25, fill: "red"},
-               X0Y5: {x: 46, y: 546, radius: 25, fill: "red"},
-               X1Y0: {x: 118, y: 186, radius: 25, fill: "red"},
-               X1Y1: {x: 118, y: 258, radius: 25, fill: "red"},
-               X1Y2: {x: 118, y: 330, radius: 25, fill: "red"},
-               X1Y3: {x: 118, y: 402, radius: 25, fill: "red"},
-               X1Y4: {x: 118, y: 474, radius: 25, fill: "red"},
-               X1Y5: {x: 118, y: 546, radius: 25, fill: "red"},
-               X2Y0: {x: 190, y: 186, radius: 25, fill: "red"},
-               X2Y1: {x: 190, y: 258, radius: 25, fill: "red"},
-               X2Y2: {x: 190, y: 330, radius: 25, fill: "red"},
-               X2Y3: {x: 190, y: 402, radius: 25, fill: "red"},
-               X2Y4: {x: 190, y: 474, radius: 25, fill: "red"},
-               X2Y5: {x: 190, y: 546, radius: 25, fill: "red"},
-               X3Y0: {x: 262, y: 186, radius: 25, fill: "red"},
-               X3Y1: {x: 262, y: 258, radius: 25, fill: "red"},
-               X3Y2: {x: 262, y: 330, radius: 25, fill: "red"},
-               X3Y3: {x: 262, y: 402, radius: 25, fill: "red"},
-               X3Y4: {x: 262, y: 474, radius: 25, fill: "red"},
-               X3Y5: {x: 262, y: 546, radius: 25, fill: "red"},
-               X4Y0: {x: 334, y: 186, radius: 25, fill: "red"},
-               X4Y1: {x: 334, y: 258, radius: 25, fill: "red"},
-               X4Y2: {x: 334, y: 330, radius: 25, fill: "red"},
-               X4Y3: {x: 334, y: 402, radius: 25, fill: "red"},
-               X4Y4: {x: 334, y: 474, radius: 25, fill: "red"},
-               X4Y5: {x: 334, y: 546, radius: 25, fill: "red"},
-               X5Y0: {x: 406, y: 186, radius: 25, fill: "red"},
-               X5Y1: {x: 406, y: 258, radius: 25, fill: "red"},
-               X5Y2: {x: 406, y: 330, radius: 25, fill: "red"},
-               X5Y3: {x: 406, y: 402, radius: 25, fill: "red"},
-               X5Y4: {x: 406, y: 474, radius: 25, fill: "red"},
-               X5Y5: {x: 406, y: 546, radius: 25, fill: "red"},
+               X0Y0: {x: 46, y: 186, radius: 25, fill: "red"}
              } as IDungeon,
       arrow: {
         points: [-10,-10],
@@ -220,18 +185,18 @@ export default Vue.extend({
     /**
      * add sample tiles to the dungeon
      */
-    // populateDungeon(): void {
-    //   for (let y=0; y<6; y++) {
-    //     for (let x=0; x<6; x++) {
-    //       this.dungeon[`X${x}Y${y}`] = {
-    //         x: 15+31+72*x,
-    //         y: 155+31+72*y,
-    //         radius: 25,
-    //         fill: 'red',
-    //       }
-    //     }
-    //   }
-    // },
+    populateDungeon(): void {
+      for (let y=0; y<6; y++) {
+        for (let x=0; x<6; x++) {
+          this.$set(this.dungeon, `X${x}Y${y}`, {
+            x: 15+31+72*x,
+            y: 155+31+72*y,
+            radius: 25,
+            fill: 'red',
+          })
+        }
+      }
+    },
     /**
      * Check if a new point can be added and do add if so
      */
@@ -313,7 +278,7 @@ export default Vue.extend({
   },
 
   mounted() {
-    // this.populateDungeon();
+    this.populateDungeon();
     this.resize();
     window.addEventListener('resize', this.resize);
     document.addEventListener('mousedown', () => { this.mouseDown = true });
