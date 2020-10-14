@@ -7,7 +7,7 @@
       <v-layer>
         <v-rect v-for="(e,n) in background" :key="n" :config="e"/>
       </v-layer>
-      <v-layer >
+      <v-layer>
         <v-circle v-for="(e,n) in dungeon"
                   :key="n"
                   :config="e"
@@ -24,6 +24,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+
 // import { Tile, Skull } from '@/assets/Tiles.ts'
 
 interface IDungeon {
@@ -40,145 +41,148 @@ export default Vue.extend({
 
   data() {
     return {
-      konva: {
-        width: 450,
+      konva:      {
+        width:  450,
         height: 800,
         scaleX: 1,
-        scaleY: 1
+        scaleY: 1,
       },
       background: {
         header:  {
-          x: 10,
-          y: 10,
-          width: 430,
+          x:      10,
+          y:      10,
+          width:  430,
           height: 40,
-          stroke: 'black'
+          stroke: 'black',
         },
         spell1:  {
-          x: 10,
-          y: 60,
-          width: 80,
+          x:      10,
+          y:      60,
+          width:  80,
           height: 80,
-          stroke: "black"
+          stroke: "black",
         },
         spell2:  {
-          x: 100,
-          y: 60,
-          width: 80,
+          x:      100,
+          y:      60,
+          width:  80,
           height: 80,
-          stroke: "black"
+          stroke: "black",
         },
         spell3:  {
-          x: 190,
-          y: 60,
-          width: 80,
+          x:      190,
+          y:      60,
+          width:  80,
           height: 80,
-          stroke: "black"
+          stroke: "black",
         },
         spell4:  {
-          x: 280,
-          y: 60,
-          width: 80,
+          x:      280,
+          y:      60,
+          width:  80,
           height: 80,
-          stroke: "black"
+          stroke: "black",
         },
         menu:    {
-          x: 370,
-          y: 60,
-          width: 70,
+          x:      370,
+          y:      60,
+          width:  70,
           height: 35,
-          stroke: "black"
+          stroke: "black",
         },
         stats:   {
-          x: 370,
-          y: 105,
-          width: 70,
+          x:      370,
+          y:      105,
+          width:  70,
           height: 35,
-          stroke: "black"
+          stroke: "black",
         },
         dungeon: {
-          x: 10,
-          y: 150,
-          width: 430,
+          x:      10,
+          y:      150,
+          width:  430,
           height: 430,
-          stroke: "black"
+          stroke: "black",
         },
         gold:    {
-          x: 10,
-          y: 590,
-          width: 130,
+          x:      10,
+          y:      590,
+          width:  130,
           height: 150,
-          stroke: "black"
+          stroke: "black",
         },
         enemy:   {
-          x: 150,
-          y: 590,
-          width: 43,
+          x:      150,
+          y:      590,
+          width:  43,
           height: 50,
-          stroke: "black"
+          stroke: "black",
         },
         defence: {
-          x: 203,
-          y: 590,
-          width: 43,
+          x:      203,
+          y:      590,
+          width:  43,
           height: 50,
-          stroke: "black"
+          stroke: "black",
         },
         attack:  {
-          x: 256,
-          y: 590,
-          width: 43,
+          x:      256,
+          y:      590,
+          width:  43,
           height: 50,
-          stroke: "black"
+          stroke: "black",
         },
         upgrade: {
-          x: 150,
-          y: 650,
-          width: 150,
+          x:      150,
+          y:      650,
+          width:  150,
           height: 40,
-          stroke: "black"
+          stroke: "black",
         },
         level:   {
-          x: 150,
-          y: 700,
-          width: 150,
+          x:      150,
+          y:      700,
+          width:  150,
           height: 40,
-          stroke: "black"
+          stroke: "black",
         },
         health:  {
-          x: 310,
-          y: 590,
-          width: 130,
+          x:      310,
+          y:      590,
+          width:  130,
           height: 150,
-          stroke: "black"
+          stroke: "black",
         },
         footer:  {
-          x: 10,
-          y: 750,
-          width: 430,
+          x:      10,
+          y:      750,
+          width:  430,
           height: 40,
-          stroke: "black"
-        }
+          stroke: "black",
+        },
       },
-      dungeon: {
-               X0Y0: {x: 46, y: 186, radius: 25, fill: "red"}
-             } as IDungeon,
-      arrow: {
-        points: [-10,-10],
-        fill: "blue",
-        stroke: "black",
+      dungeon:    {
+                    X0Y0: { x: 46, y: 186, radius: 25, fill: "red" },
+                  } as IDungeon,
+      arrow:      {
+        points:      [
+          -10,
+          -10,
+        ],
+        fill:        "blue",
+        stroke:      "black",
         strokeWidth: 10,
-        lineCap: 'round'
+        lineCap:     'round',
       },
-      mouseDown: false
+      mouseDown:  false,
     };
   },
 
   computed: {
     arrowKey(): string {
-      let length = this.arrow.points.length-1;
-      return `X${this.arrow.points[length-1]}Y${this.arrow.points[length]}`
-    }
+      let length = this.arrow.points.length - 1;
+      return `X${ this.arrow.points[length - 1] }Y${ this.arrow.points[length] }`;
+    },
   },
 
   methods: {
@@ -186,14 +190,14 @@ export default Vue.extend({
      * add sample tiles to the dungeon
      */
     populateDungeon(): void {
-      for (let y=0; y<6; y++) {
-        for (let x=0; x<6; x++) {
-          this.$set(this.dungeon, `X${x}Y${y}`, {
-            x: 15+31+72*x,
-            y: 155+31+72*y,
+      for (let y = 0; y < 6; y++) {
+        for (let x = 0; x < 6; x++) {
+          this.$set(this.dungeon, `X${ x }Y${ y }`, {
+            x:      15 + 31 + 72 * x,
+            y:      155 + 31 + 72 * y,
             radius: 25,
-            fill: 'red',
-          })
+            fill:   'red',
+          });
         }
       }
     },
@@ -202,20 +206,23 @@ export default Vue.extend({
      */
     printArrow(x: number, y: number): boolean {
       if (this.arrow.points[0] === -10) {
-        this.arrow.points=[x,y];
-        return true
+        this.arrow.points = [
+          x,
+          y,
+        ];
+        return true;
       } else {
-        let sample = ''+x+y;
-        let base = [] as string[];
+        let sample  = '' + x + y;
+        let base    = [] as string[];
         let returns = true;
-        for (let i=0; i<this.arrow.points.length/2; i++) {
-          base.push(''+this.arrow.points[i*2]+this.arrow.points[i*2+1])
+        for (let i = 0; i < this.arrow.points.length / 2; i++) {
+          base.push('' + this.arrow.points[i * 2] + this.arrow.points[i * 2 + 1]);
         }
         base.forEach(e => {
           if (e === sample) returns = false;
-        })
+        });
         if (returns) {
-          this.arrow.points.push(x,y)
+          this.arrow.points.push(x, y);
         }
         return returns;
       }
@@ -223,7 +230,7 @@ export default Vue.extend({
 
     dragArrow(x: number, y: number): void {
       if (this.mouseDown) {
-        this.printArrow(x,y);
+        this.printArrow(x, y);
       }
     },
 
@@ -241,56 +248,60 @@ export default Vue.extend({
       if (style) {
         let sHeight = style.getPropertyValue("height");
         let sWidth  = style.getPropertyValue("width");
-        height = parseInt(sHeight.slice(0, sHeight.length-2));
-        width  = parseInt(sWidth.slice(0, sWidth.length-2));
+        height      = parseInt(sHeight.slice(0, sHeight.length - 2));
+        width       = parseInt(sWidth.slice(0, sWidth.length - 2));
       }
 
       if (konvajs && canvas.length && height && width) {
         let x = 450;
         let y = 800;
 
-        if (width/x > height/y) {
-          this.konva.scaleY = height/y;
-          this.konva.scaleX = height/y;
+        if (width / x > height / y) {
+          this.konva.scaleY = height / y;
+          this.konva.scaleX = height / y;
 
           y = height;
-          x = height*0.5625;
+          x = height * 0.5625;
         } else {
-          this.konva.scaleY = width/x;
-          this.konva.scaleX = width/x;
+          this.konva.scaleY = width / x;
+          this.konva.scaleX = width / x;
 
           x = width;
-          y = width/9*16;
+          y = width / 9 * 16;
         }
 
-        this.konva.width = x;
+        this.konva.width  = x;
         this.konva.height = y;
 
-        let style = `width: ${x}px; height: ${y}px`;
+        let style = `width: ${ x }px; height: ${ y }px`;
         konvajs.setAttribute('style', style);
         canvas.forEach(e => {
-          e.setAttribute('style', style)
-          e.setAttribute('width', `${x}px`);
-          e.setAttribute('height', `${y}px`);
-        })
+          e.setAttribute('style', style);
+          e.setAttribute('width', `${ x }px`);
+          e.setAttribute('height', `${ y }px`);
+        });
       }
-    }
+    },
   },
 
   mounted() {
     this.populateDungeon();
     this.resize();
     window.addEventListener('resize', this.resize);
-    document.addEventListener('mousedown', () => { this.mouseDown = true });
-    document.addEventListener('mouseup', () => { this.mouseDown = false });
-  }
-})
+    document.addEventListener('mousedown', () => {
+      this.mouseDown = true;
+    });
+    document.addEventListener('mouseup', () => {
+      this.mouseDown = false;
+    });
+  },
+});
 </script>
 
 <style lang="less" scoped>
-  .row {
-    height: 100%;
-  }
+.row {
+  height: 100%;
+}
 </style>
 <style lang="less">
 #konva {
@@ -299,10 +310,12 @@ export default Vue.extend({
   display: flex;
   align-items: center;
   justify-content: center;
+
   .konvajs-content {
     position: relative;
     user-select: none;
   }
+
   canvas {
     padding: 0;
     margin: 0;
