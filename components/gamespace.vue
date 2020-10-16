@@ -175,6 +175,7 @@ export default Vue.extend({
         stroke:      "black",
         strokeWidth: 10,
         lineCap:     'round',
+        listening:   false,
       },
       mouseDown:  false,
     };
@@ -222,6 +223,7 @@ export default Vue.extend({
         }
         base.forEach(e => {
           if (e === sample) returns = false;
+          // TODO: add neighbouring tiles check
         });
         if (returns) {
           this.arrow.points.push(x, y);
