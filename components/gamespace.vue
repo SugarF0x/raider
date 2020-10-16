@@ -27,22 +27,6 @@
 <script lang="ts">
 import Vue from 'vue';
 
-interface IDungeon {
-  [property: string]: {
-    x: number;
-    y: number;
-    radius: number;
-    fill: string;
-  }
-}
-
-interface ITile {
-  x: number,
-  y: number,
-  radius: number,
-  fill: string
-}
-
 export default Vue.extend({
   name: "gamespace",
 
