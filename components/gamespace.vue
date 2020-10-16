@@ -11,10 +11,10 @@
         <v-circle v-for="(e,n) in dungeon"
                   :key="n"
                   :config="e"
-                  @mousedown="printArrow(e.x,e.y)"
-                  @mouseenter="dragArrow(e.x,e.y)"
-                  @touchstart="printArrow(e.x,e.y)"
-                  @touchmove="dragArrow(e.x,e.y)"
+                  @mousedown="printArrow(e, n)"
+                  @mouseenter="dragArrow(e, n)"
+                  @touchstart="printArrow(e, n)"
+                  @touchmove="dragArrow(e, n)"
         />
       </v-layer>
       <v-layer>
@@ -27,8 +27,6 @@
 <script lang="ts">
 import Vue from 'vue';
 
-// import { Tile, Skull } from '@/assets/Tiles.ts'
-
 interface IDungeon {
   [property: string]: {
     x: number;
@@ -36,6 +34,13 @@ interface IDungeon {
     radius: number;
     fill: string;
   }
+}
+
+interface ITile {
+  x: number,
+  y: number,
+  radius: number,
+  fill: string
 }
 
 export default Vue.extend({
@@ -164,7 +169,7 @@ export default Vue.extend({
         },
       },
       dungeon:    {
-                    X0Y0: { x: 46, y: 186, radius: 25, fill: "red" },
+                    X0Y0: { x: 46, y: 186, radius: 25, fill: "red" } as ITile,
                   } as IDungeon,
       arrow:      {
         points:      [
@@ -176,6 +181,7 @@ export default Vue.extend({
         strokeWidth: 10,
         lineCap:     'round',
         listening:   false,
+        keys:        [] as string[]
       },
       mouseDown:  false,
     };
@@ -183,12 +189,24 @@ export default Vue.extend({
 
   computed: {
     arrowKey(): string {
-      let length = this.arrow.points.length - 1;
-      return `X${ this.arrow.points[length - 1] }Y${ this.arrow.points[length] }`;
+      return this.arrow.keys[this.arrow.keys.length - 1];
     },
   },
 
   methods: {
+    /**
+     * Check if target tile is a neighbor of base
+     */
+    isNear(base: string, target: string): boolean {
+      let x1 = parseInt(base[1]),
+          y1 = parseInt(base[3]),
+          x2 = parseInt(target[1]),
+          y2 = parseInt(target[3]);
+      return x2 >= x1 - 1
+          && x2 <= x1 + 1
+          && y2 >= y1 - 1
+          && y2 <= y1 + 1;
+    },
     /**
      * add sample tiles to the dungeon
      */
@@ -200,41 +218,47 @@ export default Vue.extend({
             y:      155 + 31 + 72 * y,
             radius: 25,
             fill:   'red',
-          });
+          } as ITile);
         }
       }
     },
     /**
      * Check if a new point can be added and do add if so
      */
-    printArrow(x: number, y: number): boolean {
+    printArrow(e: ITile, n: string): boolean {
       if (this.arrow.points[0] === -10) {
         this.arrow.points = [
-          x,
-          y,
+          e.x,
+          e.y,
         ];
+        this.arrow.keys.push(n);
         return true;
       } else {
-        let sample  = '' + x + y;
+        let sample  = '' + e.x + e.y;
         let base    = [] as string[];
         let returns = true;
         for (let i = 0; i < this.arrow.points.length / 2; i++) {
           base.push('' + this.arrow.points[i * 2] + this.arrow.points[i * 2 + 1]);
         }
         base.forEach(e => {
-          if (e === sample) returns = false;
-          // TODO: add neighbouring tiles check
+          if
+          (
+            e === sample
+            || !this.isNear(this.arrowKey, n)
+          )
+            returns = false;
         });
         if (returns) {
-          this.arrow.points.push(x, y);
+          this.arrow.points.push(e.x, e.y);
+          this.arrow.keys.push(n);
         }
         return returns;
       }
     },
 
-    dragArrow(x: number, y: number): void {
+    dragArrow(e: ITile, n: string): void {
       if (this.mouseDown) {
-        this.printArrow(x, y);
+        this.printArrow(e, n);
       }
     },
 
