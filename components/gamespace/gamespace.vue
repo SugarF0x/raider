@@ -19,7 +19,7 @@
       </v-layer>
       <v-layer>
         <v-arrow :key="arrowKey+'outline'" :config="arrowOutline"></v-arrow>
-        <v-arrow :key="arrowKey"           :config="arrow"></v-arrow>
+        <v-arrow :key="arrowKey" :config="arrow"></v-arrow>
       </v-layer>
     </v-stage>
   </v-row>
@@ -35,29 +35,26 @@ export default Vue.extend({
 
   data() {
     return {
-      konva:      {
-        width:  450,
+      konva: {
+        width: 450,
         height: 800,
         scaleX: 1,
         scaleY: 1,
       },
       background: dungeonMD,
-      dungeon:    {
-                    X0Y0: { x: 46, y: 186, radius: 25, fill: "red" } as ITile,
-                  } as IDungeon,
-      arrow:      {
-        points:      [
-          -10,
-          -10,
-        ],
-        tension:     .3,
-        stroke:      "black",
+      dungeon: {
+        X0Y0: { x: 46, y: 186, radius: 25, fill: "red" } as ITile,
+      } as IDungeon,
+      arrow: {
+        points: [-10, -10],
+        tension: .3,
+        stroke: "black",
         strokeWidth: 10,
-        lineCap:     'round',
-        listening:   false,
-        keys:        [] as string[]
+        lineCap: 'round',
+        listening: false,
+        keys: [] as string[],
       },
-      mouseDown:  false,
+      mouseDown: false,
     };
   },
 
@@ -68,9 +65,9 @@ export default Vue.extend({
     arrowOutline(): Object {
       return Object.assign({}, this.arrow, {
         strokeWidth: 15,
-        stroke: "white"
-      })
-    }
+        stroke: "white",
+      });
+    },
   },
 
   methods: {
@@ -91,16 +88,16 @@ export default Vue.extend({
      * Generate random tile on passed dungeon grid coordinates
      */
     generateRandomTile(x: number, y: number): ITile {
-      let type = Math.floor(Math.random()*6);
-      const types = ['coin', 'skull', 'potion', 'sword', 'shield', 'boss'] as TTile[]
-      const colors = ['yellow', 'grey', 'red', 'black', 'blue', 'purple']
+      let type     = Math.floor(Math.random() * 6);
+      const types  = ['coin', 'skull', 'potion', 'sword', 'shield', 'boss'] as TTile[];
+      const colors = ['yellow', 'grey', 'red', 'black', 'blue', 'purple'];
       return {
-        x:      15 + 31 + 72 * x,
-        y:      155 + 31 + 72 * y,
+        x: 15 + 31 + 72 * x,
+        y: 155 + 31 + 72 * y,
         radius: 25,
-        fill:   colors[type],
-        type:   types[type]
-      }
+        fill: colors[type],
+        type: types[type],
+      };
     },
     /**
      * add sample tiles to the dungeon
@@ -108,7 +105,7 @@ export default Vue.extend({
     populateDungeon(): void {
       for (let y = 0; y < 6; y++) {
         for (let x = 0; x < 6; x++) {
-          this.$set(this.dungeon, `X${ x }Y${ y }`, this.generateRandomTile(x,y));
+          this.$set(this.dungeon, `X${ x }Y${ y }`, this.generateRandomTile(x, y));
         }
       }
     },
@@ -117,10 +114,7 @@ export default Vue.extend({
      */
     printArrow(e: ITile, n: string): boolean {
       if (this.arrow.points[0] === -10) {
-        this.arrow.points = [
-          e.x,
-          e.y,
-        ];
+        this.arrow.points = [e.x, e.y];
         this.arrow.keys.push(n);
         return true;
       } else {
@@ -131,12 +125,7 @@ export default Vue.extend({
           base.push('' + this.arrow.points[i * 2] + this.arrow.points[i * 2 + 1]);
         }
         base.forEach(e => {
-          if
-          (
-            e === sample
-            || !this.isNear(this.arrowKey, n)
-          )
-            returns = false;
+          if (e === sample || !this.isNear(this.arrowKey, n)) returns = false;
         });
         if (returns) {
           this.arrow.points.push(e.x, e.y);
@@ -147,9 +136,7 @@ export default Vue.extend({
     },
 
     dragArrow(e: ITile, n: string): void {
-      if (this.mouseDown) {
-        this.printArrow(e, n);
-      }
+      if (this.mouseDown) this.printArrow(e, n);
     },
 
     /**
@@ -206,18 +193,10 @@ export default Vue.extend({
     this.populateDungeon();
     this.resize();
     window.addEventListener('resize', this.resize);
-    document.addEventListener('mousedown', () => {
-      this.mouseDown = true;
-    });
-    document.addEventListener('mouseup', () => {
-      this.mouseDown = false;
-    });
-    document.addEventListener("touchstart", () => {
-      this.mouseDown = true;
-    });
-    document.addEventListener("touchend", () => {
-      this.mouseDown = false;
-    });
+    document.addEventListener('mousedown', () => { this.mouseDown = true; });
+    document.addEventListener('mouseup', () => { this.mouseDown = false; });
+    document.addEventListener("touchstart", () => { this.mouseDown = true; });
+    document.addEventListener("touchend", () => { this.mouseDown = false; });
   },
 });
 </script>
