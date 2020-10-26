@@ -18,8 +18,8 @@
         />
       </v-layer>
       <v-layer>
-        <v-arrow :key="arrowKey" :config="arrowOutline"></v-arrow>
-        <v-arrow :key="arrowKey" :config="arrow"></v-arrow>
+        <v-arrow :key="arrowKey+'outline'" :config="arrowOutline"></v-arrow>
+        <v-arrow :key="arrowKey"           :config="arrow"></v-arrow>
       </v-layer>
     </v-stage>
   </v-row>
@@ -87,18 +87,25 @@ export default Vue.extend({
           && y2 >= y1 - 1
           && y2 <= y1 + 1;
     },
+    generateRandomTile(x: number, y: number): ITile {
+      let type = Math.floor(Math.random()*6);
+      const types = ['coin', 'skull', 'potion', 'sword', 'shield', 'boss'] as TTile[]
+      const colors = ['yellow', 'grey', 'red', 'black', 'blue', 'purple']
+      return {
+        x:      15 + 31 + 72 * x,
+        y:      155 + 31 + 72 * y,
+        radius: 25,
+        fill:   colors[type],
+        type:   types[type]
+      }
+    },
     /**
      * add sample tiles to the dungeon
      */
     populateDungeon(): void {
       for (let y = 0; y < 6; y++) {
         for (let x = 0; x < 6; x++) {
-          this.$set(this.dungeon, `X${ x }Y${ y }`, {
-            x:      15 + 31 + 72 * x,
-            y:      155 + 31 + 72 * y,
-            radius: 25,
-            fill:   'red',
-          } as ITile);
+          this.$set(this.dungeon, `X${ x }Y${ y }`, this.generateRandomTile(x,y));
         }
       }
     },
