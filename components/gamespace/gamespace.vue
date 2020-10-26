@@ -87,6 +87,9 @@ export default Vue.extend({
           && y2 >= y1 - 1
           && y2 <= y1 + 1;
     },
+    /**
+     * Generate random tile on passed dungeon grid coordinates
+     */
     generateRandomTile(x: number, y: number): ITile {
       let type = Math.floor(Math.random()*6);
       const types = ['coin', 'skull', 'potion', 'sword', 'shield', 'boss'] as TTile[]
