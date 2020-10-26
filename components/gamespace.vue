@@ -18,6 +18,7 @@
         />
       </v-layer>
       <v-layer>
+        <v-arrow :key="arrowKey" :config="arrowOutline"></v-arrow>
         <v-arrow :key="arrowKey" :config="arrow"></v-arrow>
       </v-layer>
     </v-stage>
@@ -160,7 +161,7 @@ export default Vue.extend({
           -10,
           -10,
         ],
-        fill:        "blue",
+        tension:     .3,
         stroke:      "black",
         strokeWidth: 10,
         lineCap:     'round',
@@ -175,6 +176,12 @@ export default Vue.extend({
     arrowKey(): string {
       return this.arrow.keys[this.arrow.keys.length - 1];
     },
+    arrowOutline(): Object {
+      return Object.assign({}, this.arrow, {
+        strokeWidth: 15,
+        stroke: "white"
+      })
+    }
   },
 
   methods: {
