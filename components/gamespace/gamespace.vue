@@ -129,7 +129,9 @@ export default Vue.extend({
     /**
      * Generate random tile on passed dungeon grid coordinates
      */
-    generateRandomTile(x: number, y: number): ITile {
+    generateRandomTile(tile: string): ITile {
+      let x = parseInt(tile[1]);
+      let y = parseInt(tile[3])
       let type     = Math.floor(Math.random() * 5);
       const types  = ['coin', 'skull', 'potion', 'sword', 'shield'] as TTile[];
       const colors = ['yellow', 'grey', 'red', 'black', 'blue'];
@@ -148,7 +150,8 @@ export default Vue.extend({
     populateDungeon(): void {
       for (let y = 0; y < 6; y++) {
         for (let x = 0; x < 6; x++) {
-          this.$set(this.dungeon, `X${ x }Y${ y }`, this.generateRandomTile(x, y));
+          let tile = `X${ x }Y${ y }`;
+          this.$set(this.dungeon, tile, this.generateRandomTile(tile));
         }
       }
     },
@@ -159,9 +162,7 @@ export default Vue.extend({
     collect(): void {
       if (this.arrow.keys.length >= 3) {
         this.arrow.keys.forEach(key => {
-          let x = parseInt(key[1]);
-          let y = parseInt(key[3]);
-          this.dungeon[key] = this.generateRandomTile(x, y)
+          this.dungeon[key] = this.generateRandomTile(key)
         })
       }
     },
