@@ -154,6 +154,19 @@ export default Vue.extend({
     },
 
     /**
+     * Collect selected tiles and repopulate dungeon
+     */
+    collect(): void {
+      if (this.arrow.keys.length >= 3) {
+        this.arrow.keys.forEach(key => {
+          let x = parseInt(key[1]);
+          let y = parseInt(key[3]);
+          this.dungeon[key] = this.generateRandomTile(x, y)
+        })
+      }
+    },
+
+    /**
      * Check if a new point can be added and do add if so
      */
     printArrow(e: ITile, n: string): boolean {
@@ -246,14 +259,16 @@ export default Vue.extend({
     document.addEventListener('mousedown', () => { this.mouseDown = true; });
     document.addEventListener('mouseup', () => {
       this.mouseDown = false;
+      this.collect();
       this.arrow.points = [-10,-10];
-      this.arrow.keys = []
+      this.arrow.keys = [];
     });
     document.addEventListener("touchstart", () => { this.mouseDown = true; });
     document.addEventListener("touchend", () => {
       this.mouseDown = false;
+      this.collect();
       this.arrow.points = [-10,-10];
-      this.arrow.keys = []
+      this.arrow.keys = [];
     });
   },
 });
