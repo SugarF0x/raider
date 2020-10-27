@@ -120,12 +120,19 @@ export default Vue.extend({
     },
 
     /**
+     * Check if target tile is of same tile type
+     */
+    isSameType(base: string, target: string): boolean {
+      return this.dungeon[base].type === this.dungeon[target].type;
+    },
+
+    /**
      * Generate random tile on passed dungeon grid coordinates
      */
     generateRandomTile(x: number, y: number): ITile {
-      let type     = Math.floor(Math.random() * 6);
-      const types  = ['coin', 'skull', 'potion', 'sword', 'shield', 'boss'] as TTile[];
-      const colors = ['yellow', 'grey', 'red', 'black', 'blue', 'purple'];
+      let type     = Math.floor(Math.random() * 5);
+      const types  = ['coin', 'skull', 'potion', 'sword', 'shield'] as TTile[];
+      const colors = ['yellow', 'grey', 'red', 'black', 'blue'];
       return {
         x: c.x[x],
         y: c.y[y],
@@ -162,7 +169,10 @@ export default Vue.extend({
           base.push('' + this.arrow.points[i * 2] + this.arrow.points[i * 2 + 1]);
         }
         base.forEach(e => {
-          if (e === sample || !this.isNear(this.arrowKey, n)) returns = false;
+          if (e === sample
+              || !this.isNear(this.arrowKey, n)
+              || !this.isSameType(this.arrowKey, n)
+          ) returns = false;
         });
         if (returns) {
           this.arrow.points.push(e.x, e.y);
@@ -234,9 +244,17 @@ export default Vue.extend({
     this.resize();
     window.addEventListener('resize', this.resize);
     document.addEventListener('mousedown', () => { this.mouseDown = true; });
-    document.addEventListener('mouseup', () => { this.mouseDown = false; });
+    document.addEventListener('mouseup', () => {
+      this.mouseDown = false;
+      this.arrow.points = [-10,-10];
+      this.arrow.keys = []
+    });
     document.addEventListener("touchstart", () => { this.mouseDown = true; });
-    document.addEventListener("touchend", () => { this.mouseDown = false; });
+    document.addEventListener("touchend", () => {
+      this.mouseDown = false;
+      this.arrow.points = [-10,-10];
+      this.arrow.keys = []
+    });
   },
 });
 </script>

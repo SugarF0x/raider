@@ -1,5 +1,5 @@
 // tile type can only equal to one of these
-export type TTile = 'coin' | 'skull' | 'potion' | 'sword' | 'shield' | 'boss';
+export type TTile = 'coin' | 'skull' | 'potion' | 'sword' | 'shield';
 
 export interface Chain {
   type:  TTile;
