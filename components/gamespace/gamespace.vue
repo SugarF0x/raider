@@ -30,6 +30,12 @@ import Vue                  from 'vue';
 import { ITile, IDungeon }  from "~/components/gamespace/types";
 import { TTile, dungeonMD } from "~/assets/Tiles";
 
+// c for coords
+const c = {
+  x: [46, 118, 190, 262, 334, 406],
+  y: [186, 258, 330, 402, 474, 546],
+};
+
 export default Vue.extend({
   name: "gamespace",
 
@@ -43,7 +49,7 @@ export default Vue.extend({
       },
       background: dungeonMD,
       dungeon: {
-        X0Y0: { x: 46, y: 186, radius: 25, fill: "red" } as ITile,
+        X0Y0: { x: c.x[0], y: c.y[0], radius: 25, fill: "red" } as ITile,
       } as IDungeon,
       arrow: {
         points: [-10, -10],
@@ -92,8 +98,8 @@ export default Vue.extend({
       const types  = ['coin', 'skull', 'potion', 'sword', 'shield', 'boss'] as TTile[];
       const colors = ['yellow', 'grey', 'red', 'black', 'blue', 'purple'];
       return {
-        x: 15 + 31 + 72 * x,
-        y: 155 + 31 + 72 * y,
+        x: c.x[x],
+        y: c.y[y],
         radius: 25,
         fill: colors[type],
         type: types[type],
