@@ -30,7 +30,9 @@ import Vue                  from 'vue';
 import { ITile, IDungeon }  from "~/components/gamespace/types";
 import { TTile, dungeonMD } from "~/assets/Tiles";
 
-// c for coords
+/**
+ * Coords of every tile
+ */
 const c = {
   x: [46, 118, 190, 262, 334, 406],
   y: [186, 258, 330, 402, 474, 546],
@@ -41,16 +43,31 @@ export default Vue.extend({
 
   data() {
     return {
+      /**
+       * Konva configuration
+       */
       konva: {
         width: 450,
         height: 800,
         scaleX: 1,
         scaleY: 1,
       },
+
+      /**
+       * Dungeon markdown of where elements are to be
+       */
       background: dungeonMD,
+
+      /**
+       * Dungeon tiles container
+       */
       dungeon: {
         X0Y0: { x: c.x[0], y: c.y[0], radius: 25, fill: "red" } as ITile,
       } as IDungeon,
+
+      /**
+       * Tile selection arrow
+       */
       arrow: {
         points: [-10, -10],
         tension: .3,
@@ -60,14 +77,25 @@ export default Vue.extend({
         listening: false,
         keys: [] as string[],
       },
+
+      /**
+       * Flag indicating mouse button 1 being held or screen being touched
+       */
       mouseDown: false,
     };
   },
 
   computed: {
+    /**
+     * Arrow line rerender key
+     */
     arrowKey(): string {
       return this.arrow.keys[this.arrow.keys.length - 1];
     },
+
+    /**
+     * Arrow outline modification
+     */
     arrowOutline(): Object {
       return Object.assign({}, this.arrow, {
         strokeWidth: 15,
@@ -90,6 +118,7 @@ export default Vue.extend({
           && y2 >= y1 - 1
           && y2 <= y1 + 1;
     },
+
     /**
      * Generate random tile on passed dungeon grid coordinates
      */
@@ -105,8 +134,9 @@ export default Vue.extend({
         type: types[type],
       };
     },
+
     /**
-     * add sample tiles to the dungeon
+     * Add sample tiles to the dungeon
      */
     populateDungeon(): void {
       for (let y = 0; y < 6; y++) {
@@ -115,6 +145,7 @@ export default Vue.extend({
         }
       }
     },
+
     /**
      * Check if a new point can be added and do add if so
      */
@@ -141,6 +172,9 @@ export default Vue.extend({
       }
     },
 
+    /**
+     * Execute printArrow if mouse is held or screen is touched
+     */
     dragArrow(e: ITile, n: string): void {
       if (this.mouseDown) this.printArrow(e, n);
     },
