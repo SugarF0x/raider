@@ -30,6 +30,8 @@ import Vue                  from 'vue';
 import { ITile, IDungeon }  from "~/components/gamespace/types";
 import { TTile, dungeonMD } from "~/assets/Tiles";
 
+// TODO: Make a comupted function that takes dungeon tile without coordinates and returns it with coordinates based on the key name
+
 /**
  * Coords of every tile
  */
@@ -126,6 +128,28 @@ export default Vue.extend({
       return this.dungeon[base].type === this.dungeon[target].type;
     },
 
+    getCols(row: number): ITile[] {
+      return [
+          this.dungeon[`X${row}Y0`],
+          this.dungeon[`X${row}Y1`],
+          this.dungeon[`X${row}Y2`],
+          this.dungeon[`X${row}Y3`],
+          this.dungeon[`X${row}Y4`],
+          this.dungeon[`X${row}Y5`],
+      ];
+    },
+
+    getRows(col: number): ITile[] {
+      return [
+        this.dungeon[`X0Y${col}`],
+        this.dungeon[`X1Y${col}`],
+        this.dungeon[`X2Y${col}`],
+        this.dungeon[`X3Y${col}`],
+        this.dungeon[`X4Y${col}`],
+        this.dungeon[`X5Y${col}`],
+      ];
+    },
+
     /**
      * Generate random tile on passed dungeon grid coordinates
      */
@@ -158,11 +182,42 @@ export default Vue.extend({
 
     /**
      * Collect selected tiles and repopulate dungeon
+     * Collected tiles are replaced by the ones over them
+     * New tiles are generated over the column
+     *
+     * Honestly, I have little to no idea of how this works
+     * I spend a couple of days beating my head against the wall
+     * and here's the result - take it or leave it
+     *
+     * This is in a bad need of refactoring
+     * but at the time of writing i am clueless
+     * as of how to do that properly
      */
     collect(): void {
       if (this.arrow.keys.length >= 3) {
+        let toPopulate = [0,0,0,0,0,0];
         this.arrow.keys.forEach(key => {
-          this.dungeon[key] = this.generateRandomTile(key)
+          toPopulate[parseInt(key[1])]++
+        })
+        let newTiles = [null,null,null,null,null,null] as any;
+        toPopulate.forEach((col, x) => {
+          if (col) {
+            newTiles[x] = this.getCols(x).filter((entry, y) => {
+              return this.arrow.keys.indexOf(`X${x}Y${y}`) === -1
+            })
+          }
+        })
+        newTiles.forEach((entry: any, x: number) => {
+          if (entry !== null) {
+            let toPush = Object.assign([], entry) as ITile[];
+            for (let y=0; y<6-entry.length; y++) {
+              toPush.unshift(this.generateRandomTile(`X${x}Y${5-entry.length-y}`))
+            }
+            toPush.forEach((entry, y) => {
+              let result = Object.assign({}, entry, {x: c.x[x], y: c.y[y]})
+              this.$set(this.dungeon, `X${x}Y${y}`, result)
+            })
+          }
         })
       }
     },
