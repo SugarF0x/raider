@@ -326,23 +326,20 @@ export default Vue.extend({
   },
 
   mounted() {
+    const dropDrag = () => {
+      this.mouseDown = false;
+      this.collect();
+      this.arrow.points = [-10, -10];
+      this.arrow.keys   = [];
+    }
+
     this.populateDungeon();
     this.resize();
     window.addEventListener('resize', this.resize);
     document.addEventListener('mousedown', () => { this.mouseDown = true; });
-    document.addEventListener('mouseup', () => {
-      this.mouseDown = false;
-      this.collect();
-      this.arrow.points = [-10, -10];
-      this.arrow.keys   = [];
-    });
+    document.addEventListener('mouseup', () => { dropDrag() });
     document.addEventListener("touchstart", () => { this.mouseDown = true; });
-    document.addEventListener("touchend", () => {
-      this.mouseDown = false;
-      this.collect();
-      this.arrow.points = [-10, -10];
-      this.arrow.keys   = [];
-    });
+    document.addEventListener("touchend", () => { dropDrag() });
   },
 });
 </script>
