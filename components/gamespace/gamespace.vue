@@ -28,9 +28,9 @@
 </template>
 
 <script lang="ts">
-import Vue                  from 'vue';
-import { IKonvaTile, IDungeon }  from "~/components/gamespace/types";
-import { TTile, dungeonMD } from "~/assets/Tiles";
+import Vue                      from 'vue';
+import { IKonvaTile, IDungeon } from "~/components/gamespace/types";
+import { TTile, dungeonMD }     from "~/assets/Tiles";
 
 /**
  * Coords of every tile
@@ -128,23 +128,23 @@ export default Vue.extend({
 
     getCols(row: number): TTile[] {
       return [
-          this.dungeon[`X${row}Y0`],
-          this.dungeon[`X${row}Y1`],
-          this.dungeon[`X${row}Y2`],
-          this.dungeon[`X${row}Y3`],
-          this.dungeon[`X${row}Y4`],
-          this.dungeon[`X${row}Y5`],
+        this.dungeon[`X${ row }Y0`],
+        this.dungeon[`X${ row }Y1`],
+        this.dungeon[`X${ row }Y2`],
+        this.dungeon[`X${ row }Y3`],
+        this.dungeon[`X${ row }Y4`],
+        this.dungeon[`X${ row }Y5`],
       ];
     },
 
     getRows(col: number): TTile[] {
       return [
-        this.dungeon[`X0Y${col}`],
-        this.dungeon[`X1Y${col}`],
-        this.dungeon[`X2Y${col}`],
-        this.dungeon[`X3Y${col}`],
-        this.dungeon[`X4Y${col}`],
-        this.dungeon[`X5Y${col}`],
+        this.dungeon[`X0Y${ col }`],
+        this.dungeon[`X1Y${ col }`],
+        this.dungeon[`X2Y${ col }`],
+        this.dungeon[`X3Y${ col }`],
+        this.dungeon[`X4Y${ col }`],
+        this.dungeon[`X5Y${ col }`],
       ];
     },
 
@@ -172,7 +172,7 @@ export default Vue.extend({
      * Get random tile type based on TTile
      */
     getRandomTile(): TTile {
-      const types  = ['coin', 'skull', 'potion', 'sword', 'shield'] as TTile[];
+      const types = ['coin', 'skull', 'potion', 'sword', 'shield'] as TTile[];
       return types[Math.floor(Math.random() * types.length)]
     },
 
@@ -203,26 +203,26 @@ export default Vue.extend({
      */
     collect(): void {
       if (this.arrow.keys.length >= 3) {
-        let toPopulate = [0,0,0,0,0,0];
+        let toPopulate = [0, 0, 0, 0, 0, 0];
         this.arrow.keys.forEach(key => {
           toPopulate[parseInt(key[1])]++
         })
-        let newTiles = [null,null,null,null,null,null] as any;
+        let newTiles = [null, null, null, null, null, null] as any;
         toPopulate.forEach((col, x) => {
           if (col) {
             newTiles[x] = this.getCols(x).filter((entry, y) => {
-              return this.arrow.keys.indexOf(`X${x}Y${y}`) === -1
+              return this.arrow.keys.indexOf(`X${ x }Y${ y }`) === -1
             })
           }
         })
         newTiles.forEach((entry: any, x: number) => {
           if (entry !== null) {
-            let result = Object.assign([],entry);
-            for (let i=0; i<6-entry.length; i++) {
+            let result = Object.assign([], entry);
+            for (let i = 0; i < 6 - entry.length; i++) {
               result.unshift(this.getRandomTile());
             }
             result.forEach((entry: string, y: number) => {
-              this.$set(this.dungeon, `X${x}Y${y}`, entry)
+              this.$set(this.dungeon, `X${ x }Y${ y }`, entry)
             })
           }
         })
@@ -246,8 +246,8 @@ export default Vue.extend({
         for (let i = 0; i < this.arrow.points.length / 2; i++) {
           base.push('' + this.arrow.points[i * 2] + this.arrow.points[i * 2 + 1]);
         }
-        if (base[base.length-2] === sample) {
-          console.log(base[base.length-2], ' = ', sample)
+        if (base[base.length - 2] === sample) {
+          console.log(base[base.length - 2], ' = ', sample)
           this.arrow.points.pop();
           this.arrow.points.pop();
           this.arrow.keys.pop();
@@ -333,15 +333,15 @@ export default Vue.extend({
     document.addEventListener('mouseup', () => {
       this.mouseDown = false;
       this.collect();
-      this.arrow.points = [-10,-10];
-      this.arrow.keys = [];
+      this.arrow.points = [-10, -10];
+      this.arrow.keys   = [];
     });
     document.addEventListener("touchstart", () => { this.mouseDown = true; });
     document.addEventListener("touchend", () => {
       this.mouseDown = false;
       this.collect();
-      this.arrow.points = [-10,-10];
-      this.arrow.keys = [];
+      this.arrow.points = [-10, -10];
+      this.arrow.keys   = [];
     });
   },
 });
