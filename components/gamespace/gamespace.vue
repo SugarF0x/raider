@@ -5,16 +5,18 @@
         <v-rect :config="{height: 800, width: 450, fill: 'white'}"/>
       </v-layer>
       <v-layer>
-        <v-rect v-for="(e,n) in background" :key="n" :config="e"/>
+        <!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
+        <v-rect v-for="(entry,key) in background" :key="key" :config="entry"/>
       </v-layer>
       <v-layer>
-        <v-circle v-for="(e,n) in dungeon"
-                  :key="n"
-                  :config="getTileConfig(e, n)"
-                  @mousedown="printArrow(n)"
-                  @mouseenter="dragArrow(n)"
-                  @touchstart="printArrow(n)"
-                  @touchmove="dragArrow(n)"
+        <!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
+        <v-circle v-for="(entry,key) in dungeon"
+                  :key="key"
+                  :config="getTileConfig(entry, key)"
+                  @mousedown="printArrow(key)"
+                  @mouseenter="dragArrow(key)"
+                  @touchstart="printArrow(key)"
+                  @touchmove="dragArrow(key)"
         />
       </v-layer>
       <v-layer>
