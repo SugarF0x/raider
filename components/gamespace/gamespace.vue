@@ -29,7 +29,7 @@
 
 <script lang="ts">
 import Vue                  from 'vue';
-import { ITile, IDungeon }  from "~/components/gamespace/types";
+import { IKonvaTile, IDungeon }  from "~/components/gamespace/types";
 import { TTile, dungeonMD } from "~/assets/Tiles";
 
 /**
@@ -151,7 +151,7 @@ export default Vue.extend({
     /**
      * Format tile to Konva shape config object based on tile type and name
      */
-    getTileConfig(type: TTile, tile: String): ITile {
+    getTileConfig(type: TTile, tile: String): IKonvaTile {
       const colors = {
         'coin': 'yellow',
         'skull': 'grey',

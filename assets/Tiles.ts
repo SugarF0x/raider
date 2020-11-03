@@ -1,30 +1,28 @@
 // tile type can only equal to one of these
 export type TTile = 'coin' | 'skull' | 'potion' | 'sword' | 'shield';
 
-export interface Chain {
-  type:  TTile;
-  array: number[]; // contain Tile ids
-}
+export type TEffect = 'burning' | 'poisoned' | 'frozen' | 'stunned';
 
 export interface TileState {
   health: number;
   armor:  number;
   attack: number;
+  effect: TEffect;
+}
+
+export interface IEffect {
+  current: TEffect[];
+  duration: number;
+  damage?: number;
 }
 
 export class Tile {
   type: TTile;
-  isSelected = false;
-  id = Math.floor(Math.random()*1000);
+  id: string;
 
   constructor(type: TTile) {
     this.type = type;
-  }
-
-  drag(chain: Chain) {
-    if (chain.type === this.type) {
-
-    }
+    this.id = `${type}#${Math.floor(Math.random()*1000)}`
   }
 }
 
