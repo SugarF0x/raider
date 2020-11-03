@@ -40,6 +40,7 @@ const c = {
   y: [186, 258, 330, 402, 474, 546],
 };
 
+// noinspection JSUnusedGlobalSymbols
 export default Vue.extend({
   name: "gamespace",
 
