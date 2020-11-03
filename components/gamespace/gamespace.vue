@@ -246,17 +246,25 @@ export default Vue.extend({
         for (let i = 0; i < this.arrow.points.length / 2; i++) {
           base.push('' + this.arrow.points[i * 2] + this.arrow.points[i * 2 + 1]);
         }
-        base.forEach(e => {
-          if (e === sample
-              || !this.isNear(this.arrowKey, n)
-              || !this.isSameType(this.arrowKey, n)
-          ) returns = false;
-        });
-        if (returns) {
-          this.arrow.points.push(x, y);
-          this.arrow.keys.push(n);
+        if (base[base.length-2] === sample) {
+          console.log(base[base.length-2], ' = ', sample)
+          this.arrow.points.pop();
+          this.arrow.points.pop();
+          this.arrow.keys.pop();
+          return true
+        } else {
+          base.forEach(e => {
+            if (e === sample
+                || !this.isNear(this.arrowKey, n)
+                || !this.isSameType(this.arrowKey, n)
+            ) returns = false;
+          });
+          if (returns) {
+            this.arrow.points.push(x, y);
+            this.arrow.keys.push(n);
+          }
+          return returns;
         }
-        return returns;
       }
     },
 
