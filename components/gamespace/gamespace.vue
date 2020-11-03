@@ -99,7 +99,7 @@ export default Vue.extend({
     arrowOutline(): Object {
       return Object.assign({}, this.arrow, {
         strokeWidth: 15,
-        stroke: "white",
+        stroke: this.arrow.keys.length > 2 ? "orange" : "white",
       });
     },
   },
