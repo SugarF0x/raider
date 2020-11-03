@@ -63,9 +63,7 @@ export default Vue.extend({
       /**
        * Dungeon tiles container
        */
-      dungeon: {
-        X0Y0: 'coin' as TTile,
-      } as IDungeon,
+      dungeon: {} as IDungeon,
 
       /**
        * Tile selection arrow
