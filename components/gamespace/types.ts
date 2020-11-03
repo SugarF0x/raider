@@ -1,7 +1,7 @@
 import { TTile } from '~/assets/Tiles'
 
 export interface IDungeon {
-  [property: string]: ITile
+  [property: string]: TTile
 }
 export interface ITile {
   x: number,

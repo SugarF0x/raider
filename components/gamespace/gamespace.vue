@@ -10,11 +10,11 @@
       <v-layer>
         <v-circle v-for="(e,n) in dungeon"
                   :key="n"
-                  :config="e"
-                  @mousedown="printArrow(e, n)"
-                  @mouseenter="dragArrow(e, n)"
-                  @touchstart="printArrow(e, n)"
-                  @touchmove="dragArrow(e, n)"
+                  :config="getTileConfig(e, n)"
+                  @mousedown="printArrow(n)"
+                  @mouseenter="dragArrow(n)"
+                  @touchstart="printArrow(n)"
+                  @touchmove="dragArrow(n)"
         />
       </v-layer>
       <v-layer>
@@ -29,8 +29,6 @@
 import Vue                  from 'vue';
 import { ITile, IDungeon }  from "~/components/gamespace/types";
 import { TTile, dungeonMD } from "~/assets/Tiles";
-
-// TODO: Make a comupted function that takes dungeon tile without coordinates and returns it with coordinates based on the key name
 
 /**
  * Coords of every tile
@@ -64,7 +62,7 @@ export default Vue.extend({
        * Dungeon tiles container
        */
       dungeon: {
-        X0Y0: { x: c.x[0], y: c.y[0], radius: 25, fill: "red" } as ITile,
+        X0Y0: 'coin' as TTile,
       } as IDungeon,
 
       /**
@@ -125,10 +123,10 @@ export default Vue.extend({
      * Check if target tile is of same tile type
      */
     isSameType(base: string, target: string): boolean {
-      return this.dungeon[base].type === this.dungeon[target].type;
+      return this.dungeon[base] === this.dungeon[target];
     },
 
-    getCols(row: number): ITile[] {
+    getCols(row: number): TTile[] {
       return [
           this.dungeon[`X${row}Y0`],
           this.dungeon[`X${row}Y1`],
@@ -139,7 +137,7 @@ export default Vue.extend({
       ];
     },
 
-    getRows(col: number): ITile[] {
+    getRows(col: number): TTile[] {
       return [
         this.dungeon[`X0Y${col}`],
         this.dungeon[`X1Y${col}`],
@@ -151,21 +149,31 @@ export default Vue.extend({
     },
 
     /**
-     * Generate random tile on passed dungeon grid coordinates
+     * Format tile to Konva shape config object based on tile type and name
      */
-    generateRandomTile(tile: string): ITile {
-      let x = parseInt(tile[1]);
-      let y = parseInt(tile[3])
-      let type     = Math.floor(Math.random() * 5);
-      const types  = ['coin', 'skull', 'potion', 'sword', 'shield'] as TTile[];
-      const colors = ['yellow', 'grey', 'red', 'black', 'blue'];
+    getTileConfig(type: TTile, tile: String): ITile {
+      const colors = {
+        'coin': 'yellow',
+        'skull': 'grey',
+        'potion': 'red',
+        'sword': 'black',
+        'shield': 'blue'
+      }
       return {
-        x: c.x[x],
-        y: c.y[y],
+        x: c.x[parseInt(tile[1])],
+        y: c.y[parseInt(tile[3])],
         radius: 25,
         fill: colors[type],
-        type: types[type],
-      };
+        type: type,
+      }
+    },
+
+    /**
+     * Get random tile type based on TTile
+     */
+    getRandomTile(): TTile {
+      const types  = ['coin', 'skull', 'potion', 'sword', 'shield'] as TTile[];
+      return types[Math.floor(Math.random() * types.length)]
     },
 
     /**
@@ -175,7 +183,7 @@ export default Vue.extend({
       for (let y = 0; y < 6; y++) {
         for (let x = 0; x < 6; x++) {
           let tile = `X${ x }Y${ y }`;
-          this.$set(this.dungeon, tile, this.generateRandomTile(tile));
+          this.$set(this.dungeon, tile, this.getRandomTile());
         }
       }
     },
@@ -209,13 +217,12 @@ export default Vue.extend({
         })
         newTiles.forEach((entry: any, x: number) => {
           if (entry !== null) {
-            let toPush = Object.assign([], entry) as ITile[];
-            for (let y=0; y<6-entry.length; y++) {
-              toPush.unshift(this.generateRandomTile(`X${x}Y${5-entry.length-y}`))
+            let result = Object.assign([],entry);
+            for (let i=0; i<6-entry.length; i++) {
+              result.unshift(this.getRandomTile());
             }
-            toPush.forEach((entry, y) => {
-              let result = Object.assign({}, entry, {x: c.x[x], y: c.y[y]})
-              this.$set(this.dungeon, `X${x}Y${y}`, result)
+            result.forEach((entry: string, y: number) => {
+              this.$set(this.dungeon, `X${x}Y${y}`, entry)
             })
           }
         })
@@ -225,13 +232,15 @@ export default Vue.extend({
     /**
      * Check if a new point can be added and do add if so
      */
-    printArrow(e: ITile, n: string): boolean {
+    printArrow(n: string): boolean {
+      let x = c.x[parseInt(n[1])];
+      let y = c.y[parseInt(n[3])];
       if (this.arrow.points[0] === -10) {
-        this.arrow.points = [e.x, e.y];
+        this.arrow.points = [x, y];
         this.arrow.keys.push(n);
         return true;
       } else {
-        let sample  = '' + e.x + e.y;
+        let sample  = '' + x + y;
         let base    = [] as string[];
         let returns = true;
         for (let i = 0; i < this.arrow.points.length / 2; i++) {
@@ -244,7 +253,7 @@ export default Vue.extend({
           ) returns = false;
         });
         if (returns) {
-          this.arrow.points.push(e.x, e.y);
+          this.arrow.points.push(x, y);
           this.arrow.keys.push(n);
         }
         return returns;
@@ -254,8 +263,8 @@ export default Vue.extend({
     /**
      * Execute printArrow if mouse is held or screen is touched
      */
-    dragArrow(e: ITile, n: string): void {
-      if (this.mouseDown) this.printArrow(e, n);
+    dragArrow(n: string): void {
+      if (this.mouseDown) this.printArrow(n);
     },
 
     /**
