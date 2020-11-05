@@ -80,7 +80,8 @@ export default Vue.extend({
       arrow: {
         points: [-10, -10],
         tension: .3,
-        stroke: "black",
+        opacity: .7,
+        stroke: "green",
         strokeWidth: 10,
         lineCap: 'round',
         listening: false,
@@ -107,8 +108,8 @@ export default Vue.extend({
      */
     arrowOutline(): Object {
       return Object.assign({}, this.arrow, {
-        strokeWidth: 15,
-        stroke: this.arrow.keys.length > 2 ? "orange" : "white",
+        strokeWidth: 20,
+        stroke: "black"
       });
     },
   },
