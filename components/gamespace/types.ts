@@ -1,7 +1,7 @@
-import { TTile } from '~/assets/Tiles'
+import { TTile, Tile } from '~/assets/Tiles'
 
 export interface IDungeon {
-  [property: string]: TTile
+  [property: string]: Tile
 }
 export interface IKonvaTile {
   x: number,

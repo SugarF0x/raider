@@ -18,11 +18,11 @@ export interface IEffect {
 
 export class Tile {
   type: TTile;
-  id: string;
+  id: number;
 
   constructor(type: TTile) {
     this.type = type;
-    this.id = `${type}#${Math.floor(Math.random()*1000)}`
+    this.id = Math.floor(Math.random()*1000000)
   }
 }
 

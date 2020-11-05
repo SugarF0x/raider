@@ -2,7 +2,7 @@
   <v-row justify="center" align="center">
     <v-stage :config="konva" id="konva">
       <v-layer>
-        <v-rect :config="{height: 800, width: 450, fill: 'white'}"/>
+        <v-rect :config="{height: 800, width: 450, fill: 'purple'}"/>
       </v-layer>
       <v-layer>
         <!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
@@ -11,7 +11,7 @@
       <v-layer>
         <!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
         <v-image v-for="(entry,key) in dungeon"
-                 :key="key"
+                 :key="entry.id"
                  :config="getTileConfig(entry, key)"
                  @mousedown="printArrow(key)"
                  @mouseenter="dragArrow(key)"
@@ -28,9 +28,9 @@
 </template>
 
 <script lang="ts">
-import Vue                      from 'vue';
-import { IKonvaTile, IDungeon } from "~/components/gamespace/types";
-import { TTile, dungeonMD }     from "~/assets/Tiles";
+import Vue                        from 'vue';
+import { IKonvaTile, IDungeon }   from "~/components/gamespace/types";
+import { TTile, Tile, dungeonMD } from "~/assets/Tiles";
 
 /**
  * Coords of every tile
@@ -132,13 +132,13 @@ export default Vue.extend({
      * Check if target tile is of same tile type
      */
     isSameType(base: string, target: string): boolean {
-      return this.dungeon[base] === this.dungeon[target];
+      return this.dungeon[base].type === this.dungeon[target].type;
     },
 
     /**
      * Return an array of specified column rows
      */
-    getCols(row: number): TTile[] {
+    getCols(row: number): Tile[] {
       return [
         this.dungeon[`X${ row }Y0`],
         this.dungeon[`X${ row }Y1`],
@@ -152,7 +152,7 @@ export default Vue.extend({
     /**
      * Return an array of specified row columns
      */
-    getRows(col: number): TTile[] {
+    getRows(col: number): Tile[] {
       return [
         this.dungeon[`X0Y${ col }`],
         this.dungeon[`X1Y${ col }`],
@@ -166,33 +166,33 @@ export default Vue.extend({
     /**
      * Format tile to Konva Image config object based on tile type and name
      */
-    getTileConfig(type: TTile, tile: String): IKonvaTile {
+    getTileConfig(tile: Tile, pos: String): IKonvaTile {
       return {
-        x: c.x[parseInt(tile[1])],
-        y: c.y[parseInt(tile[3])],
+        x: c.x[parseInt(pos[1])],
+        y: c.y[parseInt(pos[3])],
         image: tileset,
-        width: 50,
-        height: 50,
+        width: 62,
+        height: 62,
         crop: {
-          // x: (53) * tilesetOrder.indexOf(type), // some form of this can be used to display different variations
-          x: 0,
-          y: (53) * tilesetOrder.indexOf(type),
-          width: 53,
-          height: 53
+          x: (52) * (tile.id % tilesetOrder.length) + 1 + (tile.id % tilesetOrder.length),
+          y: (52) * tilesetOrder.indexOf(tile.type) + 1 + tilesetOrder.indexOf(tile.type),
+          width: 52,
+          height: 52
         },
         offset: {
-          x: 25,
-          y: 25
+          x: 31,
+          y: 31
         },
-        type: type
+        type: tile.type
       }
     },
 
     /**
      * Get random tile type based on TTile
      */
-    getRandomTile(): TTile {
-      return tilesetOrder[Math.floor(Math.random() * tilesetOrder.length)]
+    getRandomTile(): Tile {
+      let type = tilesetOrder[Math.floor(Math.random() * tilesetOrder.length)];
+      return new Tile(type);
     },
 
     /**
@@ -356,9 +356,22 @@ export default Vue.extend({
       this.arrow.keys   = [];
     }
 
-    this.populateDungeon();
+    /**
+     * Ensures tiles render on first load
+     */
+    tileset.onload = () => {
+      this.populateDungeon();
+    }
+
+    /**
+     * The initial resize as well as an event to handle any future resizes
+     */
     this.resize();
     window.addEventListener('resize', this.resize);
+
+    /**
+     * User input events
+     */
     document.addEventListener('mousedown', () => { this.mouseDown = true; });
     document.addEventListener('mouseup', () => { dropDrag() });
     document.addEventListener("touchstart", () => { this.mouseDown = true; });
