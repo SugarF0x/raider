@@ -10,13 +10,13 @@
       </v-layer>
       <v-layer>
         <!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
-        <v-circle v-for="(entry,key) in dungeon"
-                  :key="key"
-                  :config="getTileConfig(entry, key)"
-                  @mousedown="printArrow(key)"
-                  @mouseenter="dragArrow(key)"
-                  @touchstart="printArrow(key)"
-                  @touchmove="dragArrow(key)"
+        <v-image v-for="(entry,key) in dungeon"
+                 :key="key"
+                 :config="getTileConfig(entry, key)"
+                 @mousedown="printArrow(key)"
+                 @mouseenter="dragArrow(key)"
+                 @touchstart="printArrow(key)"
+                 @touchmove="dragArrow(key)"
         />
       </v-layer>
       <v-layer>
@@ -39,6 +39,10 @@ const c = {
   x: [46, 118, 190, 262, 334, 406],
   y: [186, 258, 330, 402, 474, 546],
 };
+
+const tileset      = new Image();
+tileset.src        = '/tileset/tiles.png';
+const tilesetOrder = ['potion', 'skull', 'coin', 'shield', 'sword'] as TTile[];
 
 // noinspection JSUnusedGlobalSymbols
 export default Vue.extend({
@@ -150,22 +154,27 @@ export default Vue.extend({
     },
 
     /**
-     * Format tile to Konva shape config object based on tile type and name
+     * Format tile to Konva Image config object based on tile type and name
      */
     getTileConfig(type: TTile, tile: String): IKonvaTile {
-      const colors = {
-        'coin': 'yellow',
-        'skull': 'grey',
-        'potion': 'red',
-        'sword': 'black',
-        'shield': 'blue'
-      }
       return {
         x: c.x[parseInt(tile[1])],
         y: c.y[parseInt(tile[3])],
-        radius: 25,
-        fill: colors[type],
-        type: type,
+        image: tileset,
+        width: 50,
+        height: 50,
+        crop: {
+          // x: (53) * tilesetOrder.indexOf(type), // some form of this can be used to display different variations
+          x: 0,
+          y: (53) * tilesetOrder.indexOf(type),
+          width: 53,
+          height: 53
+        },
+        offset: {
+          x: 25,
+          y: 25
+        },
+        type: type
       }
     },
 
@@ -173,8 +182,7 @@ export default Vue.extend({
      * Get random tile type based on TTile
      */
     getRandomTile(): TTile {
-      const types = ['coin', 'skull', 'potion', 'sword', 'shield'] as TTile[];
-      return types[Math.floor(Math.random() * types.length)]
+      return tilesetOrder[Math.floor(Math.random() * tilesetOrder.length)]
     },
 
     /**

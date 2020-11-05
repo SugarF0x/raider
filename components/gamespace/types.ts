@@ -6,7 +6,18 @@ export interface IDungeon {
 export interface IKonvaTile {
   x: number,
   y: number,
-  radius: number,
-  fill: string,
+  image: HTMLImageElement,
+  width: number,
+  height: number,
+  crop: {
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  },
+  offset: {
+    x: number,
+    y: number
+  },
   type: TTile
 }
