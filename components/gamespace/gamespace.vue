@@ -40,9 +40,13 @@ const c = {
   y: [186, 258, 330, 402, 474, 546],
 };
 
+/**
+ * Tileset used to crop necessary images out of
+ */
 const tileset      = new Image();
 tileset.src        = '/tileset/tiles.png';
 const tilesetOrder = ['potion', 'skull', 'coin', 'shield', 'sword'] as TTile[];
+// const bossOrder = []
 
 // noinspection JSUnusedGlobalSymbols
 export default Vue.extend({
@@ -131,6 +135,9 @@ export default Vue.extend({
       return this.dungeon[base] === this.dungeon[target];
     },
 
+    /**
+     * Return an array of specified column rows
+     */
     getCols(row: number): TTile[] {
       return [
         this.dungeon[`X${ row }Y0`],
@@ -142,6 +149,9 @@ export default Vue.extend({
       ];
     },
 
+    /**
+     * Return an array of specified row columns
+     */
     getRows(col: number): TTile[] {
       return [
         this.dungeon[`X0Y${ col }`],
@@ -335,6 +345,10 @@ export default Vue.extend({
   },
 
   mounted() {
+    /**
+     * Reset arrow state on mouse release
+     * Collect tiles if possible
+     */
     const dropDrag = () => {
       this.mouseDown = false;
       this.collect();
