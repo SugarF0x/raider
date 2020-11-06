@@ -2,7 +2,7 @@
   <v-row justify="center" align="center">
     <v-stage :config="konva" id="konva">
       <v-layer>
-        <v-rect :config="{height: 800, width: 450, fill: 'purple'}"/>
+        <v-rect :config="{height: 800, width: 450, fill: '#1D214E'}"/>
       </v-layer>
       <v-layer>
         <!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
@@ -80,7 +80,6 @@ export default Vue.extend({
       arrow: {
         points: [-10, -10],
         tension: .3,
-        opacity: .7,
         stroke: "green",
         strokeWidth: 10,
         lineCap: 'round',
