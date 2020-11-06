@@ -130,9 +130,14 @@ export default Vue.extend({
 
     /**
      * Check if target tile is of same tile type
+     * Or if it is matching skills with swords
      */
     isSameType(base: string, target: string): boolean {
-      return this.dungeon[base].type === this.dungeon[target].type;
+      const TBase   = this.dungeon[base].type;
+      const TTarget = this.dungeon[target].type;
+      return TBase === TTarget
+          || (TBase === 'skull' && TTarget === 'sword')
+          || (TBase === 'sword' && TTarget === 'skull');
     },
 
     /**
