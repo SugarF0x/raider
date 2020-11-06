@@ -13,6 +13,12 @@ This project uses `Nuxt.js` as its main framework. `Konva.js` with its native `V
 The application is responsive and will adjust to every screen type at a ratio of 9:16.
 The application can be interacted with on PC as well as on any smartphone.
 
+## Current state of things
+
+This is what the current build looks like - pure visuals
+
+![sample](https://raw.githubusercontent.com/SugarF0x/raider/master/git/sample.jpg)
+
 ## Roadmap
 
 This is my current roadmap of things to do that's **not** in any strict order.
@@ -25,9 +31,9 @@ Given my lack of experience if this field, every point here is subject to change
     - [X] Add tile differentiation
     - [X] Add tiles' arrow selection
         - [X] Add backtracking
-        - [ ] Add type check
+        - [X] Add type check
             - [X] Let same types match
-            - [ ] Let skulls match with swords
+            - [X] Let skulls match with swords
         - [X] Add proximity check
     - [ ] Add tiles' collection
         - [X] Delete tiles on collection
