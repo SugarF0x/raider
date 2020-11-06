@@ -79,7 +79,7 @@ export default Vue.extend({
        */
       arrow: {
         points: [-10, -10],
-        tension: .3,
+        tension: .1,
         stroke: "green",
         strokeWidth: 10,
         lineCap: 'round',
