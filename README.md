@@ -15,7 +15,8 @@ The application can be interacted with on PC as well as on any smartphone.
 
 ## Current state of things
 
-This is what the current build looks like - pure visuals
+Here is a snapshot of what the current build looks like.
+You can fiddle around with it yourself [here](http://raid.sugarfox.ru).
 
 ![sample](https://raw.githubusercontent.com/SugarF0x/raider/master/git/sample.jpg)
 
