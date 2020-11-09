@@ -7,7 +7,12 @@
       <v-layer>
         <!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
         <v-rect v-for="(entry,key) in background" :key="key" :config="entry"/>
-        <v-image :key="isTilesetLoaded" :config="hud"></v-image>
+        <v-image :key="isTilesetLoaded+'hud'" :config="hud"></v-image>
+
+        <v-image :key="isTilesetLoaded+`health(${state.health.current}/${state.health.max})`"
+                 :config="getHudConfig('health', state.health.current/state.health.max)"
+        />
+        <v-text :config="getTextConfig(`${state.health.current}/${state.health.max}`, 330, 700, 100, 'yellow', 20)"/>
       </v-layer>
       <v-layer>
         <!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
@@ -32,9 +37,9 @@
 </template>
 
 <script lang="ts">
-import Vue                        from 'vue';
-import { IKonvaTile, IDungeon }   from "~/components/gamespace/types";
-import { TTile, Tile, dungeonMD } from "~/assets/Tiles";
+import Vue                                 from 'vue';
+import { IKonvaTile, IKonvaHUD, IDungeon } from "~/components/gamespace/types";
+import { TTile, THud, Tile, dungeonMD }    from "~/assets/Tiles";
 
 /**
  * Coords of every tile
@@ -92,6 +97,31 @@ export default Vue.extend({
           y: 436,
           width: 318,
           height: 75
+        }
+      },
+
+      /**
+       * Current run state
+       */
+      state: {
+        coins: 0,
+        enemy: 1,
+        defense: {
+          max: 4,
+          current: 4
+        },
+        attack: 1,
+        upgrade: {
+          max: 100,
+          current: 0
+        },
+        experience: {
+          max: 100,
+          current: 0
+        },
+        health: {
+          max: 50,
+          current: Math.floor(Math.random()*50)
         }
       },
 
@@ -235,6 +265,55 @@ export default Vue.extend({
           y: 31
         },
         type: tile.type
+      }
+    },
+
+    /**
+     * Format tile to Konva Image config object based on tile type and fill percentage
+     */
+    getHudConfig(type: THud, fill: number): IKonvaHUD {
+      const coords = {
+        'coins': {
+          canvas: { x: 0, y: 0, width: 0, height: 0 },
+          crop: { x: 0, y: 0, width: 0, height: 0 }
+          },
+        'upgrade': {
+          canvas: { x: 0, y: 0, width: 0, height: 0 },
+          crop: { x: 0, y: 0, width: 0, height: 0 }
+        },
+        'experience': {
+          canvas: { x: 0, y: 0, width: 0, height: 0 },
+          crop: { x: 0, y: 0, width: 0, height: 0 }
+        },
+        'health': {
+          canvas: { x: 331.5, y: 599+(123*(1-fill)), width: 95, height: 123*fill },
+          crop: { x: 325, y: 447+(64*(1-fill)), width: 71, height: 64*fill }
+        },
+      }
+      return {
+        x: coords[type].canvas.x,
+        y: coords[type].canvas.y,
+        image: tileset,
+        width: coords[type].canvas.width,
+        height: coords[type].canvas.height,
+        crop: coords[type].crop,
+        type: type
+      }
+    },
+
+    /**
+     * Format text to Konva Text config object based on a lot of things...
+     */
+    getTextConfig(text: string, x: number, y: number, width: number = 100, color: string = 'white', size: number = 30): Object {
+      return {
+        x: x,
+        y: y,
+        text: text,
+        fontSize: size,
+        fontFamily: 'Calibri',
+        fill: color,
+        align: 'center',
+        width: width
       }
     },
 

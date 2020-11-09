@@ -1,7 +1,7 @@
 // tile type can only equal to one of these
 export type TTile = 'coin' | 'skull' | 'potion' | 'sword' | 'shield';
-
 export type TEffect = 'burning' | 'poisoned' | 'frozen' | 'stunned';
+export type THud = 'coins' | 'upgrade' | 'experience' | 'health';
 
 export interface TileState {
   health: number;

@@ -1,9 +1,9 @@
-import { TTile, Tile } from '~/assets/Tiles'
+import { TTile, THud, Tile } from '~/assets/Tiles'
 
 export interface IDungeon {
   [property: string]: Tile
 }
-export interface IKonvaTile {
+export interface IKonvaConfig {
   x: number,
   y: number,
   image: HTMLImageElement,
@@ -15,9 +15,14 @@ export interface IKonvaTile {
     width: number,
     height: number
   },
+}
+export interface IKonvaTile extends IKonvaConfig {
   offset: {
     x: number,
     y: number
   },
   type: TTile
+}
+export interface IKonvaHUD extends IKonvaConfig {
+  type: THud
 }
