@@ -1,20 +1,22 @@
 <template>
   <v-row justify="center" align="center">
     <v-stage :config="konva" id="konva">
-      <v-layer>
+      <v-layer id="background">
         <v-rect :config="{height: 800, width: 450, fill: '#1D214E'}"/>
       </v-layer>
-      <v-layer>
+      <v-layer id="hud">
         <!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
         <v-rect v-for="(entry,key) in background" :key="key" :config="entry"/>
         <v-image :key="isTilesetLoaded+'hud'" :config="hud"></v-image>
 
-        <v-image :key="isTilesetLoaded+`health(${state.health.current}/${state.health.max})`"
-                 :config="getHudConfig('health', state.health.current/state.health.max)"
-        />
-        <v-text :config="getTextConfig(`${state.health.current}/${state.health.max}`, 330, 700, 100, 'yellow', 20)"/>
+        <v-group id="health">
+          <v-image :key="isTilesetLoaded+`health(${state.health.current}/${state.health.max})`"
+                   :config="getHudConfig('health', state.health.current/state.health.max)"
+          />
+          <v-text :config="getTextConfig(`${state.health.current}/${state.health.max}`, 330, 700, 100, 'yellow', 20)"/>
+        </v-group>
       </v-layer>
-      <v-layer>
+      <v-layer id="dungeon">
         <!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
         <v-image v-for="(entry,key) in dungeon"
                  :key="entry.id"
@@ -25,7 +27,7 @@
                  @touchmove="dragArrow(key)"
         />
       </v-layer>
-      <v-layer>
+      <v-layer id="arrow">
         <v-group ref="arrow" :config="{opacity: .8}">
           <v-arrow :key="arrowKey+'ghost'" :config="arrowGhost"></v-arrow>
           <v-arrow :key="arrowKey+'outline'" :config="arrowOutline"></v-arrow>
@@ -104,20 +106,23 @@ export default Vue.extend({
        * Current run state
        */
       state: {
-        coins: 0,
-        enemy: 1,
-        defense: {
-          max: 4,
-          current: 4
+        coins: {
+          max: 100,
+          current: Math.floor(Math.random()*100)
         },
-        attack: 1,
+        enemy: Math.floor(Math.random()*99),
+        defense: {
+          max: 40,
+          current: Math.floor(Math.random()*40)
+        },
+        attack: Math.floor(Math.random()*99),
         upgrade: {
           max: 100,
-          current: 0
+          current: Math.floor(Math.random()*100)
         },
         experience: {
           max: 100,
-          current: 0
+          current: Math.floor(Math.random()*100)
         },
         health: {
           max: 50,
