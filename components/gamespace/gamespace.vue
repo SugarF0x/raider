@@ -7,6 +7,7 @@
       <v-layer>
         <!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
         <v-rect v-for="(entry,key) in background" :key="key" :config="entry"/>
+        <v-image :key="isTilesetLoaded" :config="hud"></v-image>
       </v-layer>
       <v-layer>
         <!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
@@ -47,7 +48,7 @@ const c = {
  * Tileset used to crop necessary images out of
  */
 const tileset      = new Image();
-tileset.src        = '/tileset/tiles.png';
+tileset.src        = '/tileset/tiles-custom.png';
 const tilesetOrder = ['potion', 'skull', 'coin', 'shield', 'sword'] as TTile[];
 // const bossOrder = []
 
@@ -78,6 +79,23 @@ export default Vue.extend({
       dungeon: {} as IDungeon,
 
       /**
+       * HUD overlay display
+       */
+      hud: {
+        x: 11,
+        y: 596,
+        image: tileset,
+        width: 428,
+        height: 143,
+        crop: {
+          x: 1,
+          y: 436,
+          width: 318,
+          height: 75
+        }
+      },
+
+      /**
        * Tile selection arrow
        */
       arrow: {
@@ -94,6 +112,7 @@ export default Vue.extend({
        * Flag indicating mouse button 1 being held or screen being touched
        */
       mouseDown: false,
+      isTilesetLoaded: false
     };
   },
 
@@ -399,6 +418,7 @@ export default Vue.extend({
      * Ensures tiles render on first load
      */
     tileset.onload = () => {
+      this.isTilesetLoaded = true;
       this.populateDungeon();
     }
 
