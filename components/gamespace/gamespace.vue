@@ -53,7 +53,6 @@
       </v-layer>
       <v-layer id="arrow">
         <v-group ref="arrow" :config="{opacity: .8}">
-          <v-arrow :key="arrowKey+'ghost'" :config="arrowGhost"></v-arrow>
           <v-arrow :key="arrowKey+'outline'" :config="arrowOutline"></v-arrow>
           <v-arrow :key="arrowKey" :config="arrow"></v-arrow>
         </v-group>
@@ -193,17 +192,6 @@ export default Vue.extend({
       });
     },
 
-    /**
-     * Arrow outline ghost to fix arrowhead clipping
-     * THIS IS A CRUTCH
-     */
-    arrowGhost(): Object {
-      return Object.assign({}, this.arrow, {
-        strokeWidth: this.arrow.strokeWidth*3,
-        opacity: 0
-      });
-    },
-
     fill(): IFill {
       return {
         coins: this.state.coins.current/this.state.coins.max,
@@ -219,7 +207,7 @@ export default Vue.extend({
       handler: function(newValue) {
         let arrow = this.$refs.arrow as any;
         if (newValue.keys.length)
-          arrow.getNode().cache();
+          arrow.getNode().cache({ offset: 5 });
         else
           arrow.getNode().clearCache();
       },
