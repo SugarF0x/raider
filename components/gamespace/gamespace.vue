@@ -9,27 +9,35 @@
         <v-rect v-for="(entry,key) in background" :key="key" :config="entry"/>
         <v-image :key="isTilesetLoaded+'hud'" :config="hud"></v-image>
         <v-group id="health">
-          <v-image :key="isTilesetLoaded+`health(${state.health.current}/${state.health.max})`"
-                   :config="getHudConfig('health', state.health.current/state.health.max)"
+          <v-image :key="isTilesetLoaded+`-health(${fill.health})`"
+                   :config="getHudConfig('health')"
           />
           <v-text :config="getTextConfig(`${state.health.current}/${state.health.max}`, 330, 700, 100, 'yellow', 20)"/>
         </v-group>
         <v-group id="upgrade">
-          <v-image :key="isTilesetLoaded+`upgrade(${state.upgrade.current}/${state.upgrade.max})`"
-                   :config="getHudConfig('upgrade', state.upgrade.current/state.upgrade.max)"
+          <v-image :key="isTilesetLoaded+`-upgrade(${fill.upgrade})`"
+                   :config="getHudConfig('upgrade')"
           />
-<!--          <v-text :config="getTextConfig(`${state.upgrade.current}/${state.upgrade.max}`, 125, 677, 200, 'cyan', 16)"/>-->
+          <v-text :config="getTextConfig(`${state.upgrade.current}/${state.upgrade.max}`, 125, 677, 200, 'cyan', 16)"/>
         </v-group>
         <v-group id="experience">
-          <v-image :key="isTilesetLoaded+`experience(${state.experience.current}/${state.experience.max})`"
-                   :config="getHudConfig('experience', state.experience.current/state.experience.max)"
+          <v-image :key="isTilesetLoaded+`-experience(${fill.experience})`"
+                   :config="getHudConfig('experience')"
           />
-<!--          <v-text :config="getTextConfig(`${state.experience.current}/${state.experience.max}`, 125, 712, 200, 'lightgreen', 16)"/>-->
+          <v-text :config="getTextConfig(`${state.experience.current}/${state.experience.max}`, 125, 712, 200, 'lightgreen', 16)"/>
         </v-group>
         <v-group id="stats">
           <v-text :config="getTextConfig(state.enemy, 130, 597, 50, 'white', 16)"/>
           <v-text :config="getTextConfig(`${state.defense.current}/${state.defense.max}`, 197, 597, 50, 'lightblue', 16)"/>
           <v-text :config="getTextConfig(state.attack, 270, 597, 50, 'lightgray', 16)"/>
+        </v-group>
+        <v-group id="coins">
+          <!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
+          <v-image v-for="(col,i) in getHudConfig('coins')"
+                   :key="isTilesetLoaded+`-coins(${fill.coins}-${i})`"
+                   :config="col"
+          />
+          <v-text :config="getTextConfig(`${state.coins.current}/${state.coins.max}`, 44, 597, 50, 'yellow', 16)"/>
         </v-group>
       </v-layer>
       <v-layer id="dungeon">
@@ -55,9 +63,9 @@
 </template>
 
 <script lang="ts">
-import Vue                                 from 'vue';
-import { IKonvaTile, IKonvaHUD, IDungeon } from "~/components/gamespace/types";
-import { TTile, THud, Tile, dungeonMD }    from "~/assets/Tiles";
+import Vue                                        from 'vue';
+import { IKonvaTile, IKonvaHUD, IDungeon, IFill } from "~/components/gamespace/types";
+import { TTile, THud, Tile, dungeonMD }           from "~/assets/Tiles";
 
 /**
  * Coords of every tile
@@ -195,6 +203,15 @@ export default Vue.extend({
         opacity: 0
       });
     },
+
+    fill(): IFill {
+      return {
+        coins: this.state.coins.current/this.state.coins.max,
+        upgrade: this.state.upgrade.current/this.state.upgrade.max,
+        experience: this.state.experience.current/this.state.experience.max,
+        health: this.state.health.current/this.state.health.max
+      }
+    }
   },
 
   watch: {
@@ -291,34 +308,64 @@ export default Vue.extend({
 
     /**
      * Format tile to Konva Image config object based on tile type and fill percentage
+     * Coin type will return an array of coin column configs since their render is exceptional
      */
-    getHudConfig(type: THud, fill: number): IKonvaHUD {
-      const coords = {
-        'coins': {
-          canvas: { x: 0, y: 0, width: 0, height: 0 },
-          crop: { x: 0, y: 0, width: 0, height: 0 }
+    getHudConfig(type: THud): IKonvaHUD | IKonvaHUD[] {
+      if (type === 'coins') {
+        let fill = this.fill.coins;
+        if (fill < 0) fill = 0;
+        let cropped = [] as IKonvaHUD[];
+        let columns = Math.floor(this.state.coins.current/(this.state.coins.max/5));
+        if (this.state.coins.current%(this.state.coins.max/5) > 0) columns++;
+        for (let i=0; i<columns; i++) {
+          let toPush = {
+            x: 16 + (21.5*i),
+            y: 617,
+            image: tileset,
+            width: 21,
+            height: 117,
+            crop: {
+              x: 397 + 16*i,
+              y: 428,
+              width: 15.5,
+              height: 61
+            },
+            type: 'coins'
+          } as IKonvaHUD
+          if (i === columns-1 && this.state.coins.current%(this.state.coins.max/5) > 0) {
+            let currentColFill = (this.state.coins.current-Math.floor(this.state.coins.current/(this.state.coins.max/5))*(this.state.coins.max/5))/(this.state.coins.max/5);
+            toPush.y = toPush.y + (toPush.height*(1-currentColFill));
+            toPush.height = toPush.height * currentColFill;
+            toPush.crop.y = toPush.crop.y + (20-20*currentColFill)*3;
+            toPush.crop.height = toPush.crop.height - (20-20*currentColFill)*3;
+          }
+          cropped.push(toPush)
+        }
+        return cropped;
+      } else {
+        const coords = {
+          'upgrade': {
+            canvas: { x: 158, y: 674.5, width: 134-(134*(1-this.fill.upgrade)), height: 18.5 },
+            crop: { x: 397, y: 490, width: 100-(100*(1-this.fill.upgrade)), height: 10 }
           },
-        'upgrade': {
-          canvas: { x: 158, y: 674.5, width: 134-(134*(1-fill)), height: 18.5 },
-          crop: { x: 397, y: 490, width: 100-(100*(1-fill)), height: 10 }
-        },
-        'experience': {
-          canvas: { x: 158, y: 708.5, width: 134-(134*(1-fill)), height: 18.5 },
-          crop: { x: 397, y: 501, width: 100-(100*(1-fill)), height: 10 }
-        },
-        'health': {
-          canvas: { x: 331.5, y: 599+(123*(1-fill)), width: 95, height: 123*fill },
-          crop: { x: 325, y: 447+(64*(1-fill)), width: 71, height: 64*fill }
-        },
-      }
-      return {
-        x: coords[type].canvas.x,
-        y: coords[type].canvas.y,
-        image: tileset,
-        width: coords[type].canvas.width,
-        height: coords[type].canvas.height,
-        crop: coords[type].crop,
-        type: type
+          'experience': {
+            canvas: { x: 158, y: 708.5, width: 134-(134*(1-this.fill.experience)), height: 18.5 },
+            crop: { x: 397, y: 501, width: 100-(100*(1-this.fill.experience)), height: 10 }
+          },
+          'health': {
+            canvas: { x: 331.5, y: 599+(123*(1-this.fill.health)), width: 95, height: 123*this.fill.health },
+            crop: { x: 325, y: 447+(64*(1-this.fill.health)), width: 71, height: 64*this.fill.health }
+          },
+        } as any;
+        return {
+          x: coords[type].canvas.x,
+          y: coords[type].canvas.y,
+          image: tileset,
+          width: coords[type].canvas.width,
+          height: coords[type].canvas.height,
+          crop: coords[type].crop,
+          type: type
+        }
       }
     },
 
@@ -503,6 +550,18 @@ export default Vue.extend({
   },
 
   mounted() {
+    // document.addEventListener('keydown', (event) => {
+    //   if (event.code === 'ArrowUp') {
+    //     this.state.coins.current++;
+    //     if (this.state.coins.current >= 100)
+    //       this.state.coins.current = 0;
+    //   } else if (event.code === 'ArrowDown') {
+    //     this.state.coins.current--;
+    //     if (this.state.coins.current < 0)
+    //       this.state.coins.current = 99;
+    //   }
+    // });
+
     /**
      * Reset arrow state on mouse release
      * Collect tiles if possible

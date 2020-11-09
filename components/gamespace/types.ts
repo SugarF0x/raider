@@ -26,3 +26,9 @@ export interface IKonvaTile extends IKonvaConfig {
 export interface IKonvaHUD extends IKonvaConfig {
   type: THud
 }
+export interface IFill {
+  coins: number;
+  upgrade: number;
+  experience: number;
+  health: number;
+}
