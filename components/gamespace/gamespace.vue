@@ -20,8 +20,11 @@
         />
       </v-layer>
       <v-layer>
-        <v-arrow :key="arrowKey+'outline'" :config="arrowOutline"></v-arrow>
-        <v-arrow :key="arrowKey" :config="arrow"></v-arrow>
+        <v-group ref="arrow" :config="{opacity: .8}">
+          <v-arrow :key="arrowKey+'ghost'" :config="arrowGhost"></v-arrow>
+          <v-arrow :key="arrowKey+'outline'" :config="arrowOutline"></v-arrow>
+          <v-arrow :key="arrowKey" :config="arrow"></v-arrow>
+        </v-group>
       </v-layer>
     </v-stage>
   </v-row>
@@ -107,10 +110,34 @@ export default Vue.extend({
      */
     arrowOutline(): Object {
       return Object.assign({}, this.arrow, {
-        strokeWidth: 20,
+        strokeWidth: this.arrow.strokeWidth*2,
         stroke: "black"
       });
     },
+
+    /**
+     * Arrow outline ghost to fix arrowhead clipping
+     * THIS IS A CRUTCH
+     */
+    arrowGhost(): Object {
+      return Object.assign({}, this.arrow, {
+        strokeWidth: this.arrow.strokeWidth*3,
+        opacity: 0
+      });
+    },
+  },
+
+  watch: {
+    arrow: {
+      handler: function(newValue) {
+        let arrow = this.$refs.arrow as any;
+        if (newValue.keys.length)
+          arrow.getNode().cache();
+        else
+          arrow.getNode().clearCache();
+      },
+      deep: true
+    }
   },
 
   methods: {
@@ -272,7 +299,6 @@ export default Vue.extend({
           base.push('' + this.arrow.points[i * 2] + this.arrow.points[i * 2 + 1]);
         }
         if (base[base.length - 2] === sample) {
-          console.log(base[base.length - 2], ' = ', sample)
           this.arrow.points.pop();
           this.arrow.points.pop();
           this.arrow.keys.pop();
