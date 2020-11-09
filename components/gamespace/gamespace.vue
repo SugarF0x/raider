@@ -26,6 +26,11 @@
           />
 <!--          <v-text :config="getTextConfig(`${state.experience.current}/${state.experience.max}`, 125, 712, 200, 'lightgreen', 16)"/>-->
         </v-group>
+        <v-group id="stats">
+          <v-text :config="getTextConfig(state.enemy, 130, 597, 50, 'white', 16)"/>
+          <v-text :config="getTextConfig(`${state.defense.current}/${state.defense.max}`, 197, 597, 50, 'lightblue', 16)"/>
+          <v-text :config="getTextConfig(state.attack, 270, 597, 50, 'lightgray', 16)"/>
+        </v-group>
       </v-layer>
       <v-layer id="dungeon">
         <!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
@@ -320,11 +325,11 @@ export default Vue.extend({
     /**
      * Format text to Konva Text config object based on a lot of things...
      */
-    getTextConfig(text: string, x: number, y: number, width: number = 100, color: string = 'white', size: number = 30): Object {
+    getTextConfig(text: string | number, x: number, y: number, width: number = 100, color: string = 'white', size: number = 30): Object {
       return {
         x: x,
         y: y,
-        text: text,
+        text: text.toString(),
         fontSize: size,
         fontFamily: 'Calibri',
         fill: color,
