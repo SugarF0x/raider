@@ -24,7 +24,7 @@
           <v-image :key="isTilesetLoaded+`-experience(${fill.experience})`"
                    :config="getHudConfig('experience')"
           />
-          <v-text :config="getTextConfig(`${state.experience.current}/${state.experience.max}`, 125, 712, 200, 'lightgreen', 16)"/>
+          <v-text :config="getTextConfig(`${state.experience.current}/${state.experience.max}`, 125, 711, 200, 'lightgreen', 16)"/>
         </v-group>
         <v-group id="stats">
           <v-text :config="getTextConfig(state.enemy, 130, 597, 50, 'white', 16)"/>
@@ -37,7 +37,7 @@
                    :key="isTilesetLoaded+`-coins(${fill.coins}-${i})`"
                    :config="col"
           />
-          <v-text :config="getTextConfig(`${state.coins.current}/${state.coins.max}`, 44, 597, 50, 'yellow', 16)"/>
+          <v-text :config="getTextConfig(`${state.coins.current}/${state.coins.max}`, 20, 597, 100, 'yellow', 16)"/>
         </v-group>
       </v-layer>
       <v-layer id="dungeon">
