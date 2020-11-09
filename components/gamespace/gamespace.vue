@@ -8,12 +8,17 @@
         <!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
         <v-rect v-for="(entry,key) in background" :key="key" :config="entry"/>
         <v-image :key="isTilesetLoaded+'hud'" :config="hud"></v-image>
-
         <v-group id="health">
           <v-image :key="isTilesetLoaded+`health(${state.health.current}/${state.health.max})`"
                    :config="getHudConfig('health', state.health.current/state.health.max)"
           />
           <v-text :config="getTextConfig(`${state.health.current}/${state.health.max}`, 330, 700, 100, 'yellow', 20)"/>
+        </v-group>
+        <v-group id="upgrade">
+          <v-image :key="isTilesetLoaded+`upgrade(${state.upgrade.current}/${state.upgrade.max})`"
+                   :config="getHudConfig('upgrade', state.upgrade.current/state.upgrade.max)"
+          />
+<!--          <v-text :config="getTextConfig(`${state.upgrade.current}/${state.upgrade.max}`, 125, 677, 200, 'cyan', 16)"/>-->
         </v-group>
       </v-layer>
       <v-layer id="dungeon">
@@ -283,8 +288,8 @@ export default Vue.extend({
           crop: { x: 0, y: 0, width: 0, height: 0 }
           },
         'upgrade': {
-          canvas: { x: 0, y: 0, width: 0, height: 0 },
-          crop: { x: 0, y: 0, width: 0, height: 0 }
+          canvas: { x: 158, y: 674.5, width: 134-(134*(1-fill)), height: 18.5 },
+          crop: { x: 397, y: 490, width: 100-(100*(1-fill)), height: 10 }
         },
         'experience': {
           canvas: { x: 0, y: 0, width: 0, height: 0 },
