@@ -225,7 +225,7 @@ export default Vue.extend({
      * but at the time of writing i am clueless
      * as of how to do that properly
      */
-    collect(): void {
+    collect(): boolean {
       if (this.arrow.keys.length >= 3) {
         let toPopulate = [0, 0, 0, 0, 0, 0];
         this.arrow.keys.forEach(key => {
@@ -250,7 +250,8 @@ export default Vue.extend({
             })
           }
         })
-      }
+        return true
+      } else return false
     },
 
     /**
@@ -295,14 +296,17 @@ export default Vue.extend({
     /**
      * Execute printArrow if mouse is held or screen is touched
      */
-    dragArrow(n: string): void {
-      if (this.mouseDown) this.printArrow(n);
+    dragArrow(n: string): boolean {
+      if (this.mouseDown) {
+        this.printArrow(n);
+        return true
+      } else return false
     },
 
     /**
      * Set new sizes based on current screen
      */
-    resize(): void {
+    resize(): boolean {
       let konva   = document.getElementById("konva");
       let konvajs = document.querySelector('.konvajs-content');
       let canvas  = document.querySelectorAll('canvas');
@@ -345,7 +349,11 @@ export default Vue.extend({
           e.setAttribute('width', `${ x }px`);
           e.setAttribute('height', `${ y }px`);
         });
+
+        return true
       }
+
+      return false
     },
   },
 
