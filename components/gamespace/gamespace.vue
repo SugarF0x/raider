@@ -20,6 +20,12 @@
           />
 <!--          <v-text :config="getTextConfig(`${state.upgrade.current}/${state.upgrade.max}`, 125, 677, 200, 'cyan', 16)"/>-->
         </v-group>
+        <v-group id="experience">
+          <v-image :key="isTilesetLoaded+`experience(${state.experience.current}/${state.experience.max})`"
+                   :config="getHudConfig('experience', state.experience.current/state.experience.max)"
+          />
+<!--          <v-text :config="getTextConfig(`${state.experience.current}/${state.experience.max}`, 125, 712, 200, 'lightgreen', 16)"/>-->
+        </v-group>
       </v-layer>
       <v-layer id="dungeon">
         <!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
@@ -292,8 +298,8 @@ export default Vue.extend({
           crop: { x: 397, y: 490, width: 100-(100*(1-fill)), height: 10 }
         },
         'experience': {
-          canvas: { x: 0, y: 0, width: 0, height: 0 },
-          crop: { x: 0, y: 0, width: 0, height: 0 }
+          canvas: { x: 158, y: 708.5, width: 134-(134*(1-fill)), height: 18.5 },
+          crop: { x: 397, y: 501, width: 100-(100*(1-fill)), height: 10 }
         },
         'health': {
           canvas: { x: 331.5, y: 599+(123*(1-fill)), width: 95, height: 123*fill },
