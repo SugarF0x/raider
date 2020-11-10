@@ -51,9 +51,9 @@
                    @touchmove="dragArrow(key)"
           /><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
           <v-group v-if="entry.type === 'skull'"><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
-            <v-text :config="getTextConfig(entry.state.attack, getTileConfig(entry, key).x+7, getTileConfig(entry, key).y-25, 25, 'lightgray', 14, 'right')"/><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
-            <v-text :config="getTextConfig(entry.state.armor, getTileConfig(entry, key).x+7, getTileConfig(entry, key).y-5, 25, 'lightblue', 14, 'right')"/><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
-            <v-text :config="getTextConfig(entry.state.health, getTileConfig(entry, key).x+7, getTileConfig(entry, key).y+15, 25, 'red', 14, 'right')"/>
+            <v-text :config="getTextConfig(entry.state.attack, getTileCoords(key, 'x')+7, getTileCoords(key, 'y')-25, 25, 'lightgray', 14, 'right')"/><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
+            <v-text :config="getTextConfig(entry.state.armor, getTileCoords(key, 'x')+7, getTileCoords(key, 'y')-5, 25, 'lightblue', 14, 'right')"/><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
+            <v-text :config="getTextConfig(entry.state.health, getTileCoords(key, 'x')+7, getTileCoords(key, 'y')+15, 25, 'red', 14, 'right')"/>
           </v-group>
         </v-group>
       </v-layer>
@@ -141,12 +141,12 @@ export default Vue.extend({
         },
         enemy: 20,
         /* TODO: refactor enemy power key into this
-        enemy: {
-          power: 1, // current power level
-          damageAccumulated: 0, // enemy damage dealt to you accumulated,
-          damageRequired: 10 // amount of damage required to increase power (this is also increased on every power up)
-        }
-        */
+         enemy: {
+         power: 1, // current power level
+         damageAccumulated: 0, // enemy damage dealt to you accumulated,
+         damageRequired: 10 // amount of damage required to increase power (this is also increased on every power up)
+         }
+         */
         defense: {
           max: 4,
           current: 4
@@ -283,15 +283,31 @@ export default Vue.extend({
       ];
     },
 
-    // TODO: add getTileCoords method, incorporate it below and use it in skull stats render
+    /**
+     * Get just tile coords
+     * Can specify which axis to get
+     */
+    getTileCoords(tile: string, toGet: string = 'xy'): { x: number, y: number } | number {
+      switch (toGet) {
+        case 'x':
+          return c.x[tile[1]]
+        case 'y':
+          return c.y[tile[3]]
+        default:
+          return {
+            x: c.x[tile[1]],
+            y: c.y[tile[3]],
+          }
+      }
+    },
 
     /**
      * Format tile to Konva Image config object based on tile type and name
      */
     getTileConfig(tile: Tile, pos: String): IKonvaTile {
       return {
-        x: c.x[parseInt(pos[1])],
-        y: c.y[parseInt(pos[3])],
+        x: this.getTileCoords(pos, 'x'),
+        y: this.getTileCoords(pos, 'y'),
         image: tileset,
         width: 62,
         height: 62,
@@ -519,8 +535,7 @@ export default Vue.extend({
      * Check if a new point can be added and do add if so
      */
     printArrow(n: string): boolean {
-      let x = c.x[parseInt(n[1])];
-      let y = c.y[parseInt(n[3])];
+      let { x, y } = this.getTileCoords(n);
       if (this.arrow.points[0] === -10) {
         this.arrow.points = [x, y];
         this.arrow.keys.push(n);
