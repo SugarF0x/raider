@@ -83,7 +83,7 @@ const c = {
 /**
  * Tileset used to crop necessary images out of
  */
-const tileset      = new Image();
+let tileset        = new Image();
 tileset.src        = '/tileset/tiles-custom.png';
 const tilesetOrder = ['potion', 'skull', 'coin', 'shield', 'sword'] as TTile[];
 // const bossOrder = []
@@ -571,7 +571,7 @@ export default Vue.extend({
         if (overkill > 0) this.state.health.current -= overkill;
         if (this.state.health.current <= 0) {
           alert('game over');
-          window.location.reload();
+          this.$emit('rerender')
         } // placeholder game over screen
 
         // 5
@@ -682,35 +682,31 @@ export default Vue.extend({
 
       return false
     },
-  },
-
-  mounted() {
-    // document.addEventListener('keydown', (event) => {
-    //   if (event.code === 'ArrowUp') {
-    //     this.state.coins.current++;
-    //     if (this.state.coins.current >= 100)
-    //       this.state.coins.current = 0;
-    //   } else if (event.code === 'ArrowDown') {
-    //     this.state.coins.current--;
-    //     if (this.state.coins.current < 0)
-    //       this.state.coins.current = 99;
-    //   }
-    // });
 
     /**
      * Reset arrow state on mouse release
      * Collect tiles if possible
      */
-    const dropDrag = () => {
+    dropDrag() {
       this.mouseDown = false;
       this.collect();
       this.arrow.points = [-10, -10];
       this.arrow.keys   = [];
-    }
+    },
 
+    /**
+     * Begin drag event
+     */
+    startDrag() {
+      this.mouseDown = true
+    }
+  },
+
+  mounted() {
     /**
      * Ensures tiles render on first load
      */
+    if (tileset.complete) this.populateDungeon()
     tileset.onload = () => {
       this.isTilesetLoaded = true;
       this.populateDungeon();
@@ -725,11 +721,19 @@ export default Vue.extend({
     /**
      * User input events
      */
-    document.addEventListener('mousedown', () => { this.mouseDown = true; });
-    document.addEventListener('mouseup', () => { dropDrag() });
-    document.addEventListener("touchstart", () => { this.mouseDown = true; });
-    document.addEventListener("touchend", () => { dropDrag() });
+    document.addEventListener('mousedown', this.startDrag);
+    document.addEventListener('mouseup', this.dropDrag);
+    document.addEventListener("touchstart", this.startDrag);
+    document.addEventListener("touchend", this.dropDrag);
   },
+
+  beforeDestroy() {
+    document.removeEventListener('mousedown', this.startDrag);
+    document.removeEventListener('mouseup', this.dropDrag);
+    document.removeEventListener('touchstart', this.startDrag);
+    document.removeEventListener('touchend', this.dropDrag);
+    document.removeEventListener('resize', this.resize);
+  }
 });
 </script>
 
