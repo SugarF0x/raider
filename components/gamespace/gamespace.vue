@@ -40,7 +40,7 @@
           <v-text :config="getTextConfig(`${state.coins.current}/${state.coins.max}`, 20, 597, 100, 'yellow', 16)"/>
         </v-group>
       </v-layer>
-      <v-layer id="dungeon"><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
+      <v-layer id="dungeon" :config="{ opacity: state.TEMP_GAMEOVER ? .5 : 1 }"><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
         <v-group v-for="(entry,key) in dungeon"
                  :key="entry.id"
         ><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
@@ -61,6 +61,13 @@
         <v-group ref="arrow" :config="{opacity: .8}">
           <v-arrow :key="arrowKey+'outline'" :config="arrowOutline"></v-arrow>
           <v-arrow :key="arrowKey" :config="arrow"></v-arrow>
+        </v-group>
+      </v-layer>
+      <v-layer id="TEMP_OVERLAY">
+        <v-text :key="state.TEMP_SCORE" :config="getTextConfig(state.TEMP_SCORE, 175, 20, 100, 'white', '24')"></v-text>
+        <v-group v-if="state.TEMP_GAMEOVER" @click="$emit('rerender')">
+          <v-text :config="getTextConfig('GAME OVER', 0, 60, 450, 'red', '48')"></v-text>
+          <v-text :config="getTextConfig('Click here to restart', 0, 105, 450, 'white', '36')"></v-text>
         </v-group>
       </v-layer>
     </v-stage>
@@ -135,6 +142,8 @@ export default Vue.extend({
        * Current run state
        */
       state: {
+        TEMP_SCORE: 0,
+        TEMP_GAMEOVER: false,
         coins: {
           max: 100,
           current: 0
@@ -504,6 +513,7 @@ export default Vue.extend({
           break;
         case 'skull':
           this.state.experience.current += count;
+          this.state.TEMP_SCORE += count;
           if (this.state.experience.current >= this.state.experience.max) {
             this.state.experience.current -= this.state.experience.max;
             this.state.health.max += 5;
@@ -570,8 +580,9 @@ export default Vue.extend({
         // 4
         if (overkill > 0) this.state.health.current -= overkill;
         if (this.state.health.current <= 0) {
-          alert('game over');
-          this.$emit('rerender')
+          this.state.health.current = 0;
+          this.state.TEMP_GAMEOVER = true;
+          this.unbindEvents();
         } // placeholder game over screen
 
         // 5
@@ -588,36 +599,39 @@ export default Vue.extend({
      */
     printArrow(n: string): boolean {
       let { x, y } = this.getTileCoords(n) as { x: number, y: number };
-      if (this.arrow.points[0] === -10) {
-        this.arrow.points = [x, y];
-        this.arrow.keys.push(n);
-        return true;
-      } else {
-        let sample  = '' + x + y;
-        let base    = [] as string[];
-        let returns = true;
-        for (let i = 0; i < this.arrow.points.length / 2; i++) {
-          base.push('' + this.arrow.points[i * 2] + this.arrow.points[i * 2 + 1]);
-        }
-        if (base[base.length - 2] === sample) {
-          this.arrow.points.pop();
-          this.arrow.points.pop();
-          this.arrow.keys.pop();
-          return true
+      if (!this.state.TEMP_GAMEOVER) {
+        if (this.arrow.points[0] === -10) {
+          this.arrow.points = [x, y];
+          this.arrow.keys.push(n);
+          return true;
         } else {
-          base.forEach(e => {
-            if (e === sample
-                || !this.isNear(this.arrowKey, n)
-                || !this.isSameType(this.arrowKey, n)
-            ) returns = false;
-          });
-          if (returns) {
-            this.arrow.points.push(x, y);
-            this.arrow.keys.push(n);
+          let sample  = '' + x + y;
+          let base    = [] as string[];
+          let returns = true;
+          for (let i = 0; i < this.arrow.points.length / 2; i++) {
+            base.push('' + this.arrow.points[i * 2] + this.arrow.points[i * 2 + 1]);
           }
-          return returns;
+          if (base[base.length - 2] === sample) {
+            this.arrow.points.pop();
+            this.arrow.points.pop();
+            this.arrow.keys.pop();
+            return true
+          } else {
+            base.forEach(e => {
+              if (e === sample
+                  || !this.isNear(this.arrowKey, n)
+                  || !this.isSameType(this.arrowKey, n)
+              ) returns = false;
+            });
+            if (returns) {
+              this.arrow.points.push(x, y);
+              this.arrow.keys.push(n);
+            }
+            return returns;
+          }
         }
       }
+      return false;
     },
 
     /**
@@ -687,7 +701,7 @@ export default Vue.extend({
      * Reset arrow state on mouse release
      * Collect tiles if possible
      */
-    dropDrag() {
+    dropDrag(): void {
       this.mouseDown = false;
       this.collect();
       this.arrow.points = [-10, -10];
@@ -697,8 +711,29 @@ export default Vue.extend({
     /**
      * Begin drag event
      */
-    startDrag() {
+    startDrag(): void {
       this.mouseDown = true
+    },
+
+    /**
+     * Enable user input
+     */
+    bindEvents(): void {
+      document.addEventListener('mousedown', this.startDrag);
+      document.addEventListener('mouseup', this.dropDrag);
+      document.addEventListener("touchstart", this.startDrag);
+      document.addEventListener("touchend", this.dropDrag);
+    },
+
+    /**
+     * Disable user input
+     */
+    unbindEvents(): void {
+      document.removeEventListener('mousedown', this.startDrag);
+      document.removeEventListener('mouseup', this.dropDrag);
+      document.removeEventListener('touchstart', this.startDrag);
+      document.removeEventListener('touchend', this.dropDrag);
+      document.removeEventListener('resize', this.resize);
     }
   },
 
@@ -721,18 +756,11 @@ export default Vue.extend({
     /**
      * User input events
      */
-    document.addEventListener('mousedown', this.startDrag);
-    document.addEventListener('mouseup', this.dropDrag);
-    document.addEventListener("touchstart", this.startDrag);
-    document.addEventListener("touchend", this.dropDrag);
+    this.bindEvents();
   },
 
   beforeDestroy() {
-    document.removeEventListener('mousedown', this.startDrag);
-    document.removeEventListener('mouseup', this.dropDrag);
-    document.removeEventListener('touchstart', this.startDrag);
-    document.removeEventListener('touchend', this.dropDrag);
-    document.removeEventListener('resize', this.resize);
+    this.unbindEvents();
   }
 });
 </script>
