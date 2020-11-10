@@ -4,8 +4,7 @@
       <v-layer id="background">
         <v-rect :config="{height: 800, width: 450, fill: '#1D214E'}"/>
       </v-layer>
-      <v-layer id="hud">
-        <!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
+      <v-layer id="hud"><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
         <v-rect v-for="(entry,key) in background" :key="key" :config="entry"/>
         <v-image :key="isTilesetLoaded+'hud'" :config="hud"></v-image>
         <v-group id="health">
@@ -33,8 +32,7 @@
               :config="getTextConfig(`${state.defense.current}/${state.defense.max}`, 197, 597, 50, 'lightblue', 16)"/>
           <v-text :config="getTextConfig(state.attack, 270, 597, 50, 'lightgray', 16)"/>
         </v-group>
-        <v-group id="coins">
-          <!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
+        <v-group id="coins"><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
           <v-image v-for="(col,i) in getHudConfig('coins')"
                    :key="isTilesetLoaded+`-coins(${fill.coins}-${i})`"
                    :config="col"
@@ -42,16 +40,22 @@
           <v-text :config="getTextConfig(`${state.coins.current}/${state.coins.max}`, 20, 597, 100, 'yellow', 16)"/>
         </v-group>
       </v-layer>
-      <v-layer id="dungeon">
-        <!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
-        <v-image v-for="(entry,key) in dungeon"
+      <v-layer id="dungeon"><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
+        <v-group v-for="(entry,key) in dungeon"
                  :key="entry.id"
-                 :config="getTileConfig(entry, key)"
-                 @mousedown="printArrow(key)"
-                 @mouseenter="dragArrow(key)"
-                 @touchstart="printArrow(key)"
-                 @touchmove="dragArrow(key)"
-        />
+        ><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
+          <v-image :config="getTileConfig(entry, key)"
+                   @mousedown="printArrow(key)"
+                   @mouseenter="dragArrow(key)"
+                   @touchstart="printArrow(key)"
+                   @touchmove="dragArrow(key)"
+          /><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
+          <v-group v-if="entry.type === 'skull'"><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
+            <v-text :config="getTextConfig(entry.state.attack, getTileConfig(entry, key).x+7, getTileConfig(entry, key).y-25, 25, 'lightgray', 14, 'right')"/><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
+            <v-text :config="getTextConfig(entry.state.armor, getTileConfig(entry, key).x+7, getTileConfig(entry, key).y-5, 25, 'lightblue', 14, 'right')"/><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
+            <v-text :config="getTextConfig(entry.state.health, getTileConfig(entry, key).x+7, getTileConfig(entry, key).y+15, 25, 'red', 14, 'right')"/>
+          </v-group>
+        </v-group>
       </v-layer>
       <v-layer id="arrow">
         <v-group ref="arrow" :config="{opacity: .8}">
@@ -66,7 +70,7 @@
 <script lang="ts">
 import Vue                                        from 'vue';
 import { IKonvaTile, IKonvaHUD, IDungeon, IFill } from "~/components/gamespace/types";
-import { TTile, THud, Tile, dungeonMD }           from "~/assets/Tiles";
+import { TTile, THud, Tile, Skull, dungeonMD }    from "~/assets/Tiles";
 
 /**
  * Coords of every tile
@@ -135,7 +139,14 @@ export default Vue.extend({
           max: 100,
           current: 0
         },
-        enemy: 1,
+        enemy: 20,
+        /* TODO: refactor enemy power key into this
+        enemy: {
+          power: 1, // current power level
+          damageAccumulated: 0, // enemy damage dealt to you accumulated,
+          damageRequired: 10 // amount of damage required to increase power (this is also increased on every power up)
+        }
+        */
         defense: {
           max: 4,
           current: 4
@@ -272,6 +283,8 @@ export default Vue.extend({
       ];
     },
 
+    // TODO: add getTileCoords method, incorporate it below and use it in skull stats render
+
     /**
      * Format tile to Konva Image config object based on tile type and name
      */
@@ -362,7 +375,7 @@ export default Vue.extend({
     /**
      * Format text to Konva Text config object based on a lot of things...
      */
-    getTextConfig(text: string | number, x: number, y: number, width: number = 100, color: string = 'white', size: number = 30): Object {
+    getTextConfig(text: string | number, x: number, y: number, width: number = 100, color: string = 'white', size: number = 30, align: string = 'center'): Object {
       return {
         x: x,
         y: y,
@@ -370,8 +383,9 @@ export default Vue.extend({
         fontSize: size,
         fontFamily: 'Calibri',
         fill: color,
-        align: 'center',
-        width: width
+        align: align,
+        width: width,
+        wrap: 'none',
       }
     },
 
@@ -380,7 +394,8 @@ export default Vue.extend({
      */
     getRandomTile(): Tile {
       let type = tilesetOrder[Math.floor(Math.random() * tilesetOrder.length)];
-      return new Tile(type);
+      if (type === 'skull') return new Skull(this.state.enemy);
+      else return new Tile(type);
     },
 
     /**
