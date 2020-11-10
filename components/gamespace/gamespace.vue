@@ -131,25 +131,25 @@ export default Vue.extend({
       state: {
         coins: {
           max: 100,
-          current: Math.floor(Math.random() * 100)
+          current: 0
         },
-        enemy: Math.floor(Math.random() * 99),
+        enemy: 1,
         defense: {
-          max: 40,
-          current: Math.floor(Math.random() * 40)
+          max: 4,
+          current: 4
         },
-        attack: Math.floor(Math.random() * 99),
+        attack: 1,
         upgrade: {
           max: 100,
-          current: Math.floor(Math.random() * 100)
+          current: 0
         },
         experience: {
           max: 100,
-          current: Math.floor(Math.random() * 100)
+          current: 0
         },
         health: {
           max: 50,
-          current: Math.floor(Math.random() * 50)
+          current: 50
         }
       },
 
