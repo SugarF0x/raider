@@ -18,7 +18,8 @@ The application can be interacted with on PC as well as on any smartphone.
 Here is a snapshot of what the current build looks like.
 You can fiddle around with it yourself [here](http://raid.sugarfox.ru).
 
-![sample](https://raw.githubusercontent.com/SugarF0x/raider/master/git/sample.jpg)
+![snapshot-1](https://raw.githubusercontent.com/SugarF0x/raider/master/git/snapshot-1.jpg)
+![snapshot-2](https://raw.githubusercontent.com/SugarF0x/raider/master/git/snapshot-2.jpg)
 
 ## Roadmap
 
@@ -27,7 +28,7 @@ Given my lack of experience if this field, every point here is subject to change
 
 - [X] Setup canvas
     - [X] Add responsive resize
-- [ ] Setup dungeon field
+- [X] Setup dungeon field
     - [X] Add tiles render
     - [X] Add tile differentiation
     - [X] Add tiles' arrow selection
@@ -36,30 +37,30 @@ Given my lack of experience if this field, every point here is subject to change
             - [X] Let same types match
             - [X] Let skulls match with swords
         - [X] Add proximity check
-    - [ ] Add tiles' collection
+    - [X] Add tiles' collection
         - [X] Delete tiles on collection
         - [X] Generate new tiles
             - [X] Generate tiles ontop the old ones
             - [X] Shift old ones down
-        - [ ] Add functionality to tiles' collection
-            - [ ] Handle coin collection
-            - [ ] Handle potion collection
-            - [ ] Handle sword collection
-            - [ ] Handle skull collection
-            - [ ] Handle shield collection
+        - [X] Add functionality to tiles' collection
+            - [X] Handle coin collection
+            - [X] Handle potion collection
+            - [X] Handle sword collection
+            - [X] Handle skull collection
+            - [X] Handle shield collection
 - [ ] Setup header field
 - [ ] Setup footer field
 - [ ] Setup skills field
 - [ ] Setup menus field
-- [ ] Setup status field
-    - [ ] Setup coin display
-    - [ ] Setup health display
-    - [ ] Setup power display
-        - [ ] Setup current weapon power display
-        - [ ] Setup current armor display
-        - [ ] Setup current enemy power display
-    - [ ] Setup level progression display
-    - [ ] Setup upgrade progression display
+- [X] Setup status field
+    - [X] Setup coin display
+    - [X] Setup health display
+    - [X] Setup power display
+        - [X] Setup current weapon power display
+        - [X] Setup current armor display
+        - [X] Setup current enemy power display
+    - [X] Setup level progression display
+    - [X] Setup upgrade progression display
 
 ## Build Setup
 
