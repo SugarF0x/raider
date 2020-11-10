@@ -24,11 +24,13 @@
           <v-image :key="isTilesetLoaded+`-experience(${fill.experience})`"
                    :config="getHudConfig('experience')"
           />
-          <v-text :config="getTextConfig(`${state.experience.current}/${state.experience.max}`, 125, 711, 200, 'lightgreen', 16)"/>
+          <v-text
+              :config="getTextConfig(`${state.experience.current}/${state.experience.max}`, 125, 711, 200, 'lightgreen', 16)"/>
         </v-group>
         <v-group id="stats">
           <v-text :config="getTextConfig(state.enemy, 130, 597, 50, 'white', 16)"/>
-          <v-text :config="getTextConfig(`${state.defense.current}/${state.defense.max}`, 197, 597, 50, 'lightblue', 16)"/>
+          <v-text
+              :config="getTextConfig(`${state.defense.current}/${state.defense.max}`, 197, 597, 50, 'lightblue', 16)"/>
           <v-text :config="getTextConfig(state.attack, 270, 597, 50, 'lightgray', 16)"/>
         </v-group>
         <v-group id="coins">
@@ -408,10 +410,28 @@ export default Vue.extend({
      */
     collect(): boolean {
       if (this.arrow.keys.length >= 3) {
+
+        // handling collection event
+        let type = this.dungeon[this.arrow.keys[0]].type;
+        if (type === 'skull' || type === 'sword') {
+          // skull fighting
+          let count = 0;
+          this.arrow.keys.forEach(entry => {
+            if (this.dungeon[entry].type === 'skull') count++;
+          })
+          this.handleCollection('skull', count)
+        } else {
+          // every other tile type
+          this.handleCollection(type, this.arrow.keys.length)
+        }
+
+        // getting columns in need of population as well of number of tiles to populate
         let toPopulate = [0, 0, 0, 0, 0, 0];
         this.arrow.keys.forEach(key => {
           toPopulate[parseInt(key[1])]++
         })
+
+        // populating newTiles with old uncollected tiles leaving unchanged columns as null
         let newTiles = [null, null, null, null, null, null] as any;
         toPopulate.forEach((col, x) => {
           if (col) {
@@ -420,6 +440,8 @@ export default Vue.extend({
             })
           }
         })
+
+        // populating changed columns with corresponding amount of new tiles and shifting column downwards
         newTiles.forEach((entry: any, x: number) => {
           if (entry !== null) {
             let result = Object.assign([], entry);
@@ -431,8 +453,51 @@ export default Vue.extend({
             })
           }
         })
+
         return true
       } else return false
+    },
+
+    /**
+     * Handle collection of <count> tiles of <type> type
+     * e.g. add collected coins to state.coins
+     */
+    handleCollection(type: TTile, count: number): void {
+      switch (type) {
+        case 'coin':
+          this.state.coins.current += count;
+          if (this.state.coins.current >= this.state.coins.max) {
+            this.state.coins.current -= this.state.coins.max;
+            this.state.attack++;
+          }
+          break;
+        case 'skull':
+          this.state.experience.current += count;
+          if (this.state.experience.current >= this.state.experience.max) {
+            this.state.experience.current -= this.state.experience.max;
+            this.state.health.max += 5;
+            this.state.health.current = this.state.health.max;
+          }
+          break;
+        case 'shield':
+          this.state.defense.current += count;
+          if (this.state.defense.current >= this.state.defense.max) {
+            this.state.defense.current = this.state.defense.max;
+            this.state.upgrade.current += count - (this.state.defense.max - this.state.defense.current);
+            if (this.state.upgrade.current >= this.state.upgrade.max) {
+              this.state.upgrade.current -= this.state.upgrade.max;
+              this.state.defense.max++;
+              this.state.defense.current++;
+            }
+          }
+          break;
+        case 'potion':
+          this.state.health.current += count;
+          if (this.state.health.current > this.state.health.max) {
+            this.state.health.current = this.state.health.max;
+          }
+          break;
+      }
     },
 
     /**
