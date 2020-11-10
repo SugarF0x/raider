@@ -131,25 +131,25 @@ export default Vue.extend({
       state: {
         coins: {
           max: 100,
-          current: Math.floor(Math.random()*100)
+          current: Math.floor(Math.random() * 100)
         },
-        enemy: Math.floor(Math.random()*99),
+        enemy: Math.floor(Math.random() * 99),
         defense: {
           max: 40,
-          current: Math.floor(Math.random()*40)
+          current: Math.floor(Math.random() * 40)
         },
-        attack: Math.floor(Math.random()*99),
+        attack: Math.floor(Math.random() * 99),
         upgrade: {
           max: 100,
-          current: Math.floor(Math.random()*100)
+          current: Math.floor(Math.random() * 100)
         },
         experience: {
           max: 100,
-          current: Math.floor(Math.random()*100)
+          current: Math.floor(Math.random() * 100)
         },
         health: {
           max: 50,
-          current: Math.floor(Math.random()*50)
+          current: Math.floor(Math.random() * 50)
         }
       },
 
@@ -187,24 +187,24 @@ export default Vue.extend({
      */
     arrowOutline(): Object {
       return Object.assign({}, this.arrow, {
-        strokeWidth: this.arrow.strokeWidth*2,
+        strokeWidth: this.arrow.strokeWidth * 2,
         stroke: "black"
       });
     },
 
     fill(): IFill {
       return {
-        coins: this.state.coins.current/this.state.coins.max,
-        upgrade: this.state.upgrade.current/this.state.upgrade.max,
-        experience: this.state.experience.current/this.state.experience.max,
-        health: this.state.health.current/this.state.health.max
+        coins: this.state.coins.current / this.state.coins.max,
+        upgrade: this.state.upgrade.current / this.state.upgrade.max,
+        experience: this.state.experience.current / this.state.experience.max,
+        health: this.state.health.current / this.state.health.max
       }
     }
   },
 
   watch: {
     arrow: {
-      handler: function(newValue) {
+      handler: function (newValue) {
         let arrow = this.$refs.arrow as any;
         if (newValue.keys.length)
           arrow.getNode().cache({ offset: 5 });
@@ -303,29 +303,29 @@ export default Vue.extend({
         let fill = this.fill.coins;
         if (fill < 0) fill = 0;
         let cropped = [] as IKonvaHUD[];
-        let columns = Math.floor(this.state.coins.current/(this.state.coins.max/5));
-        if (this.state.coins.current%(this.state.coins.max/5) > 0) columns++;
-        for (let i=0; i<columns; i++) {
+        let columns = Math.floor(this.state.coins.current / (this.state.coins.max / 5));
+        if (this.state.coins.current % (this.state.coins.max / 5) > 0) columns++;
+        for (let i = 0; i < columns; i++) {
           let toPush = {
-            x: 16 + (21.5*i),
+            x: 16 + (21.5 * i),
             y: 617,
             image: tileset,
             width: 21,
             height: 117,
             crop: {
-              x: 397 + 16*i,
+              x: 397 + 16 * i,
               y: 428,
               width: 15.5,
               height: 61
             },
             type: 'coins'
           } as IKonvaHUD
-          if (i === columns-1 && this.state.coins.current%(this.state.coins.max/5) > 0) {
-            let currentColFill = (this.state.coins.current-Math.floor(this.state.coins.current/(this.state.coins.max/5))*(this.state.coins.max/5))/(this.state.coins.max/5);
-            toPush.y = toPush.y + (toPush.height*(1-currentColFill));
-            toPush.height = toPush.height * currentColFill;
-            toPush.crop.y = toPush.crop.y + (20-20*currentColFill)*3;
-            toPush.crop.height = toPush.crop.height - (20-20*currentColFill)*3;
+          if (i === columns - 1 && this.state.coins.current % (this.state.coins.max / 5) > 0) {
+            let currentColFill = (this.state.coins.current - Math.floor(this.state.coins.current / (this.state.coins.max / 5)) * (this.state.coins.max / 5)) / (this.state.coins.max / 5);
+            toPush.y           = toPush.y + (toPush.height * (1 - currentColFill));
+            toPush.height      = toPush.height * currentColFill;
+            toPush.crop.y      = toPush.crop.y + (20 - 20 * currentColFill) * 3;
+            toPush.crop.height = toPush.crop.height - (20 - 20 * currentColFill) * 3;
           }
           cropped.push(toPush)
         }
@@ -333,16 +333,16 @@ export default Vue.extend({
       } else {
         const coords = {
           'upgrade': {
-            canvas: { x: 158, y: 674.5, width: 134-(134*(1-this.fill.upgrade)), height: 18.5 },
-            crop: { x: 397, y: 490, width: 100-(100*(1-this.fill.upgrade)), height: 10 }
+            canvas: { x: 158, y: 674.5, width: 134 - (134 * (1 - this.fill.upgrade)), height: 18.5 },
+            crop: { x: 397, y: 490, width: 100 - (100 * (1 - this.fill.upgrade)), height: 10 }
           },
           'experience': {
-            canvas: { x: 158, y: 708.5, width: 134-(134*(1-this.fill.experience)), height: 18.5 },
-            crop: { x: 397, y: 501, width: 100-(100*(1-this.fill.experience)), height: 10 }
+            canvas: { x: 158, y: 708.5, width: 134 - (134 * (1 - this.fill.experience)), height: 18.5 },
+            crop: { x: 397, y: 501, width: 100 - (100 * (1 - this.fill.experience)), height: 10 }
           },
           'health': {
-            canvas: { x: 331.5, y: 599+(123*(1-this.fill.health)), width: 95, height: 123*this.fill.health },
-            crop: { x: 325, y: 447+(64*(1-this.fill.health)), width: 71, height: 64*this.fill.health }
+            canvas: { x: 331.5, y: 599 + (123 * (1 - this.fill.health)), width: 95, height: 123 * this.fill.health },
+            crop: { x: 325, y: 447 + (64 * (1 - this.fill.health)), width: 71, height: 64 * this.fill.health }
           },
         } as any;
         return {
