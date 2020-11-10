@@ -139,7 +139,7 @@ export default Vue.extend({
           max: 100,
           current: 0
         },
-        enemy: 20,
+        enemy: 1,
         /* TODO: refactor enemy power key into this
          enemy: {
          power: 1, // current power level

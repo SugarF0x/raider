@@ -40,9 +40,9 @@ export class Skull extends Tile {
 
     // generate base stats
     let base = {
-      health: Math.floor(Math.pow(1.2, power)) + 1,
-      armor: Math.floor(Math.pow(1.12, power)),
-      attack: Math.floor(Math.pow(1.15, power)) + 1
+      health: Math.floor(Math.pow(1.2, power)) + power,
+      armor: Math.floor(Math.pow(1.05, power)) + Math.floor(1.05*power),
+      attack: Math.floor(Math.pow(1.15, power)) + Math.floor(1.15*power)
     } as TileState;
 
     // add randomness based on id seed
