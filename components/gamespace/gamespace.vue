@@ -27,7 +27,7 @@
               :config="getTextConfig(`${state.experience.current}/${state.experience.max}`, 125, 711, 200, 'lightgreen', 16)"/>
         </v-group>
         <v-group id="stats">
-          <v-text :config="getTextConfig(state.enemy, 130, 597, 50, 'white', 16)"/>
+          <v-text :config="getTextConfig(state.enemy.power, 130, 597, 50, 'white', 16)"/>
           <v-text
               :config="getTextConfig(`${state.defense.current}/${state.defense.max}`, 197, 597, 50, 'lightblue', 16)"/>
           <v-text :config="getTextConfig(state.attack, 270, 597, 50, 'lightgray', 16)"/>
@@ -139,14 +139,11 @@ export default Vue.extend({
           max: 100,
           current: 0
         },
-        enemy: 1,
-        /* TODO: refactor enemy power key into this
-         enemy: {
+        enemy: {
          power: 1, // current power level
          damageAccumulated: 0, // enemy damage dealt to you accumulated,
          damageRequired: 10 // amount of damage required to increase power (this is also increased on every power up)
-         }
-         */
+         },
         defense: {
           max: 4,
           current: 4
@@ -410,7 +407,7 @@ export default Vue.extend({
      */
     getRandomTile(): Tile {
       let type = tilesetOrder[Math.floor(Math.random() * tilesetOrder.length)];
-      if (type === 'skull') return new Skull(this.state.enemy);
+      if (type === 'skull') return new Skull(this.state.enemy.power);
       else return new Tile(type);
     },
 
