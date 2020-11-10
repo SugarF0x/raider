@@ -140,9 +140,9 @@ export default Vue.extend({
           current: 0
         },
         enemy: {
-         power: 1, // current power level
-         damageAccumulated: 0, // enemy damage dealt to you accumulated,
-         damageRequired: 10 // amount of damage required to increase power (this is also increased on every power up)
+          power: 1, // current power level
+          damageAccumulated: 0, // enemy damage dealt to you accumulated,
+          damageRequired: 10 // amount of damage required to increase power (this is also increased on every power up)
          },
         defense: {
           max: 4,
@@ -287,13 +287,13 @@ export default Vue.extend({
     getTileCoords(tile: string, toGet: string = 'xy'): { x: number, y: number } | number {
       switch (toGet) {
         case 'x':
-          return c.x[tile[1]]
+          return c.x[parseInt(tile[1])]
         case 'y':
-          return c.y[tile[3]]
+          return c.y[parseInt(tile[3])]
         default:
           return {
-            x: c.x[tile[1]],
-            y: c.y[tile[3]],
+            x: c.x[parseInt(tile[1])],
+            y: c.y[parseInt(tile[3])],
           }
       }
     },
@@ -301,10 +301,10 @@ export default Vue.extend({
     /**
      * Format tile to Konva Image config object based on tile type and name
      */
-    getTileConfig(tile: Tile, pos: String): IKonvaTile {
+    getTileConfig(tile: Tile, pos: string): IKonvaTile {
       return {
-        x: this.getTileCoords(pos, 'x'),
-        y: this.getTileCoords(pos, 'y'),
+        x: this.getTileCoords(pos, 'x') as number,
+        y: this.getTileCoords(pos, 'y') as number,
         image: tileset,
         width: 62,
         height: 62,
@@ -482,6 +482,9 @@ export default Vue.extend({
           }
         })
 
+        // enemy turn before next turn
+        this.enemyTurn();
+
         return true
       } else return false
     },
@@ -529,10 +532,62 @@ export default Vue.extend({
     },
 
     /**
+     * Actions that happen during enemy attack phase
+     * That includes taking damage to armor and health
+     * Special boss actions will most likely end up here as well
+     */
+    enemyTurn(): boolean {
+      let skulls = [] as [string, Skull][];
+      Object.entries(this.dungeon).forEach(entry => {
+        if (entry[1].type === 'skull') skulls.push(entry as [string, Skull])
+      })
+      if (skulls.length > 0) {
+
+        /*
+         1. collect total damage
+         2. calculate damage to be absorbed by shields
+         3. calculate shields damage
+         4. apply overkill damage to health
+         5. set skulls' freshness to false
+         */
+
+        // 1
+        let totalDamage = 0;
+        skulls.forEach(entry => {
+          if (!entry[1].isFresh) totalDamage += entry[1].state.attack
+        })
+
+        // 2
+        let overkill = totalDamage - this.state.defense.current;
+        if (overkill < 0) overkill = 0;
+
+        // 3
+        for (let i = 0; i < totalDamage - overkill; i++) {
+          // 30% chance for armor not to break
+          if (Math.random() > .3) this.state.defense.current--;
+        }
+
+        // 4
+        if (overkill > 0) this.state.health.current -= overkill;
+        if (this.state.health.current <= 0) {
+          alert('game over');
+          window.location.reload();
+        } // placeholder game over screen
+
+        // 5
+        skulls.forEach(entry => {
+          entry[1].getReady();
+        })
+
+        return true
+      } else return false
+    },
+
+    /**
      * Check if a new point can be added and do add if so
      */
     printArrow(n: string): boolean {
-      let { x, y } = this.getTileCoords(n);
+      let { x, y } = this.getTileCoords(n) as { x: number, y: number };
       if (this.arrow.points[0] === -10) {
         this.arrow.points = [x, y];
         this.arrow.keys.push(n);

@@ -31,6 +31,7 @@ export class Skull extends Tile {
   state: TileState;
   base: TileState;
   effect: TEffect[] = [];
+  isFresh = true;
 
   constructor(power: number) {
     super('skull');
@@ -53,6 +54,10 @@ export class Skull extends Tile {
     // assign values
     this.base  = base;
     this.state = base;
+  }
+
+  getReady() {
+    this.isFresh = false;
   }
 }
 
