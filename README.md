@@ -26,6 +26,8 @@ You can fiddle around with it yourself [here](http://raid.sugarfox.ru).
 This is my current roadmap of things to do that's **not** in any strict order.
 Given my lack of experience if this field, every point here is subject to change.
 
+###  Goal for v0.1.0:
+
 - [X] Setup canvas
     - [X] Add responsive resize
 - [X] Setup dungeon field
@@ -48,8 +50,8 @@ Given my lack of experience if this field, every point here is subject to change
             - [X] Handle sword collection
             - [X] Handle skull collection
             - [X] Handle shield collection
-- [ ] Setup header field
-- [ ] Setup footer field
+- [ ] (?) Setup header field
+- [ ] (?) Setup footer field
 - [ ] Setup skills field
 - [ ] Setup menus field
 - [X] Setup status field
@@ -61,6 +63,12 @@ Given my lack of experience if this field, every point here is subject to change
         - [X] Setup current enemy power display
     - [X] Setup level progression display
     - [X] Setup upgrade progression display
+- [ ] Setup baseline gameplay necessities
+    - [ ] Add shop handling
+    - [ ] Add upgrade handling
+    - [ ] Add levelup handling
+    - [ ] Add difficulty progression
+    - [ ] Add skull state handling
 
 ## Build Setup
 
