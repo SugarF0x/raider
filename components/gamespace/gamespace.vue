@@ -237,23 +237,6 @@ export default Vue.extend({
     }
   },
 
-  // watch: {
-  //   /**
-  //    * Cache arrow on every update
-  //    * ensuring proper opacity render
-  //    */
-  //   arrow: {
-  //     handler: function (newValue) {
-  //       let arrow = this.$refs.arrow as any;
-  //       if (newValue.keys.length)
-  //         arrow.getNode().cache({ offset: 5 });
-  //       else
-  //         arrow.getNode().clearCache();
-  //     },
-  //     deep: true
-  //   }
-  // },
-
   methods: {
     /**
      * Check if target tile is a neighbor of base
