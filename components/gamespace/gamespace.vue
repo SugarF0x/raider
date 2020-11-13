@@ -64,13 +64,13 @@
         </v-group>
       </v-layer>
       <v-layer id="TEMP_OVERLAY">
-        <v-text :key="state.TEMP_SCORE" :config="getTextConfig(state.TEMP_SCORE, 175, 20, 100, 'white', '24')"></v-text>
+        <v-text :key="state.TEMP_SCORE" :config="getTextConfig(state.TEMP_SCORE, 175, 20, 100, 'white', 24)"></v-text>
         <v-group v-if="state.TEMP_GAMEOVER"
                  @mousedown="$emit('rerender')"
                  @touchstart="$emit('rerender')"
         >
           <v-text :config="getTextConfig('GAME OVER', 0, 60, 450, 'red', '48')"></v-text>
-          <v-text :config="getTextConfig('Click here to restart', 0, 105, 450, 'white', '36')"></v-text>
+          <v-text :config="getTextConfig('Click here to restart', 0, 105, 450, 'white', 36)"></v-text>
         </v-group>
       </v-layer>
     </v-stage>
