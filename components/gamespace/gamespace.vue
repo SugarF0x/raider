@@ -58,7 +58,7 @@
         </v-group>
       </v-layer>
       <v-layer id="arrow">
-        <v-group ref="arrow" :config="{opacity: .8}">
+        <v-group ref="arrow" :config="arrow.keys.length ? {opacity: .8} : {opacity: 0}">
           <v-arrow :key="arrowKey+'outline'" :config="arrowOutline"></v-arrow>
           <v-arrow :key="arrowKey" :config="arrow"></v-arrow>
         </v-group>
@@ -179,7 +179,7 @@ export default Vue.extend({
        * Tile selection arrow
        */
       arrow: {
-        points: [-10, -10],
+        points: [] as number[],
         tension: .1,
         stroke: "green",
         strokeWidth: 10,
@@ -199,9 +199,19 @@ export default Vue.extend({
   computed: {
     /**
      * Arrow line rerender key
+     * Also updates arrow cache on change
+     * to ensure proper opacity render
      */
     arrowKey(): string {
-      return this.arrow.keys[this.arrow.keys.length - 1];
+      let arrow = this.$refs.arrow as any;
+      if (arrow) {
+        if (this.arrow.keys.length)
+          arrow.getNode().cache({ offset: 5 });
+        else
+          arrow.getNode().clearCache();
+      }
+
+      return this.arrow.keys[this.arrow.keys.length-1];
     },
 
     /**
@@ -214,6 +224,9 @@ export default Vue.extend({
       });
     },
 
+    /**
+     * Fill percentage of said fields
+     */
     fill(): IFill {
       return {
         coins: this.state.coins.current / this.state.coins.max,
@@ -224,18 +237,22 @@ export default Vue.extend({
     }
   },
 
-  watch: {
-    arrow: {
-      handler: function (newValue) {
-        let arrow = this.$refs.arrow as any;
-        if (newValue.keys.length)
-          arrow.getNode().cache({ offset: 5 });
-        else
-          arrow.getNode().clearCache();
-      },
-      deep: true
-    }
-  },
+  // watch: {
+  //   /**
+  //    * Cache arrow on every update
+  //    * ensuring proper opacity render
+  //    */
+  //   arrow: {
+  //     handler: function (newValue) {
+  //       let arrow = this.$refs.arrow as any;
+  //       if (newValue.keys.length)
+  //         arrow.getNode().cache({ offset: 5 });
+  //       else
+  //         arrow.getNode().clearCache();
+  //     },
+  //     deep: true
+  //   }
+  // },
 
   methods: {
     /**
@@ -603,35 +620,29 @@ export default Vue.extend({
     printArrow(n: string): boolean {
       let { x, y } = this.getTileCoords(n) as { x: number, y: number };
       if (!this.state.TEMP_GAMEOVER) {
-        if (this.arrow.points[0] === -10) {
-          this.arrow.points = [x, y];
-          this.arrow.keys.push(n);
-          return true;
+        let sample  = '' + x + y;
+        let base    = [] as string[];
+        let returns = true;
+        for (let i = 0; i < this.arrow.points.length / 2; i++) {
+          base.push('' + this.arrow.points[i * 2] + this.arrow.points[i * 2 + 1]);
+        }
+        if (base[base.length - 2] === sample) {
+          this.arrow.points.pop();
+          this.arrow.points.pop();
+          this.arrow.keys.pop();
+          return true
         } else {
-          let sample  = '' + x + y;
-          let base    = [] as string[];
-          let returns = true;
-          for (let i = 0; i < this.arrow.points.length / 2; i++) {
-            base.push('' + this.arrow.points[i * 2] + this.arrow.points[i * 2 + 1]);
+          base.forEach(e => {
+            if (e === sample
+                || !this.isNear(this.arrow.keys[this.arrow.keys.length-1], n)
+                || !this.isSameType(this.arrow.keys[this.arrow.keys.length-1], n)
+            ) returns = false;
+          });
+          if (returns) {
+            this.arrow.points.push(x, y);
+            this.arrow.keys.push(n);
           }
-          if (base[base.length - 2] === sample) {
-            this.arrow.points.pop();
-            this.arrow.points.pop();
-            this.arrow.keys.pop();
-            return true
-          } else {
-            base.forEach(e => {
-              if (e === sample
-                  || !this.isNear(this.arrowKey, n)
-                  || !this.isSameType(this.arrowKey, n)
-              ) returns = false;
-            });
-            if (returns) {
-              this.arrow.points.push(x, y);
-              this.arrow.keys.push(n);
-            }
-            return returns;
-          }
+          return returns;
         }
       }
       return false;
@@ -707,7 +718,7 @@ export default Vue.extend({
     dropDrag(): void {
       this.mouseDown = false;
       this.collect();
-      this.arrow.points = [-10, -10];
+      this.arrow.points = [];
       this.arrow.keys   = [];
     },
 
