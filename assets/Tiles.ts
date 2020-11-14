@@ -37,19 +37,20 @@ export class Skull extends Tile {
     super('skull');
     const rng = new seedrandom(this.id)
 
-    // TODO: balance this out :shrug:
-
     // generate base stats
     let base = {
-      health: Math.floor(Math.pow(1.2, power)) + power,
-      armor: Math.floor(Math.pow(1.05, power)) + Math.floor(1.05*power),
-      attack: Math.floor(Math.pow(1.15, power)) + Math.floor(1.15*power)
+      health: Math.floor(Math.pow(1.2, power)) + power - 1,
+      armor: Math.floor(Math.pow(1.05, power)) + Math.floor(power * .5),
+      attack: Math.floor(Math.pow(1.15, power)) + Math.floor(power * .25)
     } as TileState;
 
     // add randomness based on id seed
     base.health += Math.floor((rng() < 0.5 ? -1 : 1) * (Math.floor(rng() * 10) / 100) * base.health);
     base.armor += Math.floor((rng() < 0.5 ? -1 : 1) * (Math.floor(rng() * 10) / 100) * base.armor);
     base.attack += Math.floor((rng() < 0.5 ? -1 : 1) * (Math.floor(rng() * 10) / 100) * base.attack);
+
+    // make sure it has at least 1 health
+    if (base.health <= 0) base.health = 1;
 
     // assign values
     this.base  = base;
