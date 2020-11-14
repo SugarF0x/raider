@@ -53,7 +53,7 @@
                    @touchstart="printArrow(key)"
                    @touchmove="dragArrow(key)"
           /><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
-          <v-group v-if="entry.type === 'skull'"><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
+          <v-group v-if="entry.type === 'skull'" :config="{ opacity: selectedTileType === 'sword' || selectedTileType === 'none' ? 1 : .5 }"><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
             <v-text :config="getTextConfig(entry.state.attack, getTileCoords(key, 'x')+7, getTileCoords(key, 'y')-25, 25, 'lightgray', 14, 'right')"/><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
             <v-text :config="getTextConfig(entry.state.armor, getTileCoords(key, 'x')+7, getTileCoords(key, 'y')-5, 25, 'lightblue', 14, 'right')"/><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
             <v-text :config="getTextConfig(entry.state.health, getTileCoords(key, 'x')+7, getTileCoords(key, 'y')+15, 25, 'red', 14, 'right')"/>
