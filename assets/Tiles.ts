@@ -49,8 +49,9 @@ export class Skull extends Tile {
     base.armor += Math.floor((rng() < 0.5 ? -1 : 1) * (Math.floor(rng() * 10) / 100) * base.armor);
     base.attack += Math.floor((rng() < 0.5 ? -1 : 1) * (Math.floor(rng() * 10) / 100) * base.attack);
 
-    // make sure it has at least 1 health
+    // make sure it has at least 1 health and 1 damage
     if (base.health <= 0) base.health = 1;
+    if (base.attack <= 0) base.attack = 1;
 
     // assign values
     this.base  = base;
