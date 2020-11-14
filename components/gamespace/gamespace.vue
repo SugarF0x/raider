@@ -40,7 +40,10 @@
           <v-text :config="getTextConfig(`${state.coins.current}/${state.coins.max}`, 20, 597, 100, 'yellow', 16)"/>
         </v-group>
       </v-layer>
-      <v-layer id="dungeon" :config="{ opacity: state.TEMP_GAMEOVER ? .5 : 1 }"><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
+      <v-layer id="dungeon"
+               :config="{ opacity: state.TEMP_GAMEOVER ? .5 : 1 }"
+               :key="selectedTileType"
+      ><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
         <v-group v-for="(entry,key) in dungeon"
                  :key="entry.id"
         ><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
@@ -56,8 +59,6 @@
             <v-text :config="getTextConfig(entry.state.health, getTileCoords(key, 'x')+7, getTileCoords(key, 'y')+15, 25, 'red', 14, 'right')"/>
           </v-group>
         </v-group>
-      </v-layer>
-      <v-layer id="arrow">
         <v-group ref="arrow" :config="arrow.keys.length ? {opacity: .8} : {opacity: 0}">
           <v-arrow :key="arrowKey+'outline'" :config="arrowOutline"></v-arrow>
           <v-arrow :key="arrowKey" :config="arrow"></v-arrow>
@@ -234,6 +235,24 @@ export default Vue.extend({
         experience: this.state.experience.current / this.state.experience.max,
         health: this.state.health.current / this.state.health.max
       }
+    },
+
+    selectedTileType(): TTile | 'none' {
+      if (this.arrow.keys.length) {
+        switch (this.dungeon[this.arrow.keys[0]].type) {
+          case "coin":
+          case "potion":
+          case "shield":
+            return this.dungeon[this.arrow.keys[0]].type;
+          case "skull":
+          case "sword":
+            return "sword";
+          default:
+            return 'none';
+        }
+      } else {
+        return 'none';
+      }
     }
   },
 
@@ -310,11 +329,13 @@ export default Vue.extend({
       }
     },
 
+    // TODO: this all should probably be within Tile class? question mark?
+
     /**
      * Format tile to Konva Image config object based on tile type and name
      */
     getTileConfig(tile: Tile, pos: string): IKonvaTile {
-      return {
+      let result = {
         x: this.getTileCoords(pos, 'x') as number,
         y: this.getTileCoords(pos, 'y') as number,
         image: tileset,
@@ -330,8 +351,23 @@ export default Vue.extend({
           x: 31,
           y: 31
         },
-        type: tile.type
+        type: tile.type,
+        opacity: 1
       }
+
+      if (this.selectedTileType !== 'none') {
+        if (result.type === 'skull' || result.type === 'sword') {
+          if (!(this.selectedTileType === 'skull' || this.selectedTileType === 'sword')) {
+            result.opacity = .5;
+          }
+        } else {
+          if (this.selectedTileType !== result.type) {
+            result.opacity = .5;
+          }
+        }
+      }
+
+      return result;
     },
 
     /**

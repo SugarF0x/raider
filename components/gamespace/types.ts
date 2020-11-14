@@ -21,7 +21,8 @@ export interface IKonvaTile extends IKonvaConfig {
     x: number,
     y: number
   },
-  type: TTile
+  type: TTile,
+  opacity: number
 }
 export interface IKonvaHUD extends IKonvaConfig {
   type: THud
