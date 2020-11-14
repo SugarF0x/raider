@@ -42,7 +42,6 @@
       </v-layer>
       <v-layer id="dungeon"
                :config="{ opacity: state.TEMP_GAMEOVER ? .5 : 1 }"
-               :key="selectedTileType"
       ><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
         <v-group v-for="(entry,key) in dungeon"
                  :key="entry.id"
@@ -52,6 +51,7 @@
                    @mouseenter="dragArrow(key)"
                    @touchstart="printArrow(key)"
                    @touchmove="dragArrow(key)"
+                   :key="(selectedTileType === 'sword' || selectedTileType === 'none') + entry.id"
           /><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
           <v-group v-if="entry.type === 'skull'" :config="{ opacity: selectedTileType === 'sword' || selectedTileType === 'none' ? 1 : .5 }"><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
             <v-text :config="getTextConfig(entry.state.attack, getTileCoords(key, 'x')+7, getTileCoords(key, 'y')-25, 25, 'lightgray', 14, 'right')"/><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
