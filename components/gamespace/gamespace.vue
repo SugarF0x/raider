@@ -64,7 +64,7 @@
         </v-group>
       </v-layer>
       <v-layer id="TEMP_OVERLAY">
-        <v-text :key="state.TEMP_SCORE" :config="getTextConfig(state.TEMP_SCORE, 175, 20, 100, 'white', 24)"></v-text>
+        <v-text :key="state.score" :config="getTextConfig(state.score, 175, 20, 100, 'white', 24)"></v-text>
         <v-group v-if="state.TEMP_GAMEOVER"
                  @mousedown="$emit('rerender')"
                  @touchstart="$emit('rerender')"
@@ -145,7 +145,7 @@ export default Vue.extend({
        * Current run state
        */
       state: {
-        TEMP_SCORE: 0,
+        score: 0,
         TEMP_GAMEOVER: false,
         coins: {
           max: 100,
@@ -508,6 +508,7 @@ export default Vue.extend({
     handleCollection(type: TTile, count: number): void {
       switch (type) {
         case 'coin':
+          this.state.score += count;
           this.state.coins.current += count;
           if (this.state.coins.current >= this.state.coins.max) {
             this.state.coins.current -= this.state.coins.max;
@@ -515,8 +516,8 @@ export default Vue.extend({
           }
           break;
         case 'skull':
+          this.state.score += count*10;
           this.state.experience.current += count;
-          this.state.TEMP_SCORE += count;
           if (this.state.experience.current >= this.state.experience.max) {
             this.state.experience.current -= this.state.experience.max;
             this.state.health.max += 5;
@@ -524,6 +525,7 @@ export default Vue.extend({
           }
           break;
         case 'shield':
+          this.state.score += count;
           this.state.defense.current += count;
           if (this.state.defense.current >= this.state.defense.max) {
             this.state.defense.current = this.state.defense.max;
@@ -536,6 +538,7 @@ export default Vue.extend({
           }
           break;
         case 'potion':
+          this.state.score += count;
           this.state.health.current += count;
           if (this.state.health.current > this.state.health.max) {
             this.state.health.current = this.state.health.max;
