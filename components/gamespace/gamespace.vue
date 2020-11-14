@@ -69,7 +69,7 @@
                  @mousedown="$emit('rerender')"
                  @touchstart="$emit('rerender')"
         >
-          <v-text :config="getTextConfig('GAME OVER', 0, 60, 450, 'red', '48')"></v-text>
+          <v-text :config="getTextConfig('GAME OVER', 0, 60, 450, 'red', 48)"></v-text>
           <v-text :config="getTextConfig('Click here to restart', 0, 105, 450, 'white', 36)"></v-text>
         </v-group>
       </v-layer>
