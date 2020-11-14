@@ -67,11 +67,12 @@
       <v-layer id="TEMP_OVERLAY">
         <v-text :key="state.score" :config="getTextConfig(state.score, 175, 20, 100, 'white', 24)"></v-text>
         <v-group v-if="state.TEMP_GAMEOVER"
+                 :config="{listening: true}"
                  @mousedown="$emit('rerender')"
                  @touchstart="$emit('rerender')"
         >
-          <v-text :config="getTextConfig('GAME OVER', 0, 60, 450, 'red', 48)"></v-text>
-          <v-text :config="getTextConfig('Click here to restart', 0, 105, 450, 'white', 36)"></v-text>
+          <v-text :config="getTextConfig('GAME OVER', 0, 60, 450, 'red', 48, 'center', true)"></v-text>
+          <v-text :config="getTextConfig('Click here to restart', 0, 105, 450, 'white', 36, 'center', true)"></v-text>
         </v-group>
       </v-layer>
     </v-stage>
@@ -433,10 +434,12 @@ export default Vue.extend({
       }
     },
 
+    // TODO: refactor getTextConfig params to be an object with optional values
+
     /**
      * Format text to Konva Text config object based on a lot of things...
      */
-    getTextConfig(text: string | number, x: number, y: number, width: number = 100, color: string = 'white', size: number = 30, align: string = 'center'): Object {
+    getTextConfig(text: string | number, x: number, y: number, width: number = 100, color: string = 'white', size: number = 30, align: string = 'center', listen = false): Object {
       return {
         x: x,
         y: y,
@@ -447,6 +450,7 @@ export default Vue.extend({
         align: align,
         width: width,
         wrap: 'none',
+        listening: listen
       }
     },
 
