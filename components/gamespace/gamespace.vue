@@ -1,5 +1,5 @@
 <template>
-  <v-row justify="center" align="center">
+  <v-row justify="center" align="center" ref="row">
     <v-stage :config="konva" id="konva">
       <v-layer id="background">
         <v-rect :config="{height: 800, width: 450, fill: '#1D214E'}"/>
@@ -38,6 +38,13 @@
                    :config="col"
           />
           <v-text :config="getTextConfig(`${state.coins.current}/${state.coins.max}`, 20, 597, 100, 'yellow', 16)"/>
+        </v-group>
+        <v-group id="FullscreenButton"
+                 @mousedown="toggleFullscreen"
+                 @touchstart="toggleFullscreen"
+        >
+          <v-text :config="getTextConfig('FULLSCREEN', 357, 68, 80, 'white', 10, 'right', true)" />
+          <v-text :config="getTextConfig(isFullscreen ? 'ON' : 'OFF', 375, 80, 40, 'white', 10, 'right', true)" />
         </v-group>
       </v-layer>
       <v-layer id="dungeon"
@@ -194,7 +201,8 @@ export default Vue.extend({
        * Flag indicating mouse button 1 being held or screen being touched
        */
       mouseDown: false,
-      isTilesetLoaded: false
+      isTilesetLoaded: false,
+      isFullscreen: false
     };
   },
 
@@ -735,6 +743,16 @@ export default Vue.extend({
       }
 
       return false
+    },
+
+    toggleFullscreen(): void {
+      let element = this.$refs.row as HTMLElement;
+      if (this.isFullscreen) {
+        document.exitFullscreen()
+      } else {
+        element.requestFullscreen()
+      }
+      this.isFullscreen = !this.isFullscreen;
     },
 
     /**
