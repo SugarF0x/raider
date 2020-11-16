@@ -1,6 +1,6 @@
 <template>
   <v-row justify="center" align="center" ref="row">
-    <v-stage :config="konva" id="konva">
+    <v-stage :config="konva" id="konva" :key="konva.resizeKey">
       <v-layer id="background">
         <v-rect :config="{height: 800, width: 450, fill: '#1D214E'}"/>
       </v-layer>
@@ -121,6 +121,7 @@ export default Vue.extend({
         height: 800,
         scaleX: 1,
         scaleY: 1,
+        resizeKey: 0
       },
 
       /**
@@ -739,6 +740,7 @@ export default Vue.extend({
           e.setAttribute('height', `${ y }px`);
         });
 
+        this.konva.resizeKey++;
         return true
       }
 
