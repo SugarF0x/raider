@@ -445,7 +445,7 @@ export default Vue.extend({
         y: y,
         text: text.toString(),
         fontSize: size,
-        fontFamily: 'Calibri',
+        fontFamily: 'Comic Sans MS',
         fill: color,
         align: align,
         width: width,
