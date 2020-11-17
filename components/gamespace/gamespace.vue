@@ -11,40 +11,38 @@
           <v-image :key="isTilesetLoaded+`-health(${fill.health})`"
                    :config="getHudConfig('health')"
           />
-          <v-text :config="getTextConfig(`${state.health.current}/${state.health.max}`, 330, 700, 100, 'yellow', 20)"/>
+          <v-text :config="getTextConfig({text: `${state.health.current}/${state.health.max}`, x: 330, y: 700, width: 100, fill: 'yellow', fontSize: 20})"/>
         </v-group>
         <v-group id="upgrade">
           <v-image :key="isTilesetLoaded+`-upgrade(${fill.upgrade})`"
                    :config="getHudConfig('upgrade')"
           />
-          <v-text :config="getTextConfig(`${state.upgrade.current}/${state.upgrade.max}`, 125, 677, 200, 'cyan', 16)"/>
+          <v-text :config="getTextConfig({text: `${state.upgrade.current}/${state.upgrade.max}`, x: 125, y: 677, width: 200, fill: 'cyan'})"/>
         </v-group>
         <v-group id="experience">
           <v-image :key="isTilesetLoaded+`-experience(${fill.experience})`"
                    :config="getHudConfig('experience')"
           />
-          <v-text
-              :config="getTextConfig(`${state.experience.current}/${state.experience.max}`, 125, 711, 200, 'lightgreen', 16)"/>
+          <v-text :config="getTextConfig({text: `${state.experience.current}/${state.experience.max}`, x: 125, y: 711, width: 200, fill: 'lightgreen'})"/>
         </v-group>
         <v-group id="stats">
-          <v-text :config="getTextConfig(state.enemy.power, 130, 597, 50, 'white', 16)"/>
-          <v-text
-              :config="getTextConfig(`${state.defense.current}/${state.defense.max}`, 197, 597, 50, 'lightblue', 16)"/>
-          <v-text :config="getTextConfig(state.attack, 270, 597, 50, 'lightgray', 16)"/>
+          <v-text :config="getTextConfig({text: state.enemy.power, x: 130, y: 597, width: 50})"/>
+          <v-text :config="getTextConfig({text: `${state.defense.current}/${state.defense.max}`, x: 197, y: 597, width: 50, fill: 'lightblue'})"/>
+          <v-text :config="getTextConfig({text: state.attack, x: 270, y: 597, width: 50, fill: 'lightgray'})"/>
         </v-group>
         <v-group id="coins"><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
           <v-image v-for="(col,i) in getHudConfig('coins')"
                    :key="isTilesetLoaded+`-coins(${fill.coins}-${i})`"
                    :config="col"
           />
-          <v-text :config="getTextConfig(`${state.coins.current}/${state.coins.max}`, 20, 597, 100, 'yellow', 16)"/>
+          <v-text :config="getTextConfig({text: `${state.coins.current}/${state.coins.max}`, x: 20, y: 597, width: 100, fill: 'yellow'})"/>
         </v-group>
         <v-group id="FullscreenButton"
                  @mousedown="toggleFullscreen"
                  @touchstart="toggleFullscreen"
         >
-          <v-text :config="getTextConfig('FULLSCREEN', 357, 68, 80, 'white', 10, 'right', true)" />
-          <v-text :config="getTextConfig(isFullscreen ? 'ON' : 'OFF', 375, 80, 40, 'white', 10, 'right', true)" />
+          <v-text :config="getTextConfig({text: 'FULLSCREEN', x: 357, y: 68, width: 80, fontSize: 10, align: 'right', listen: true})" />
+          <v-text :config="getTextConfig({text: isFullscreen ? 'ON' : 'OFF', x: 375, y: 80, width: 40, fontSize: 10, align: 'right', listen: true})" />
         </v-group>
       </v-layer>
       <v-layer id="dungeon"
@@ -61,9 +59,9 @@
                    :key="(selectedTileType === 'sword' || selectedTileType === 'none') + entry.id"
           /><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
           <v-group v-if="entry.type === 'skull'" :config="{ opacity: selectedTileType === 'sword' || selectedTileType === 'none' ? 1 : .5 }"><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
-            <v-text :config="getTextConfig(entry.state.attack, getTileCoords(key, 'x')+7, getTileCoords(key, 'y')-25, 25, 'lightgray', 14, 'right')"/><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
-            <v-text :config="getTextConfig(entry.state.armor, getTileCoords(key, 'x')+7, getTileCoords(key, 'y')-5, 25, 'lightblue', 14, 'right')"/><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
-            <v-text :config="getTextConfig(entry.state.health, getTileCoords(key, 'x')+7, getTileCoords(key, 'y')+15, 25, 'red', 14, 'right')"/>
+            <v-text :config="getTextConfig({text: entry.state.attack, x: getTileCoords(key, 'x')+7, y: getTileCoords(key, 'y')-25, width: 25, fill: 'lightgray', fontSize: 14, align: 'right'})"/><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
+            <v-text :config="getTextConfig({text: entry.state.armor, x: getTileCoords(key, 'x')+7, y: getTileCoords(key, 'y')-5, width: 25, fill: 'lightblue', fontSize: 14, align: 'right'})"/><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
+            <v-text :config="getTextConfig({text: entry.state.health, x: getTileCoords(key, 'x')+7, y: getTileCoords(key, 'y')+15, width: 25, fill: 'red', fontSize: 14, align: 'right'})"/>
           </v-group>
         </v-group>
         <v-group ref="arrow" :config="arrow.keys.length ? {opacity: .8} : {opacity: 0}">
@@ -72,14 +70,14 @@
         </v-group>
       </v-layer>
       <v-layer id="TEMP_OVERLAY">
-        <v-text :key="state.score" :config="getTextConfig(state.score, 175, 20, 100, 'white', 24)"></v-text>
+        <v-text :key="state.score" :config="getTextConfig({text: state.score, x: 175, y: 20, width: 100, fontSize: 24})"></v-text>
         <v-group v-if="state.TEMP_GAMEOVER"
                  :config="{listening: true}"
                  @mousedown="$emit('rerender')"
                  @touchstart="$emit('rerender')"
         >
-          <v-text :config="getTextConfig('GAME OVER', 0, 60, 450, 'red', 48, 'center', true)"></v-text>
-          <v-text :config="getTextConfig('Click here to restart', 0, 105, 450, 'white', 36, 'center', true)"></v-text>
+          <v-text :config="getTextConfig({text: 'GAME OVER', x: 0, y: 60, width: 450, fill: 'red', fontSize: 48, listen: true})"></v-text>
+          <v-text :config="getTextConfig({text: 'Click here to restart', x: 0, y: 105, width: 450, fontSize: 36, listen: true})"></v-text>
         </v-group>
       </v-layer>
     </v-stage>
@@ -87,9 +85,17 @@
 </template>
 
 <script lang="ts">
-import Vue                                        from 'vue';
-import { IKonvaTile, IKonvaHUD, IDungeon, IFill } from "~/components/gamespace/types";
-import { TTile, THud, Tile, Skull, dungeonMD }    from "~/assets/Tiles";
+import Vue from 'vue';
+
+import {
+  IKonvaTile, IKonvaHUD,
+  IDungeon, IFill,
+  ITextConfigOptions, ITextNonOptionals
+} from "~/components/gamespace/types";
+
+import { TTile, THud, Tile, Skull, dungeonMD } from "~/assets/Tiles";
+
+// TODO: change every AS <T> instances to [key]: <T> = VALUE
 
 /**
  * Coords of every tile
@@ -443,24 +449,32 @@ export default Vue.extend({
       }
     },
 
-    // TODO: refactor getTextConfig params to be an object with optional values
-
     /**
      * Format text to Konva Text config object based on a lot of things...
      */
-    getTextConfig(text: string | number, x: number, y: number, width: number = 100, color: string = 'white', size: number = 30, align: string = 'center', listen = false): Object {
-      return {
-        x: x,
-        y: y,
-        text: text.toString(),
-        fontSize: size,
-        fontFamily: 'Comic Sans MS',
-        fill: color,
-        align: align,
-        width: width,
-        wrap: 'none',
-        listening: listen
-      }
+    getTextConfig(opt: ITextConfigOptions): Object {
+      const defaults: ITextNonOptionals = {
+        width: 100,
+        fill: 'white',
+        fontSize: 16,
+        align: 'center',
+        listen: false
+      };
+
+      /*
+          First assign defaults
+          Then override defaults with passed values if any
+          Then assign immutable values as transform text to string
+       */
+      let returns =  Object.assign(defaults, opt,
+        {
+          text: opt.text.toString(),
+          wrap: 'none',
+          fontFamily: 'Comic Sans MS'
+        },
+      );
+      console.log(returns)
+      return returns
     },
 
     /**
