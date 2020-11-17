@@ -95,8 +95,6 @@ import {
 
 import { TTile, THud, Tile, Skull, dungeonMD } from "~/assets/Tiles";
 
-// TODO: change every AS <T> instances to [key]: <T> = VALUE
-
 /**
  * Coords of every tile
  */
