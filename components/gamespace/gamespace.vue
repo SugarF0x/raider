@@ -37,13 +37,6 @@
           />
           <v-text :config="getTextConfig({text: `${state.coins.current}/${state.coins.max}`, x: 20, y: 597, width: 100, fill: 'yellow'})"/>
         </v-group>
-        <v-group id="FullscreenButton"
-                 @mousedown="toggleFullscreen"
-                 @touchstart="toggleFullscreen"
-        >
-          <v-text :config="getTextConfig({text: 'FULLSCREEN', x: 357, y: 68, width: 80, fontSize: 10, align: 'right', listen: true})" />
-          <v-text :config="getTextConfig({text: isFullscreen ? 'ON' : 'OFF', x: 375, y: 80, width: 40, fontSize: 10, align: 'right', listen: true})" />
-        </v-group>
       </v-layer>
       <v-layer id="dungeon"
                :config="{ opacity: state.TEMP_GAMEOVER ? .5 : 1 }"
@@ -757,16 +750,6 @@ export default Vue.extend({
       }
 
       return false
-    },
-
-    toggleFullscreen(): void {
-      let element = this.$refs.row as HTMLElement;
-      if (this.isFullscreen) {
-        document.exitFullscreen()
-      } else {
-        element.requestFullscreen()
-      }
-      this.isFullscreen = !this.isFullscreen;
     },
 
     /**
