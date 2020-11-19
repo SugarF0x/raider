@@ -91,13 +91,14 @@ $ npm run generate
 
 Commit syntax is subjective. Committer is to pick most appropriate commit category themselves.
 
-* :blue_book: Documentation - General documentation changes, in both .md and JsDoc
-* :white_check_mark: Feature       - A new functional feature for end-user
-* :hammer_and_wrench: Fix           - A bugfix of any kind
-* :corn: Miscellaneous - Uncategorized changes
-* :recycle: Refactor      - Under the hood code changes - nothing new for end-user
-* :milky_way: Release       - End of dev cycle
-* :art: Style         - Style changes, no new functionality
-* :pill: Testing       - Completion and maintenance of test units
-* :construction: WIP           - A stepping stone for a Work in Progress change
+* :blue_book:                   Documentation - General documentation changes, in both .md and JsDoc
+* :negative_squared_cross_mark: Deletion      - Removal or deletion of obsolete, redundant or deprecated code
+* :white_check_mark:            Feature       - A new functional feature for end-user
+* :hammer_and_wrench:           Fix           - A bugfix of any kind
+* :corn:                        Miscellaneous - Uncategorized changes
+* :recycle:                     Refactor      - Under the hood code changes - nothing new for end-user
+* :milky_way:                   Release       - End of dev cycle
+* :art:                         Style         - Style changes, no new functionality
+* :pill:                        Testing       - Completion and maintenance of test units
+* :construction:                WIP           - A stepping stone for a Work in Progress change
 
