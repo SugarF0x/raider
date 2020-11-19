@@ -457,15 +457,13 @@ export default Vue.extend({
           Then override defaults with passed values if any
           Then assign immutable values as transform text to string
        */
-      let returns =  Object.assign(defaults, opt,
+      return Object.assign(defaults, opt,
         {
           text: opt.text.toString(),
           wrap: 'none',
           fontFamily: 'Comic Sans MS'
         },
       );
-      console.log(returns)
-      return returns
     },
 
     /**
