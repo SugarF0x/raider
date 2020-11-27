@@ -621,26 +621,36 @@ export default Vue.extend({
      * as of how to do that properly
      */
     collect(): boolean {
+      /* TODO: refactor this whole thing
+          should be something like
+            replace collected tiles with undefined
+            shift columns according to undefined fields
+      */
       if (this.arrow.keys.length >= 3) {
 
         // handling collection event
-        let family = this.dungeon[this.arrow.keys[0]].family;
-        if (family === 'skull' || family === 'sword') {
+        if (this.selectedFamily === 'sword') {
           // skull fighting
           let count = 0;
-          this.arrow.keys.forEach(entry => {
-            if (this.dungeon[entry].family === 'skull') count++;
+          this.arrow.keys.forEach(key => {
+            if (this.dungeon[key].family === 'skull' && this.dungeon[key].effects.indexOf('vulnerable') !== -1) count++;
           })
-          this.handleCollection('skull', count)
+          this.handleCollection('sword', count)
         } else {
           // every other tile type
-          this.handleCollection(family, this.arrow.keys.length)
+          this.handleCollection(this.selectedFamily, this.arrow.keys.length)
         }
 
         // getting columns in need of population as well of number of tiles to populate
         let toPopulate = [0, 0, 0, 0, 0, 0];
         this.arrow.keys.forEach(key => {
-          toPopulate[parseInt(key[1])]++
+          if (this.dungeon[key].family === 'skull' && this.dungeon[key].effects.indexOf('vulnerable') === -1) {
+            let skull = this.dungeon[key] as Skull;
+            skull.isFatal(0);
+            skull.applyDamage(this.currentDamage);
+          } else {
+            toPopulate[parseInt(key[1])]++
+          }
         })
 
         // populating newTiles with old uncollected tiles leaving unchanged columns as null
@@ -680,7 +690,7 @@ export default Vue.extend({
      * Handle collection of <count> tiles of <type> type
      * e.g. add collected coins to state.coins
      */
-    handleCollection(family: TFamily, count: number): void {
+    handleCollection(family: TFamily | 'none', count: number): void {
       switch (family) {
         case 'coin':
           this.state.score += count;
@@ -690,7 +700,7 @@ export default Vue.extend({
             this.state.attack++;
           }
           break;
-        case 'skull':
+        case 'sword':
           this.state.score += count*10;
           this.state.experience.current += count;
           if (this.state.experience.current >= this.state.experience.max) {
