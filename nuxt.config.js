@@ -16,12 +16,11 @@ export default {
   ** See https://nuxtjs.org/api/configuration-head
   */
   head: {
-    titleTemplate: '%s - ' + process.env.npm_package_name,
-    title: process.env.npm_package_name || '',
+    title: 'Raid Legacy',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: process.env.npm_package_description || '' }
+      { hid: 'description', name: 'description', content: 'A passion replica of Dungeon Raid' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/icon.png' }
@@ -59,11 +58,17 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
   ],
-  /*
-  ** Axios module configuration
-  ** See https://axios.nuxtjs.org/options
-  */
-  axios: {},
+  pwa: {
+    manifest: {
+      name: 'Raid Legacy',
+      short_name: 'Raid Legacy',
+      description: 'A passion replica of Dungeon Raid'
+    },
+    meta: {
+      name: 'Raid Legacy',
+      description: 'A passion replica of Dungeon Raid'
+    }
+  },
   /*
   ** vuetify module configuration
   ** https://github.com/nuxt-community/vuetify-module
