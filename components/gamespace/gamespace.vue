@@ -26,7 +26,7 @@
           <v-text :config="getTextConfig({text: `${state.experience.current}/${state.experience.max}`, x: 125, y: 711, width: 200, fill: 'lightgreen'})"/>
         </v-group>
         <v-group id="stats">
-          <v-text :config="getTextConfig({text: state.enemy.power, x: 130, y: 597, width: 50})"/>
+          <v-text :config="getTextConfig({text: state.enemy, x: 130, y: 597, width: 50})"/>
           <v-text :config="getTextConfig({text: `${state.defense.current}/${state.defense.max}`, x: 197, y: 597, width: 50, fill: 'lightblue'})"/>
           <v-text :config="getTextConfig({text: state.attack, x: 270, y: 597, width: 50, fill: 'lightgray'})"/>
         </v-group>
@@ -223,11 +223,7 @@ export default Vue.extend({
           max: 100,
           current: 0
         },
-        enemy: {
-          power: 1, // current power level
-          damageAccumulated: 0, // enemy damage dealt to you accumulated,
-          damageRequired: 10 // amount of damage required to increase power (this is also increased on every power up)
-         },
+        enemy: 1,
         defense: {
           max: 4,
           current: 4
@@ -591,7 +587,7 @@ export default Vue.extend({
      */
     getRandomTile(): Tile {
       let family = tilesetOrder[Math.floor(Math.random() * tilesetOrder.length)];
-      if (family === 'skull') return new Skull(this.state.enemy.power);
+      if (family === 'skull') return new Skull(this.state.enemy);
       else return new Tile(family);
     },
 
@@ -678,6 +674,9 @@ export default Vue.extend({
 
         // enemy turn before next turn
         this.enemyTurn();
+
+        // TEMPORARY POWER CREEP
+        this.state.enemy = Math.floor(this.state.score/500) + 1;
 
         return true
       } else {
