@@ -1,9 +1,16 @@
 const seedrandom = require('seedrandom');
 
 // tile type can only equal to one of these
-export type TTile = 'coin' | 'skull' | 'potion' | 'sword' | 'shield';
-export type TEffect = 'burning' | 'poisoned' | 'frozen' | 'stunned' | 'vulnerable';
-export type THud = 'coins' | 'upgrade' | 'experience' | 'health';
+export type TFamily = 'coin' | 'skull' | 'potion' | 'sword' | 'shield' | 'effect'
+export type TType = TTCoin | TTSkull | TTPotion | TTSword | TTShield | TTEffect
+export type THud = 'coins' | 'upgrade' | 'experience' | 'health'
+
+export type TTCoin   = 'common'
+export type TTSkull  = 'common'  | 'boss'
+export type TTPotion = 'common'  | 'mana'   | 'poison' | 'explosive'
+export type TTSword  = 'common'  | 'broken' | 'skull'
+export type TTShield = 'common'  | 'broken'
+export type TTEffect = 'burning' | 'frozen' | 'vulnerable'
 
 export interface TileState {
   health: number;
@@ -12,25 +19,27 @@ export interface TileState {
 }
 
 export interface IEffect {
-  current: TEffect[];
+  current: TTEffect[];
   duration: number;
   damage?: number;
 }
 
 export class Tile {
-  type: TTile;
+  family: TFamily;
+  type: TType;
   id: number;
 
-  constructor(type: TTile) {
-    this.type = type;
-    this.id   = Math.floor(Math.random() * 1000000)
+  constructor(family: TFamily, type: TType = 'common') {
+    this.family = family;
+    this.type   = type;
+    this.id     = Math.floor(Math.random() * 1000000)
   }
 }
 
 export class Skull extends Tile {
   state: TileState;
   base: TileState;
-  effect: TEffect[] = [];
+  effect: TTEffect[] = [];
   isFresh = true;
 
   constructor(power: number) {

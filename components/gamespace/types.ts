@@ -1,4 +1,4 @@
-import { TTile, THud, Tile } from '~/assets/Tiles'
+import { TFamily, TType, THud, Tile } from '~/assets/Tiles'
 
 type TGetOptionals<T> = {
   [k in keyof T]-?: undefined extends T[k] ? never : k
@@ -26,8 +26,10 @@ export interface IKonvaTile extends IKonvaConfig {
     x: number,
     y: number
   },
-  type: TTile,
-  opacity: number
+  family: TFamily,
+  type: TType,
+  opacity: number,
+  listening: boolean
 }
 export interface IKonvaHUD extends IKonvaConfig {
   type: THud

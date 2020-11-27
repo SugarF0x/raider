@@ -49,9 +49,9 @@
                    @mouseenter="dragArrow(key)"
                    @touchstart="printArrow(key)"
                    @touchmove="dragArrow(key)"
-                   :key="(selectedTileType === 'sword' || selectedTileType === 'none') + entry.id"
+                   :key="(selectedFamily === 'sword' || selectedFamily === 'none') + entry.id"
           /><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
-          <v-group v-if="entry.type === 'skull'" :config="{ opacity: selectedTileType === 'sword' || selectedTileType === 'none' ? 1 : .5 }"><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
+          <v-group v-if="entry.family === 'skull'" :config="{ opacity: selectedFamily === 'sword' || selectedFamily === 'none' ? 1 : .5 }"><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
             <v-text :config="getTextConfig({text: entry.state.attack, x: getTileCoords(key, 'x')+7, y: getTileCoords(key, 'y')-25, width: 25, fill: 'lightgray', fontSize: 14, align: 'right'})"/><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
             <v-text :config="getTextConfig({text: entry.state.armor, x: getTileCoords(key, 'x')+7, y: getTileCoords(key, 'y')-5, width: 25, fill: 'lightblue', fontSize: 14, align: 'right'})"/><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
             <v-text :config="getTextConfig({text: entry.state.health, x: getTileCoords(key, 'x')+7, y: getTileCoords(key, 'y')+15, width: 25, fill: 'red', fontSize: 14, align: 'right'})"/>
@@ -86,7 +86,7 @@ import {
   ITextConfigOptions, ITextNonOptionals
 } from "~/components/gamespace/types";
 
-import { TTile, THud, Tile, Skull, dungeonMD } from "~/assets/Tiles";
+import { TFamily, THud, Tile, Skull, dungeonMD } from "~/assets/Tiles";
 
 /**
  * Coords of every tile
@@ -99,10 +99,64 @@ const c = {
 /**
  * Tileset used to crop necessary images out of
  */
-let tileset        = new Image();
-tileset.src        = '/tileset/tiles-custom.png';
-const tilesetOrder = ['potion', 'skull', 'coin', 'shield', 'sword'] as TTile[];
-// const bossOrder = []
+let tileset         = new Image();
+tileset.src         = '/tileset/tiles-custom.png';
+const tilesetOrder  = ['potion', 'skull', 'coin', 'shield', 'sword'] as TFamily[]; // TODO: refactor this to nothing?
+
+/**
+ * Define generic types and subtypes that can be inter-connected
+ *
+ * numbers are generics
+ *   that means that the number itself is a Y coordinate
+ *   X coordinate is calculated based on the following formula
+ *     x = (52) * [0-7 random order] + 1 + [0-7 random order]
+ *
+ * objects contain both X and Y coordinate
+ *
+ * skulls' Boss is an exception
+ *   base defines base Y coordinate that can change on itself
+ *   these two formulas define both X and Y
+ *     x = (52) * (order.indexOf(BOSS_NAME) % 8) + 1 + (order.indexOf(BOSS_NAME) % 8)
+ *     y = base + (52) * Math.floor(order.indexOf(BOSS_NAME)/8)
+ */
+const tilesetPositions = {
+  coin: {
+    common: 107
+  },
+  potion: {
+    common: 1,
+    mana: 512,
+    poison: 565,
+    explosive: 618
+  },
+  shield: {
+    common: 160,
+    broken: { x: 425, y: 724 }
+  },
+  sword: {
+    common: 213,
+    broken: { x: 425, y: 777 },
+    skull: null
+  },
+  skull: {
+    common: 54,
+    boss: {
+      base: 671,
+      order: [
+        'tough', 'spiked', 'golden', 'healing', 'invisible', 'undefined-1', 'flaming', 'undefined-2',
+        'venomous', 'boomer', 'leader', 'corrupt', 'alchemist', 'jumper', 'mage', 'assassin',
+        'mimic', 'thief', 'unstable', 'vampire', 'ravaging', 'trampling', 'undefined-3', 'explosive',
+        'undefined-4', 'brute', 'armored', 'devourer', 'poisonous', 'beefy', 'fleeing', 'lich'
+      ]
+    },
+    sword: null
+  },
+  effect: {
+    vulnerable: { x: 160, y: 330 },
+    frozen: { x: 328, y: 394 },
+    burning: { x: 414, y: 572 }
+  }
+} as { [key in TFamily]: any }
 
 // noinspection JSUnusedGlobalSymbols
 export default Vue.extend({
@@ -110,6 +164,7 @@ export default Vue.extend({
 
   data() {
     return {
+      testImage: null,
       /**
        * Konva configuration
        */
@@ -244,13 +299,13 @@ export default Vue.extend({
       }
     },
 
-    selectedTileType(): TTile | 'none' {
+    selectedFamily(): TFamily | 'none' {
       if (this.arrow.keys.length) {
-        switch (this.dungeon[this.arrow.keys[0]].type) {
+        switch (this.dungeon[this.arrow.keys[0]].family) {
           case "coin":
           case "potion":
           case "shield":
-            return this.dungeon[this.arrow.keys[0]].type;
+            return this.dungeon[this.arrow.keys[0]].family;
           case "skull":
           case "sword":
             return "sword";
@@ -282,12 +337,11 @@ export default Vue.extend({
      * Check if target tile is of same tile type
      * Or if it is matching skills with swords
      */
-    isSameType(base: string, target: string): boolean {
-      const TBase   = this.dungeon[base].type;
-      const TTarget = this.dungeon[target].type;
+    isSameFamily(base: string, target: string): boolean {
+      const TBase   = this.dungeon[base].family;
+      const TTarget = this.dungeon[target].family;
       return TBase === TTarget
-          || (TBase === 'skull' && TTarget === 'sword')
-          || (TBase === 'sword' && TTarget === 'skull');
+          || tilesetPositions[TBase].hasOwnProperty(TTarget)
     },
 
     /**
@@ -336,12 +390,30 @@ export default Vue.extend({
       }
     },
 
-    // TODO: this all should probably be within Tile class? question mark?
-
+    
+    // TODO: refactor this to account for tilesetPositions
     /**
      * Format tile to Konva Image config object based on tile type and name
      */
     getTileConfig(tile: Tile, pos: string): IKonvaTile {
+      let x: number = 1;
+      let y: number = 928;
+
+      let tilesetPos = tilesetPositions[tile.family][tile.type];
+
+      if (!isNaN(tilesetPos)) {
+        // generic type
+        x = (52) * (tile.id % 8) + 1 + (tile.id % 8)
+        y = tilesetPos;
+      } else if(tilesetPos.hasOwnProperty('x')) {
+        x = tilesetPos.x;
+        y = tilesetPos.y;
+      } else if(tilesetPos.hasOwnProperty('base')) {
+        // boss
+        x = (52) * (tilesetPos.order.indexOf(tile.type) % 8) + 1 + (tilesetPos.indexOf(tile.type) % 8)
+        y = tilesetPos.base + (52) * Math.floor(tilesetPos.indexOf(tile.type)/8)
+      }
+
       let result = {
         x: this.getTileCoords(pos, 'x') as number,
         y: this.getTileCoords(pos, 'y') as number,
@@ -349,8 +421,8 @@ export default Vue.extend({
         width: 62,
         height: 62,
         crop: {
-          x: (52) * (tile.id % tilesetOrder.length) + 1 + (tile.id % tilesetOrder.length),
-          y: (52) * tilesetOrder.indexOf(tile.type) + 1 + tilesetOrder.indexOf(tile.type),
+          x: x,
+          y: y,
           width: 52,
           height: 52
         },
@@ -358,17 +430,19 @@ export default Vue.extend({
           x: 31,
           y: 31
         },
+        family: tile.family,
         type: tile.type,
+        listening: tile.family !== 'effect',
         opacity: 1
       }
 
-      if (this.selectedTileType !== 'none') {
-        if (result.type === 'skull' || result.type === 'sword') {
-          if (!(this.selectedTileType === 'skull' || this.selectedTileType === 'sword')) {
+      if (this.selectedFamily !== 'none') {
+        if (result.family === 'skull' || result.family === 'sword') {
+          if (!(this.selectedFamily === 'skull' || this.selectedFamily === 'sword')) {
             result.opacity = .5;
           }
         } else {
-          if (this.selectedTileType !== result.type) {
+          if (this.selectedFamily !== result.family) {
             result.opacity = .5;
           }
         }
@@ -467,12 +541,12 @@ export default Vue.extend({
     },
 
     /**
-     * Get random tile type based on TTile
+     * Get random tile type based on TFamily
      */
     getRandomTile(): Tile {
-      let type = tilesetOrder[Math.floor(Math.random() * tilesetOrder.length)];
-      if (type === 'skull') return new Skull(this.state.enemy.power);
-      else return new Tile(type);
+      let family = tilesetOrder[Math.floor(Math.random() * tilesetOrder.length)];
+      if (family === 'skull') return new Skull(this.state.enemy.power);
+      else return new Tile(family);
     },
 
     /**
@@ -504,17 +578,17 @@ export default Vue.extend({
       if (this.arrow.keys.length >= 3) {
 
         // handling collection event
-        let type = this.dungeon[this.arrow.keys[0]].type;
-        if (type === 'skull' || type === 'sword') {
+        let family = this.dungeon[this.arrow.keys[0]].family;
+        if (family === 'skull' || family === 'sword') {
           // skull fighting
           let count = 0;
           this.arrow.keys.forEach(entry => {
-            if (this.dungeon[entry].type === 'skull') count++;
+            if (this.dungeon[entry].family === 'skull') count++;
           })
           this.handleCollection('skull', count)
         } else {
           // every other tile type
-          this.handleCollection(type, this.arrow.keys.length)
+          this.handleCollection(family, this.arrow.keys.length)
         }
 
         // getting columns in need of population as well of number of tiles to populate
@@ -557,8 +631,8 @@ export default Vue.extend({
      * Handle collection of <count> tiles of <type> type
      * e.g. add collected coins to state.coins
      */
-    handleCollection(type: TTile, count: number): void {
-      switch (type) {
+    handleCollection(family: TFamily, count: number): void {
+      switch (family) {
         case 'coin':
           this.state.score += count;
           this.state.coins.current += count;
@@ -607,7 +681,7 @@ export default Vue.extend({
     enemyTurn(): boolean {
       let skulls = [] as [string, Skull][];
       Object.entries(this.dungeon).forEach(entry => {
-        if (entry[1].type === 'skull') skulls.push(entry as [string, Skull])
+        if (entry[1].family === 'skull') skulls.push(entry as [string, Skull])
       })
       if (skulls.length > 0) {
 
@@ -673,7 +747,7 @@ export default Vue.extend({
           base.forEach(e => {
             if (e === sample
                 || !this.isNear(this.arrow.keys[this.arrow.keys.length-1], n)
-                || !this.isSameType(this.arrow.keys[this.arrow.keys.length-1], n)
+                || !this.isSameFamily(this.arrow.keys[this.arrow.keys.length-1], n)
             ) returns = false;
           });
           if (returns) {
