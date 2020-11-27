@@ -57,9 +57,15 @@
             <v-text :config="getTextConfig({text: entry.state.health, x: getTileCoords(key, 'x')+7, y: getTileCoords(key, 'y')+15, width: 25, fill: 'red', fontSize: 14, align: 'right'})"/>
           </v-group>
         </v-group>
+        <v-group id="effects">
+
+        </v-group>
         <v-group ref="arrow" :config="arrow.keys.length ? {opacity: .8} : {opacity: 0}">
           <v-arrow :key="arrowKey+'outline'" :config="arrowOutline"></v-arrow>
           <v-arrow :key="arrowKey" :config="arrow"></v-arrow>
+        </v-group>
+        <v-group id="tooltips">
+          <v-text v-if="selectedFamily === 'sword'" :config="getTextConfig({text: currentDamage + ' damage', x: getTileCoords(arrowKey, 'x')-50, y: getTileCoords(arrowKey, 'y')-50, width: 100, fontSize: 20, fill: 'red'})"/>
         </v-group>
       </v-layer>
       <v-layer id="TEMP_OVERLAY">
@@ -78,6 +84,8 @@
 </template>
 
 <script lang="ts">
+// TODO: contain currentDamage tooltip on screen
+
 import Vue from 'vue';
 
 import {
@@ -164,7 +172,6 @@ export default Vue.extend({
 
   data() {
     return {
-      testImage: null,
       /**
        * Konva configuration
        */
@@ -315,6 +322,12 @@ export default Vue.extend({
       } else {
         return 'none';
       }
+    },
+
+    currentDamage(): number {
+      if (this.selectedFamily === 'sword') {
+        return this.arrow.keys.filter(entry => this.dungeon[entry].family === 'sword').length * this.state.attack + this.state.attack;
+      } else return 1
     }
   },
 

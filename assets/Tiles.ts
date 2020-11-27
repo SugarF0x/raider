@@ -27,6 +27,7 @@ export interface IEffect {
 export class Tile {
   family: TFamily;
   type: TType;
+  effect: TTEffect[] = [];
   id: number;
 
   constructor(family: TFamily, type: TType = 'common') {
@@ -39,7 +40,6 @@ export class Tile {
 export class Skull extends Tile {
   state: TileState;
   base: TileState;
-  effect: TTEffect[] = [];
   isFresh = true;
 
   constructor(power: number) {
