@@ -670,7 +670,10 @@ export default Vue.extend({
         this.enemyTurn();
 
         return true
-      } else return false
+      } else {
+        this.calculateEnemyVulnerability(0);
+        return false
+      }
     },
 
     /**
@@ -772,6 +775,15 @@ export default Vue.extend({
       } else return false
     },
 
+    calculateEnemyVulnerability(damage: number) {
+      this.arrow.keys.forEach(key => {
+        if (this.dungeon[key].family === 'skull') {
+          let skull = this.dungeon[key] as Skull
+          skull.isFatal(damage);
+        }
+      })
+    },
+
     /**
      * Check if a new point can be added and do add if so
      */
@@ -785,9 +797,14 @@ export default Vue.extend({
           base.push('' + this.arrow.points[i * 2] + this.arrow.points[i * 2 + 1]);
         }
         if (base[base.length - 2] === sample) {
+          if (this.dungeon[this.arrowKey].family === 'skull') {
+            let skull = this.dungeon[this.arrowKey] as Skull
+            skull.isFatal(0);
+          }
           this.arrow.points.pop();
           this.arrow.points.pop();
           this.arrow.keys.pop();
+          this.calculateEnemyVulnerability(this.currentDamage);
           return true
         } else {
           base.forEach(e => {
@@ -799,6 +816,7 @@ export default Vue.extend({
           if (returns) {
             this.arrow.points.push(x, y);
             this.arrow.keys.push(n);
+            this.calculateEnemyVulnerability(this.currentDamage);
           }
           return returns;
         }

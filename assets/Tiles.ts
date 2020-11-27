@@ -67,8 +67,35 @@ export class Skull extends Tile {
     this.state = base;
   }
 
-  getReady() {
+  getReady(): void {
     this.isFresh = false;
+  }
+
+  isFatal(value: number): boolean {
+    if ((this.state.health + this.state.armor) - value <= 0) {
+      if (this.effects.indexOf('vulnerable') === -1) {
+        this.effects.push('vulnerable');
+      }
+      return true;
+    } else {
+      this.effects = this.effects.filter(entry => entry !== 'vulnerable')
+      return false;
+    }
+  }
+
+  applyDamage(value: number): void {
+    let overkill = value - this.state.armor;
+    if (overkill < 0) overkill = 0;
+
+    for (let i = 0; i < value - overkill; i++) {
+      // 30% chance for armor not to break
+      if (Math.random() > .3) this.state.armor--;
+    }
+
+    if (overkill > 0) this.state.health -= overkill;
+    if (this.state.health <= 0) {
+      this.state.health = 0;
+    }
   }
 }
 
