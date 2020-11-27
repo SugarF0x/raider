@@ -56,9 +56,12 @@
             <v-text :config="getTextConfig({text: entry.state.armor, x: getTileCoords(key, 'x')+7, y: getTileCoords(key, 'y')-5, width: 25, fill: 'lightblue', fontSize: 14, align: 'right'})"/><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
             <v-text :config="getTextConfig({text: entry.state.health, x: getTileCoords(key, 'x')+7, y: getTileCoords(key, 'y')+15, width: 25, fill: 'red', fontSize: 14, align: 'right'})"/>
           </v-group>
-        </v-group>
-        <v-group id="effects">
-
+          <v-group id="effects"><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
+            <v-image v-for="effect in getEffectsConfig(entry, key)"
+                     :config="effect"
+                     :key="entry.effects.length + entry.id + effect.type"
+            />
+          </v-group>
         </v-group>
         <v-group ref="arrow" :config="arrow.keys.length ? {opacity: .8} : {opacity: 0}">
           <v-arrow :key="arrowKey+'outline'" :config="arrowOutline"></v-arrow>
@@ -403,8 +406,6 @@ export default Vue.extend({
       }
     },
 
-    
-    // TODO: refactor this to account for tilesetPositions
     /**
      * Format tile to Konva Image config object based on tile type and name
      */
@@ -445,7 +446,6 @@ export default Vue.extend({
         },
         family: tile.family,
         type: tile.type,
-        listening: tile.family !== 'effect',
         opacity: 1
       }
 
@@ -462,6 +462,39 @@ export default Vue.extend({
       }
 
       return result;
+    },
+
+    /**
+     * Get array of tile effects if any as IKonvaTile objects for rendering
+     */
+    getEffectsConfig(tile: Tile, pos: string): IKonvaTile[] {
+      let effects = [] as IKonvaTile[];
+
+      tile.effects.forEach(entry => {
+        effects.push({
+          x: this.getTileCoords(pos, 'x') as number,
+          y: this.getTileCoords(pos, 'y') as number,
+          image: tileset,
+          width: 62,
+          height: 62,
+          crop: {
+            x: tilesetPositions.effect[entry].x,
+            y: tilesetPositions.effect[entry].y,
+            width: 52,
+            height: 52
+          },
+          offset: {
+            x: 31,
+            y: 31
+          },
+          family: tile.family,
+          type: tile.type,
+          opacity: 1,
+          listening: false
+        })
+      })
+
+      return effects
     },
 
     /**

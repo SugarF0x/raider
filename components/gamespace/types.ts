@@ -29,7 +29,7 @@ export interface IKonvaTile extends IKonvaConfig {
   family: TFamily,
   type: TType,
   opacity: number,
-  listening: boolean
+  listening?: boolean
 }
 export interface IKonvaHUD extends IKonvaConfig {
   type: THud
