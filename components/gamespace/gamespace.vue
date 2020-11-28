@@ -218,6 +218,7 @@ export default Vue.extend({
        */
       state: {
         score: 0,
+        turn: 0,
         TEMP_GAMEOVER: false,
         coins: {
           max: 100,
@@ -617,11 +618,6 @@ export default Vue.extend({
      * as of how to do that properly
      */
     collect(): boolean {
-      /* TODO: refactor this whole thing
-          should be something like
-            replace collected tiles with undefined
-            shift columns according to undefined fields
-      */
       if (this.arrow.keys.length >= 3) {
 
         // handling collection event
@@ -675,8 +671,11 @@ export default Vue.extend({
         // enemy turn before next turn
         this.enemyTurn();
 
+        // progress turn
+        this.state.turn++;
+
         // TEMPORARY POWER CREEP
-        this.state.enemy = Math.floor(this.state.score/500) + 1;
+        this.state.enemy = Math.floor(this.state.turn/50) + 1;
 
         return true
       } else {
