@@ -6,21 +6,21 @@
       </v-layer>
       <v-layer id="hud"><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
         <v-rect v-for="(entry,key) in background" :key="key" :config="entry"/>
-        <v-image :key="isTilesetLoaded+'hud'" :config="hud"></v-image>
+        <v-image :config="hud"></v-image>
         <v-group id="health">
-          <v-image :key="isTilesetLoaded+`-health(${fill.health})`"
+          <v-image :key="'health-'+fill.health"
                    :config="getHudConfig('health')"
           />
           <v-text :config="getTextConfig({text: `${state.health.current}/${state.health.max}`, x: 330, y: 700, width: 100, fill: 'yellow', fontSize: 20})"/>
         </v-group>
         <v-group id="upgrade">
-          <v-image :key="isTilesetLoaded+`-upgrade(${fill.upgrade})`"
+          <v-image :key="'upgrade-'+fill.upgrade"
                    :config="getHudConfig('upgrade')"
           />
           <v-text :config="getTextConfig({text: `${state.upgrade.current}/${state.upgrade.max}`, x: 125, y: 677, width: 200, fill: 'cyan'})"/>
         </v-group>
         <v-group id="experience">
-          <v-image :key="isTilesetLoaded+`-experience(${fill.experience})`"
+          <v-image :key="'experience-'+fill.experience"
                    :config="getHudConfig('experience')"
           />
           <v-text :config="getTextConfig({text: `${state.experience.current}/${state.experience.max}`, x: 125, y: 711, width: 200, fill: 'lightgreen'})"/>
@@ -32,14 +32,14 @@
         </v-group>
         <v-group id="coins"><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
           <v-image v-for="(col,i) in getHudConfig('coins')"
-                   :key="isTilesetLoaded+`-coins(${fill.coins}-${i})`"
+                   :key="'coins-'+fill.coins+'-'+i"
                    :config="col"
           />
           <v-text :config="getTextConfig({text: `${state.coins.current}/${state.coins.max}`, x: 20, y: 597, width: 100, fill: 'yellow'})"/>
         </v-group>
       </v-layer>
       <v-layer id="dungeon"
-               :config="{ opacity: state.TEMP_GAMEOVER ? .5 : 1 }"
+               :config="{ opacity: $store.state.TEMP_GAMEOVER ? .5 : 1 }"
       ><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
         <v-group v-for="(entry,key) in dungeon"
                  :key="entry.id"
@@ -63,21 +63,22 @@
             />
           </v-group>
         </v-group>
-        <v-group ref="arrow" :config="arrow.keys.length ? {opacity: .8} : {opacity: 0}">
+        <v-group ref="arrow" :config="$store.state.arrow.keys.length ? {opacity: .8} : {opacity: 0}">
           <v-arrow :key="arrowKey+'outline'" :config="arrowOutline"></v-arrow>
           <v-arrow :key="arrowKey" :config="arrow"></v-arrow>
         </v-group>
         <v-group id="tooltips">
-          <v-text v-if="selectedFamily === 'sword'" :config="getTextConfig({text: currentDamage + ' damage', x: getTileCoords(arrowKey, 'x')-50, y: getTileCoords(arrowKey, 'y')-50, width: 100, fontSize: 20, fill: 'red'})"/>
+          <v-text v-if="selectedFamily === 'sword'" :config="getTextConfig({text: currentDamage + ' damage', x: getTileCoords(lastKey, 'x')-50, y: getTileCoords(lastKey, 'y')-50, width: 100, fontSize: 20, fill: 'red'})"/>
         </v-group>
       </v-layer>
       <v-layer id="TEMP_OVERLAY">
         <v-text :key="state.score" :config="getTextConfig({text: state.score, x: 175, y: 20, width: 100, fontSize: 24})"></v-text>
-        <v-group v-if="state.TEMP_GAMEOVER"
+        <v-group v-if="$store.state.TEMP_GAMEOVER"
                  :config="{listening: true}"
                  @mousedown="$emit('rerender')"
                  @touchstart="$emit('rerender')"
         >
+          <v-rect :config="{height: 800, width: 450, fill: 'black', opacity: .5}"/>
           <v-text :config="getTextConfig({text: 'GAME OVER', x: 0, y: 60, width: 450, fill: 'red', fontSize: 48, listen: true})"></v-text>
           <v-text :config="getTextConfig({text: 'Click here to restart', x: 0, y: 105, width: 450, fontSize: 36, listen: true})"></v-text>
         </v-group>
@@ -93,9 +94,8 @@ import Vue from 'vue';
 
 import {
   IKonvaTile, IKonvaHUD,
-  IDungeon, IFill,
-  ITextConfigOptions, ITextNonOptionals
-} from "~/components/gamespace/types";
+  ITextConfigOptions, ITextNonOptionals, IDungeon
+} from "~/components/gamespace/types"
 
 import { TFamily, THud, Tile, Skull, dungeonMD } from "~/assets/Tiles";
 
@@ -106,13 +106,6 @@ const c = {
   x: [46, 118, 190, 262, 334, 406],
   y: [186, 258, 330, 402, 474, 546],
 };
-
-/**
- * Tileset used to crop necessary images out of
- */
-let tileset         = new Image();
-tileset.src         = '/tileset/tiles-custom.png';
-const tilesetOrder  = ['potion', 'skull', 'coin', 'shield', 'sword'] as TFamily[]; // TODO: refactor this to nothing?
 
 /**
  * Define generic types and subtypes that can be inter-connected
@@ -190,19 +183,34 @@ export default Vue.extend({
        * Dungeon markdown of where elements are to be
        */
       background: dungeonMD,
+    };
+  },
 
-      /**
-       * Dungeon tiles container
-       */
-      dungeon: {} as IDungeon,
+  computed: {
+      // vuex
+    
+    isMouseDown(): boolean { return this.$store.state.isMouseDown },
 
-      /**
-       * HUD overlay display
-       */
-      hud: {
+    tileset() { return this.$store.state.tiles },
+    state() { return this.$store.state.run },
+
+    arrow() {
+      return {
+        ...this.$store.state.arrow,
+        tension: .1,
+        stroke: "green",
+        strokeWidth: 10,
+        lineCap: 'round',
+        listening: false,
+      }
+    },
+    dungeon(): IDungeon { return this.$store.state.dungeon.tiles },
+
+    hud() {
+      return {
         x: 11,
         y: 596,
-        image: tileset,
+        image: this.$store.state.tiles,
         width: 428,
         height: 143,
         crop: {
@@ -211,62 +219,9 @@ export default Vue.extend({
           width: 318,
           height: 75
         }
-      },
+      }
+    },
 
-      /**
-       * Current run state
-       */
-      state: {
-        score: 0,
-        turn: 0,
-        TEMP_GAMEOVER: false,
-        coins: {
-          max: 100,
-          current: 0
-        },
-        enemy: 1,
-        defense: {
-          max: 4,
-          current: 4
-        },
-        attack: 1,
-        upgrade: {
-          max: 100,
-          current: 0
-        },
-        experience: {
-          max: 100,
-          current: 0
-        },
-        health: {
-          max: 50,
-          current: 50
-        }
-      },
-
-      /**
-       * Tile selection arrow
-       */
-      arrow: {
-        points: [] as number[],
-        tension: .1,
-        stroke: "green",
-        strokeWidth: 10,
-        lineCap: 'round',
-        listening: false,
-        keys: [] as string[],
-      },
-
-      /**
-       * Flag indicating mouse button 1 being held or screen being touched
-       */
-      mouseDown: false,
-      isTilesetLoaded: false,
-      isFullscreen: false
-    };
-  },
-
-  computed: {
     /**
      * Arrow line rerender key
      * Also updates arrow cache on change
@@ -275,14 +230,20 @@ export default Vue.extend({
     arrowKey(): string {
       let arrow = this.$refs.arrow as any;
       if (arrow) {
-        if (this.arrow.keys.length)
+        if (this.$store.state.arrow.keys.length)
           arrow.getNode().cache({ offset: 5 });
         else
           arrow.getNode().clearCache();
       }
 
-      return this.arrow.keys[this.arrow.keys.length-1];
+      return this.$store.getters['arrow/lastKey'];
     },
+    lastKey(): string { return this.$store.getters['arrow/lastKey'] },
+    selectedFamily(): TFamily | 'none' { return this.$store.getters['selectedFamily'] },
+    currentDamage(): number { return this.$store.getters['currentDamage'] },
+    fill() { return this.$store.getters['run/fill'] },
+
+      // local
 
     /**
      * Arrow outline modification
@@ -292,42 +253,6 @@ export default Vue.extend({
         strokeWidth: this.arrow.strokeWidth * 2,
         stroke: "black"
       });
-    },
-
-    /**
-     * Fill percentage of said fields
-     */
-    fill(): IFill {
-      return {
-        coins: this.state.coins.current / this.state.coins.max,
-        upgrade: this.state.upgrade.current / this.state.upgrade.max,
-        experience: this.state.experience.current / this.state.experience.max,
-        health: this.state.health.current / this.state.health.max
-      }
-    },
-
-    selectedFamily(): TFamily | 'none' {
-      if (this.arrow.keys.length) {
-        switch (this.dungeon[this.arrow.keys[0]].family) {
-          case "coin":
-          case "potion":
-          case "shield":
-            return this.dungeon[this.arrow.keys[0]].family;
-          case "skull":
-          case "sword":
-            return "sword";
-          default:
-            return 'none';
-        }
-      } else {
-        return 'none';
-      }
-    },
-
-    currentDamage(): number {
-      if (this.selectedFamily === 'sword') {
-        return this.arrow.keys.filter(entry => this.dungeon[entry].family === 'sword').length * this.state.attack + this.state.attack;
-      } else return 1
     }
   },
 
@@ -355,34 +280,6 @@ export default Vue.extend({
       const TTarget = this.dungeon[target].family;
       return TBase === TTarget
           || tilesetPositions[TBase].hasOwnProperty(TTarget)
-    },
-
-    /**
-     * Return an array of specified column rows
-     */
-    getCols(row: number): Tile[] {
-      return [
-        this.dungeon[`X${ row }Y0`],
-        this.dungeon[`X${ row }Y1`],
-        this.dungeon[`X${ row }Y2`],
-        this.dungeon[`X${ row }Y3`],
-        this.dungeon[`X${ row }Y4`],
-        this.dungeon[`X${ row }Y5`],
-      ];
-    },
-
-    /**
-     * Return an array of specified row columns
-     */
-    getRows(col: number): Tile[] {
-      return [
-        this.dungeon[`X0Y${ col }`],
-        this.dungeon[`X1Y${ col }`],
-        this.dungeon[`X2Y${ col }`],
-        this.dungeon[`X3Y${ col }`],
-        this.dungeon[`X4Y${ col }`],
-        this.dungeon[`X5Y${ col }`],
-      ];
     },
 
     /**
@@ -428,7 +325,7 @@ export default Vue.extend({
       let result = {
         x: this.getTileCoords(pos, 'x') as number,
         y: this.getTileCoords(pos, 'y') as number,
-        image: tileset,
+        image: this.tileset,
         width: 62,
         height: 62,
         crop: {
@@ -471,7 +368,7 @@ export default Vue.extend({
         effects.push({
           x: this.getTileCoords(pos, 'x') as number,
           y: this.getTileCoords(pos, 'y') as number,
-          image: tileset,
+          image: this.tileset,
           width: 62,
           height: 62,
           crop: {
@@ -509,7 +406,7 @@ export default Vue.extend({
           let toPush = {
             x: 16 + (21.5 * i),
             y: 617,
-            image: tileset,
+            image: this.tileset,
             width: 21,
             height: 117,
             crop: {
@@ -545,15 +442,16 @@ export default Vue.extend({
             crop: { x: 325, y: 447 + (64 * (1 - this.fill.health)), width: 71, height: 64 * this.fill.health }
           },
         } as any;
-        return {
+        let returns = {
           x: coords[type].canvas.x,
           y: coords[type].canvas.y,
-          image: tileset,
+          image: this.tileset,
           width: coords[type].canvas.width,
           height: coords[type].canvas.height,
           crop: coords[type].crop,
           type: type
-        }
+          }
+        return returns
       }
     },
 
@@ -584,27 +482,6 @@ export default Vue.extend({
     },
 
     /**
-     * Get random tile type based on TFamily
-     */
-    getRandomTile(): Tile {
-      let family = tilesetOrder[Math.floor(Math.random() * tilesetOrder.length)];
-      if (family === 'skull') return new Skull(this.state.enemy);
-      else return new Tile(family);
-    },
-
-    /**
-     * Add sample tiles to the dungeon
-     */
-    populateDungeon(): void {
-      for (let y = 0; y < 6; y++) {
-        for (let x = 0; x < 6; x++) {
-          let tile = `X${ x }Y${ y }`;
-          this.$set(this.dungeon, tile, this.getRandomTile());
-        }
-      }
-    },
-
-    /**
      * Collect selected tiles and repopulate dungeon
      * Collected tiles are replaced by the ones over them
      * New tiles are generated over the column
@@ -621,112 +498,23 @@ export default Vue.extend({
       if (this.arrow.keys.length >= 3) {
 
         // handling collection event
-        if (this.selectedFamily === 'sword') {
-          // skull fighting
-          let count = 0;
-          this.arrow.keys.forEach(key => {
-            if (this.dungeon[key].family === 'skull' && this.dungeon[key].effects.indexOf('vulnerable') !== -1) count++;
-          })
-          this.handleCollection('sword', count)
-        } else {
-          // every other tile type
-          this.handleCollection(this.selectedFamily, this.arrow.keys.length)
-        }
+        this.$store.dispatch('run/handleCollection')
 
-        // getting columns in need of population as well of number of tiles to populate
-        let toPopulate = [0, 0, 0, 0, 0, 0];
-        this.arrow.keys.forEach(key => {
-          if (this.dungeon[key].family === 'skull' && this.dungeon[key].effects.indexOf('vulnerable') === -1) {
-            let skull = this.dungeon[key] as Skull;
-            skull.isFatal(0);
-            skull.applyDamage(this.currentDamage);
-          } else {
-            toPopulate[parseInt(key[1])]++
-          }
-        })
-
-        // populating newTiles with old uncollected tiles leaving unchanged columns as null
-        let newTiles = [null, null, null, null, null, null] as any;
-        toPopulate.forEach((col, x) => {
-          if (col) {
-            newTiles[x] = this.getCols(x).filter((entry, y) => {
-              return this.arrow.keys.indexOf(`X${ x }Y${ y }`) === -1
-            })
-          }
-        })
-
-        // populating changed columns with corresponding amount of new tiles and shifting column downwards
-        newTiles.forEach((entry: any, x: number) => {
-          if (entry !== null) {
-            let result = Object.assign([], entry);
-            for (let i = 0; i < 6 - entry.length; i++) {
-              result.unshift(this.getRandomTile());
-            }
-            result.forEach((entry: string, y: number) => {
-              this.$set(this.dungeon, `X${ x }Y${ y }`, entry)
-            })
-          }
-        })
+        this.$store.dispatch('dungeon/repopulate')
 
         // enemy turn before next turn
         this.enemyTurn();
 
         // progress turn
-        this.state.turn++;
+        this.$store.commit('run/NEXT_TURN')
 
         // TEMPORARY POWER CREEP
-        this.state.enemy = Math.floor(this.state.turn/50) + 1;
+        this.$store.commit('run/ENEMY_POWER_CHECK')
 
         return true
       } else {
-        this.calculateEnemyVulnerability(0);
+        this.$store.dispatch('dungeon/calculateVulnerability', 0)
         return false
-      }
-    },
-
-    /**
-     * Handle collection of <count> tiles of <type> type
-     * e.g. add collected coins to state.coins
-     */
-    handleCollection(family: TFamily | 'none', count: number): void {
-      switch (family) {
-        case 'coin':
-          this.state.score += count;
-          this.state.coins.current += count;
-          if (this.state.coins.current >= this.state.coins.max) {
-            this.state.coins.current -= this.state.coins.max;
-            this.state.attack++;
-          }
-          break;
-        case 'sword':
-          this.state.score += count*10;
-          this.state.experience.current += count;
-          if (this.state.experience.current >= this.state.experience.max) {
-            this.state.experience.current -= this.state.experience.max;
-            this.state.health.max += 5;
-            this.state.health.current = this.state.health.max;
-          }
-          break;
-        case 'shield':
-          this.state.score += count;
-          this.state.defense.current += count;
-          if (this.state.defense.current >= this.state.defense.max) {
-            this.state.defense.current = this.state.defense.max;
-            this.state.upgrade.current += count - (this.state.defense.max - this.state.defense.current);
-            if (this.state.upgrade.current >= this.state.upgrade.max) {
-              this.state.upgrade.current -= this.state.upgrade.max;
-              this.state.defense.max++;
-              this.state.defense.current++;
-            }
-          }
-          break;
-        case 'potion':
-          this.state.score += count;
-          this.state.health.current += count;
-          if (this.state.health.current > this.state.health.max) {
-            this.state.health.current = this.state.health.max;
-          }
-          break;
       }
     },
 
@@ -761,35 +549,27 @@ export default Vue.extend({
         if (overkill < 0) overkill = 0;
 
         // 3
+        let defenseResult = parseInt(this.$store.state.run.defense.current) // to unbind
         for (let i = 0; i < totalDamage - overkill; i++) {
           // 30% chance for armor not to break
-          if (Math.random() > .3) this.state.defense.current--;
+          if (Math.random() > .3) defenseResult--;
         }
+        this.$store.commit('run/MODIFY_STATE', { target: 'defense', value: defenseResult })
 
         // 4
-        if (overkill > 0) this.state.health.current -= overkill;
+        if (overkill > 0) this.$store.commit('run/MODIFY_STATE', { target: 'health', value: this.state.health.current-overkill })
         if (this.state.health.current <= 0) {
-          this.state.health.current = 0;
-          this.state.TEMP_GAMEOVER = true;
-          this.unbindEvents();
+          this.$store.commit('run/MODIFY_STATE', { target: 'health', value: 0 })
+          this.$store.commit('TEMP_GAMEOVER_TRIGGER')
         } // placeholder game over screen
 
         // 5
         skulls.forEach(entry => {
-          entry[1].getReady();
+          this.$store.commit('dungeon/SET_READY', entry[0])
         })
 
         return true
       } else return false
-    },
-
-    calculateEnemyVulnerability(damage: number) {
-      this.arrow.keys.forEach(key => {
-        if (this.dungeon[key].family === 'skull') {
-          let skull = this.dungeon[key] as Skull
-          skull.isFatal(damage);
-        }
-      })
     },
 
     /**
@@ -797,7 +577,7 @@ export default Vue.extend({
      */
     printArrow(n: string): boolean {
       let { x, y } = this.getTileCoords(n) as { x: number, y: number };
-      if (!this.state.TEMP_GAMEOVER) {
+      if (!this.$store.state.TEMP_GAMEOVER) {
         let sample  = '' + x + y;
         let base    = [] as string[];
         let returns = true;
@@ -805,14 +585,11 @@ export default Vue.extend({
           base.push('' + this.arrow.points[i * 2] + this.arrow.points[i * 2 + 1]);
         }
         if (base[base.length - 2] === sample) {
-          if (this.dungeon[this.arrowKey].family === 'skull') {
-            let skull = this.dungeon[this.arrowKey] as Skull
-            skull.isFatal(0);
+          if (this.dungeon[this.lastKey].family === 'skull') {
+            this.$store.commit('dungeon/SET_VULNERABILITY', { tile: this.lastKey, config: 0 })
           }
-          this.arrow.points.pop();
-          this.arrow.points.pop();
-          this.arrow.keys.pop();
-          this.calculateEnemyVulnerability(this.currentDamage);
+          this.$store.commit('arrow/REMOVE_KEY')
+          this.$store.dispatch('dungeon/calculateVulnerability')
           return true
         } else {
           base.forEach(e => {
@@ -822,9 +599,8 @@ export default Vue.extend({
             ) returns = false;
           });
           if (returns) {
-            this.arrow.points.push(x, y);
-            this.arrow.keys.push(n);
-            this.calculateEnemyVulnerability(this.currentDamage);
+            this.$store.commit('arrow/ADD_KEY', { x, y, key: n})
+            this.$store.dispatch('dungeon/calculateVulnerability')
           }
           return returns;
         }
@@ -836,7 +612,7 @@ export default Vue.extend({
      * Execute printArrow if mouse is held or screen is touched
      */
     dragArrow(n: string): boolean {
-      if (this.mouseDown) {
+      if (this.isMouseDown) {
         this.printArrow(n);
         return true
       } else return false
@@ -901,17 +677,18 @@ export default Vue.extend({
      * Collect tiles if possible
      */
     dropDrag(): void {
-      this.mouseDown = false;
+      this.$store.commit('MOUSE_UP')
       this.collect();
-      this.arrow.points = [];
-      this.arrow.keys   = [];
+      if (this.$store.state.arrow.keys.length) {
+        this.$store.commit('arrow/CLEAR_KEYS')
+      }
     },
 
     /**
      * Begin drag event
      */
     startDrag(): void {
-      this.mouseDown = true
+      this.$store.commit('MOUSE_DOWN')
     },
 
     /**
@@ -937,14 +714,7 @@ export default Vue.extend({
   },
 
   mounted() {
-    /**
-     * Ensures tiles render on first load
-     */
-    if (tileset.complete) this.populateDungeon()
-    tileset.onload = () => {
-      this.isTilesetLoaded = true;
-      this.populateDungeon();
-    }
+    this.$store.dispatch('dungeon/populate')
 
     /**
      * The initial resize as well as an event to handle any future resizes
