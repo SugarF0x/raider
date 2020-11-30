@@ -513,7 +513,9 @@ export default Vue.extend({
 
         return true
       } else {
-        this.$store.dispatch('dungeon/calculateVulnerability', 0)
+        if (this.arrow.keys.length > 0) {
+          this.$store.dispatch('dungeon/calculateVulnerability', 0)
+        }
         return false
       }
     },
