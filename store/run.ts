@@ -97,6 +97,7 @@ export const actions: ActionTree<RunState, RootState> = {
       count = root.arrow.keys.length
     }
 
+    // TODO: clean this up
     switch (rootGetters.selectedFamily) {
       case 'coin':
         commit('MODIFY_STATE', { target: 'score', value: state.score+count })

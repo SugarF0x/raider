@@ -6,7 +6,7 @@ import { Skull, TFamily, Tile } from "~/assets/Tiles"
 
 const defaultState = () => {
   return {
-    tiles: {} as IDungeon
+    tiles: {} as IDungeon // TODO: refactor this to be an array and tiles to contain their key as property
   }
 }
 
@@ -15,7 +15,7 @@ export const state = () => (defaultState())
 export type DungeonState = ReturnType<typeof state>
 
 export const getters: GetterTree<DungeonState, RootState> = {
-
+  // TODO: add getter for converting new dungeon into it's old type with keys outside tiles
 }
 
 interface ISetTilePayload {
