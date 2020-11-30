@@ -564,9 +564,11 @@ export default Vue.extend({
         } // placeholder game over screen
 
         // 5
+        let toReady = [] as string[]
         skulls.forEach(entry => {
-          this.$store.commit('dungeon/SET_READY', entry[0])
+          toReady.push(entry[0])
         })
+        this.$store.commit('dungeon/SET_READY', toReady)
 
         return true
       } else return false
@@ -586,7 +588,7 @@ export default Vue.extend({
         }
         if (base[base.length - 2] === sample) {
           if (this.dungeon[this.lastKey].family === 'skull') {
-            this.$store.commit('dungeon/SET_VULNERABILITY', { tile: this.lastKey, config: 0 })
+            this.$store.commit('dungeon/SET_VULNERABILITY', { key: this.lastKey, damage: 0 })
           }
           this.$store.commit('arrow/REMOVE_KEY')
           this.$store.dispatch('dungeon/calculateVulnerability')

@@ -19,8 +19,13 @@ export const getters: GetterTree<DungeonState, RootState> = {
 }
 
 interface ISetTilePayload {
-  tile: string,
-  config: any
+  key: string,
+  tile: Tile
+}
+
+interface ISetVulnerabilityPayload {
+  key: string,
+  damage: number
 }
 
 // noinspection JSUnusedGlobalSymbols
@@ -28,32 +33,63 @@ export const mutations: MutationTree<DungeonState> = {
   RESET_STATE(state) {
     Object.assign(state, defaultState())
   },
-  SET_TILE(state, { tile, config }: ISetTilePayload) {
-    Vue.set(state.tiles, tile, config);
+  SET_TILE(state, payload: ISetTilePayload | ISetTilePayload[]) {
+    if (!Array.isArray(payload)) {
+      Vue.set(state.tiles, payload.key, payload.tile);
+    } else {
+      payload.forEach(entry => {
+        Vue.set(state.tiles, entry.key, entry.tile);
+      })
+    }
   },
-  SET_VULNERABILITY(state, {tile, config}: ISetTilePayload) {
-    let skull = state.tiles[tile] as Skull
-    skull.isFatal(config)
+  SET_VULNERABILITY(state, payload: ISetVulnerabilityPayload | ISetVulnerabilityPayload[]) {
+    if (!Array.isArray(payload)) {
+      let skull = state.tiles[payload.key] as Skull
+      skull.isFatal(payload.damage)
+    } else {
+      payload.forEach(entry => {
+        let skull = state.tiles[entry.key] as Skull
+        skull.isFatal(entry.damage)
+      })
+    }
   },
-  SET_READY(state, tile) {
-    let skull = state.tiles[tile] as Skull
-    skull.getReady()
+  SET_READY(state, key: string | string[]) {
+    if (!Array.isArray(key)) {
+      let skull = state.tiles[key] as Skull
+      skull.getReady()
+    } else {
+      key.forEach(entry => {
+        let skull = state.tiles[entry] as Skull
+        skull.getReady()
+      })
+    }
   },
-  APPLY_DAMAGE(state, {tile, config}: ISetTilePayload) {
-    let skull = state.tiles[tile] as Skull
-    skull.applyDamage(config)
+  APPLY_DAMAGE(state, payload: ISetVulnerabilityPayload | ISetVulnerabilityPayload[]) {
+    if (!Array.isArray(payload)) {
+      console.log(`Applying damage to ${payload.key} of ${payload.damage}`)
+      let skull = state.tiles[payload.key] as Skull
+      skull.applyDamage(payload.damage)
+    } else {
+      payload.forEach(entry => {
+        console.log(`Applying damage to ${entry.key} of ${entry.damage}`)
+        let skull = state.tiles[entry.key] as Skull
+        skull.applyDamage(entry.damage)
+      })
+    }
   }
 }
 
 export const actions: ActionTree<DungeonState, RootState> = {
   populate({ commit, rootState }) {
     let root = rootState as CombinedStates
+    let tiles = [] as ISetTilePayload[]
     for (let y = 0; y < 6; y++) {
       for (let x = 0; x < 6; x++) {
-        let tile = `X${ x }Y${ y }`
-        commit('SET_TILE', { tile, config: getRandomTile(root.run.attack) })
+        let key = `X${ x }Y${ y }`
+        tiles.push({ key, tile: getRandomTile(root.run.attack) })
       }
     }
+    commit('SET_TILE', tiles)
   },
 
   // TODO: Fix bug where skull gets removed when there is a deletable tile beneath
@@ -62,15 +98,18 @@ export const actions: ActionTree<DungeonState, RootState> = {
 
     // getting columns in need of population as well of number of tiles to populate
     let toPopulate = [0, 0, 0, 0, 0, 0];
+    let toCheck = [] as ISetVulnerabilityPayload[]
+    let toApply = [] as ISetVulnerabilityPayload[]
     root.arrow.keys.forEach((key: string) => {
       if (state.tiles[key].family === 'skull' && state.tiles[key].effects.indexOf('vulnerable') === -1) {
-        let skull = state.tiles[key] as Skull;
-        commit('SET_VULNERABILITY', { tile: key, config: 0 })
-        commit('APPLY_DAMAGE', { tile: key, config: rootGetters.currentDamage })
+        toCheck.push({ key, damage: 0 })
+        toApply.push({ key, damage: rootGetters.currentDamage })
       } else {
         toPopulate[parseInt(key[1])]++
       }
     })
+    commit('SET_VULNERABILITY', toCheck)
+    commit('APPLY_DAMAGE', toApply)
 
     // populating newTiles with old uncollected tiles leaving unchanged columns as null
     let newTiles = [null, null, null, null, null, null] as any;
@@ -96,20 +135,24 @@ export const actions: ActionTree<DungeonState, RootState> = {
         for (let i = 0; i < 6 - entry.length; i++) {
           result.unshift(getRandomTile(root.run.enemy));
         }
-        result.forEach((entry: string, y: number) => {
-          commit('SET_TILE', { tile: `X${ x }Y${ y }`, config: entry })
+        let tiles = [] as ISetTilePayload[]
+        result.forEach((tile: Tile, y: number) => {
+          tiles.push({ key: `X${ x }Y${ y }`, tile })
         })
+        commit('SET_TILE', tiles)
       }
     })
   },
 
   calculateVulnerability({ commit, state, rootState, rootGetters }, damage: number = rootGetters.currentDamage) {
     let root = rootState as CombinedStates
+    let toCheck = [] as ISetVulnerabilityPayload[]
     root.arrow.keys.forEach((key: string) => {
       if (state.tiles[key].family === 'skull') {
-        commit('SET_VULNERABILITY', { tile: key, config: damage })
+        toCheck.push({ key, damage })
       }
     })
+    commit('SET_VULNERABILITY', toCheck)
   }
 }
 
