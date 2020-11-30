@@ -9,7 +9,7 @@
                @mouseenter="dragArrow(key)"
                @touchstart="printArrow(key)"
                @touchmove="dragArrow(key)"
-               :key="(selectedFamily === 'sword' || selectedFamily === 'none') + entry.id"
+               :key="(selectedFamily === 'sword' || selectedFamily === 'none' || !selectedFamily) + entry.id"
       /><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
       <v-group v-if="entry.family === 'skull'" :config="{ opacity: selectedFamily === 'sword' || selectedFamily === 'none' ? 1 : .5 }"><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
         <u-text :config="{text: entry.state.attack, x: getTileCoords(key, 'x')+7, y: getTileCoords(key, 'y')-25, width: 25, fill: 'lightgray', fontSize: 14, align: 'right'}"/><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
@@ -408,7 +408,7 @@ export default Vue.extend({
     }
   },
   mounted() {
-    this.$store.dispatch('dungeon/populate')
+    if (!this.dungeon.hasOwnProperty('X0Y0')) this.$store.dispatch('dungeon/populate')
 
     /**
      * User input events
