@@ -55,7 +55,7 @@ export const getters: GetterTree<RunState, RootState> = {
     }, 0)
   },
   totalAttack: state => state.character.equipment.weapon.stat,
-  totalHealth: state => 35 + state.character.equipment.accessory.stat*15
+  totalHealth: state => 25 + state.character.equipment.accessory.stat*15 + state.character.state.level*10
 }
 
 interface IModifyPayload {
@@ -179,7 +179,11 @@ export const actions: ActionTree<RunState, RootState> = {
       case 'sword':
         if (state.collectibles.current.experience+count >= state.collectibles.max) {
           commit('MODIFY_COLLECTIBLES', { target: 'experience', value: state.collectibles.current.experience+count-state.collectibles.max })
-          commit('shop/SELECT_SHOP', 'levelup', { root: true })
+          // TODO: enable levelup shop on spells completion
+          // commit('shop/SELECT_SHOP', 'levelup', { root: true })
+
+          commit('MODIFY_CHARACTER', { target: 'level', value: `+1` })
+          commit('MODIFY_CHARACTER', { target: 'health', value: rootGetters['run/totalHealth'] })
         } else {
           commit('MODIFY_COLLECTIBLES', { target: 'experience', value: state.collectibles.current.experience+count })
         }
