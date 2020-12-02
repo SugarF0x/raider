@@ -67,3 +67,192 @@ export const TILESET_COORDS = {
     burning: { x: 414, y: 572 }
   }
 } as { [key in TFamily]: any }
+
+
+// markdown
+
+export const dungeonMD = {
+  header: {
+    x: 10,
+    y: 10,
+    width: 430,
+    height: 40,
+    stroke: KONVA_STROKE_COLOR,
+  },
+  spell1: {
+    x: 10,
+    y: 60,
+    width: 80,
+    height: 80,
+    stroke: KONVA_STROKE_COLOR,
+  },
+  spell2: {
+    x: 100,
+    y: 60,
+    width: 80,
+    height: 80,
+    stroke: KONVA_STROKE_COLOR,
+  },
+  spell3: {
+    x: 190,
+    y: 60,
+    width: 80,
+    height: 80,
+    stroke: KONVA_STROKE_COLOR,
+  },
+  spell4: {
+    x: 280,
+    y: 60,
+    width: 80,
+    height: 80,
+    stroke: KONVA_STROKE_COLOR,
+  },
+  menu: {
+    x: 370,
+    y: 60,
+    width: 70,
+    height: 35,
+    stroke: KONVA_STROKE_COLOR,
+  },
+  stats: {
+    x: 370,
+    y: 105,
+    width: 70,
+    height: 35,
+    stroke: KONVA_STROKE_COLOR,
+  },
+  dungeon: {
+    x: 10,
+    y: 150,
+    width: 430,
+    height: 430,
+    stroke: KONVA_STROKE_COLOR,
+    fill: 'black'
+  },
+  hud: {
+    x: 10,
+    y: 590,
+    width: 430,
+    height: 150,
+    stroke: KONVA_STROKE_COLOR,
+  },
+  footer: {
+    x: 10,
+    y: 750,
+    width: 430,
+    height: 40,
+    stroke: KONVA_STROKE_COLOR,
+  },
+}
+
+// shop
+
+export const shopMD = {
+  background: {
+    x: 0,
+    y: 0,
+    width: 450,
+    height: 850,
+    fill: 'black',
+    opacity: .5
+  },
+  screen: {
+    x: 40,
+    y: 190,
+    width: 450,
+    height: 350,
+    stroke: KONVA_STROKE_COLOR,
+    strokeWidth: 5,
+    fill: KONVA_BACKGROUND_COLOR
+  },
+  screen_accept: {
+    x: 40,
+    y: 540.5,
+    width: 100,
+    height: 50,
+    stroke: KONVA_STROKE_COLOR,
+    strokeWidth: 5,
+    fill: KONVA_BACKGROUND_COLOR
+  },
+  screen_acceptOverflow: {
+    x: 42.5,
+    y: 535,
+    width: 95,
+    height: 10,
+    fill: KONVA_BACKGROUND_COLOR
+  }
+}
+
+export const titleBase = {
+  item: {
+    head: {
+      fontSize: 32,
+      width: 200,
+      align: 'left',
+      x: 50,
+      y: 200
+    },
+    desc: {
+      fontSize: 18,
+      width: 250,
+      align: 'right',
+      x: 190,
+      y: 212
+    }
+  }
+}
+
+export const shopTiles = {
+  itemFrame: {
+    width: 62,
+    height: 62,
+    crop: {
+      x: 1,
+      y: 382,
+      width: 53,
+      height: 53
+    }
+  },
+  itemFrameSelectedBG: {
+    width: 62,
+    height: 62,
+    crop: {
+      x: 55,
+      y: 382,
+      width: 53,
+      height: 53
+    }
+  },
+  selectedItemBG: {
+    width: 62,
+    height: 62,
+    crop: {
+      x: 309,
+      y: 380,
+      width: 9,
+      height: 55
+    }
+  },
+  currentItemBG: {
+    width: 62,
+    height: 62,
+    crop: {
+      x: 319,
+      y: 380,
+      width: 9,
+      height: 55
+    }
+  },
+  acceptButton: {
+    x: 46.5,
+    y: 536,
+    width: 90,
+    height: 49,
+    crop: {
+      x: 144,
+      y: 288,
+      width: 53,
+      height: 35
+    }
+  }
+}
