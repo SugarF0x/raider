@@ -26,7 +26,7 @@ You can fiddle around with it yourself [here](http://raid.sugarfox.ru).
 This is my current roadmap of things to do that's **not** in any strict order.
 Given my lack of experience if this field, every point here is subject to change.
 
-###  Goal for v0.1.0:
+###  Goal for Alpha:
 
 - [X] Setup canvas
     - [X] Add responsive resize
@@ -54,6 +54,7 @@ Given my lack of experience if this field, every point here is subject to change
 - [ ] (?) Setup footer field
 - [ ] Setup skills field
 - [ ] Setup menus field
+- [ ] Setup save/load mechanics
 - [X] Setup status field
     - [X] Setup coin display
     - [X] Setup health display
@@ -68,7 +69,9 @@ Given my lack of experience if this field, every point here is subject to change
     - [ ] Add upgrade handling
     - [ ] Add levelup handling
     - [ ] Add difficulty progression
-    - [ ] Add skull state handling
+        - [X] Add increasing difficulty curve
+        - [ ] Add bosses
+    - [X] Add skull state handling
 
 ## Build Setup
 
