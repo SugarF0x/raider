@@ -41,11 +41,11 @@ export const TILESET_COORDS = {
   },
   shield: {
     common: 160,
-    broken: { x: 425, y: 724 }
+    broken: { x: 424, y: 726 }
   },
   sword: {
     common: 213,
-    broken: { x: 425, y: 777 },
+    broken: { x: 424, y: 779 },
     skull: null
   },
   skull: {
