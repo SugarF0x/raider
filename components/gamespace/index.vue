@@ -5,13 +5,12 @@
       <l-hud />
       <l-dungeon />
       <l-gameover v-on:rerender="$emit('rerender')" />
+      <l-shop />
     </v-stage>
   </v-row>
 </template>
 
 <script lang="ts">
-// TODO: contain currentDamage tooltip on screen
-
 import Vue from 'vue'
 
 import * as C from '~/assets/consts'
@@ -20,6 +19,7 @@ import lBackground from './layers/l-background.vue'
 import lHud from './layers/l-hud.vue'
 import lDungeon from './layers/l-dungeon.vue'
 import lGameover from './layers/l-gameover.vue'
+import lShop from './layers/l-shop.vue'
 
 // noinspection JSUnusedGlobalSymbols
 export default Vue.extend({
@@ -29,7 +29,8 @@ export default Vue.extend({
     'l-background': lBackground,
     'l-hud': lHud,
     'l-dungeon': lDungeon,
-    'l-gameover': lGameover
+    'l-gameover': lGameover,
+    'l-shop': lShop
   },
 
   data() {

@@ -80,6 +80,7 @@ export const mutations: MutationTree<RunState> = {
     Object.assign(state, defaultState())
   },
   // TODO: unify function used in these two
+  // TODO: rethink functionality? question mark? perhaps add by default and use another payload key like {set: true}
   MODIFY_COLLECTIBLES(state, { target, value }: IModifyStatePayload) {
     if (typeof value === 'string') {
       let parsedValue = parseInt(value.slice(1))
@@ -165,14 +166,12 @@ export const actions: ActionTree<RunState, RootState> = {
         commit('MODIFY_GAME', { target: 'score', value: `+${count}` })
     }
 
-    // TODO: clean this up
-    // TODO: integrate shop
     // handle collection
     switch (rootGetters.selectedFamily) {
       case 'coin':
         if (state.collectibles.current.coins+count >= state.collectibles.max) {
           commit('MODIFY_COLLECTIBLES', { target: 'coins', value: state.collectibles.current.coins+count-state.collectibles.max })
-          // TODO: add item shop handling
+          commit('shop/SELECT_SHOP', 'item', { root: true })
         } else {
           commit('MODIFY_COLLECTIBLES', { target: 'coins', value: state.collectibles.current.coins+count })
         }
@@ -180,7 +179,7 @@ export const actions: ActionTree<RunState, RootState> = {
       case 'sword':
         if (state.collectibles.current.experience+count >= state.collectibles.max) {
           commit('MODIFY_COLLECTIBLES', { target: 'experience', value: state.collectibles.current.experience+count-state.collectibles.max })
-          // TODO: add levelup shop handling
+          commit('shop/SELECT_SHOP', 'levelup', { root: true })
         } else {
           commit('MODIFY_COLLECTIBLES', { target: 'experience', value: state.collectibles.current.experience+count })
         }
@@ -189,7 +188,7 @@ export const actions: ActionTree<RunState, RootState> = {
         if (state.character.state.shields+count > rootGetters['run/totalArmor']) {
           if (state.collectibles.current.upgrade+(count-(rootGetters['run/totalArmor']-state.character.state.shields)) >= state.collectibles.max) {
             commit('MODIFY_COLLECTIBLES', { target: 'upgrade', value: state.collectibles.current.upgrade+(count-(rootGetters['run/totalArmor']-state.character.state.shields))-state.collectibles.max })
-            // TODO: add upgrade shop handling
+            commit('shop/SELECT_SHOP', 'upgrade', { root: true })
           } else {
             commit('MODIFY_COLLECTIBLES', { target: 'upgrade', value: state.collectibles.current.upgrade+count-(rootGetters['run/totalArmor']-state.character.state.shields) })
           }

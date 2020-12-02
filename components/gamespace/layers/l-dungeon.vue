@@ -37,6 +37,8 @@
 </template>
 
 <script lang="ts">
+// TODO: contain currentDamage tooltip on screen
+
 import Vue from 'vue'
 import uText from '../utils/u-text.vue'
 import * as C from "~/assets/consts"

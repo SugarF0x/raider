@@ -1,9 +1,10 @@
 import { MutationTree, GetterTree, ActionTree } from 'vuex'
 import { TFamily } from "~/assets/Tiles"
 
-import * as run from './run'
-import * as dungeon from './dungeon'
-import * as arrow from './arrow'
+import { RunState } from './run'
+import { DungeonState } from './dungeon'
+import { ArrowState } from './arrow'
+import { ShopState } from './shop'
 
 export const state = () => ({
   tiles: new Image(),
@@ -15,9 +16,10 @@ export const state = () => ({
 
 export type RootState = ReturnType<typeof state>
 export interface CombinedStates extends RootState {
-  run: run.RunState
-  dungeon: dungeon.DungeonState
-  arrow: arrow.ArrowState
+  run: RunState
+  dungeon: DungeonState
+  arrow: ArrowState
+  shop: ShopState
 }
 
 export const getters: GetterTree<RootState, RootState> = {
@@ -81,5 +83,6 @@ export const actions: ActionTree<RootState, RootState> = {
     commit('run/RESET_STATE')
     commit('dungeon/RESET_STATE')
     commit('arrow/RESET_STATE')
+    commit('shop/RESET_STATE')
   }
 }
