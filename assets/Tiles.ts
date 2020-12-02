@@ -1,5 +1,5 @@
 import { KONVA_BACKGROUND_COLOR,  KONVA_STROKE_COLOR } from '~/assets/consts'
-const seedrandom = require('seedrandom');
+const seedRandom = require('seedrandom');
 
 // items related
 
@@ -20,7 +20,7 @@ export class Item {
     this.id = Math.floor(Math.random() * 1000000)
     this.type = type
 
-    const rng = new seedrandom(this.id)
+    const rng = new seedRandom(this.id)
 
     if (previousItem) {
       // upgrade based on previous item
@@ -104,7 +104,7 @@ export class Skull extends Tile {
 
   constructor(power: number) {
     super('skull');
-    const rng = new seedrandom(this.id)
+    const rng = new seedRandom(this.id)
 
     // generate base stats
     let base = {
