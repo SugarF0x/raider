@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import {ITextConfigOptions, ITextNonOptionals} from "@/components/gamespace/types"
+import { ITextConfigOptions, ITextNonOptionals } from "@/components/gamespace/types"
 
 export default Vue.extend({
   name: "u-text",

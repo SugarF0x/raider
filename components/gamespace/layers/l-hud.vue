@@ -7,27 +7,27 @@
       <v-image :key="'health-'+fill.health"
                :config="getHudConfig('health')"
       />
-      <u-text :config="{text: `${state.health.current}/${state.health.max}`, x: 330, y: 700, width: 100, fill: 'yellow', fontSize: 20}"/>
+      <u-text :config="{text: `${state.character.state.health}/${totalHealth}`, x: 330, y: 700, width: 100, fill: 'yellow', fontSize: 20}"/>
     </v-group>
 
     <v-group id="upgrade">
       <v-image :key="'upgrade-'+fill.upgrade"
                :config="getHudConfig('upgrade')"
       />
-      <u-text :config="{text: `${state.upgrade.current}/${state.upgrade.max}`, x: 125, y: 677, width: 200, fill: 'cyan'}"/>
+      <u-text :config="{text: `${state.collectibles.current.upgrade}/${state.collectibles.max}`, x: 125, y: 677, width: 200, fill: 'cyan'}"/>
     </v-group>
 
     <v-group id="experience">
       <v-image :key="'experience-'+fill.experience"
                :config="getHudConfig('experience')"
       />
-      <u-text :config="{text: `${state.experience.current}/${state.experience.max}`, x: 125, y: 711, width: 200, fill: 'lightgreen'}"/>
+      <u-text :config="{text: `${state.collectibles.current.experience}/${state.collectibles.max}`, x: 125, y: 711, width: 200, fill: 'lightgreen'}"/>
     </v-group>
 
     <v-group id="stats">
-      <u-text :config="{text: state.enemy, x: 130, y: 597, width: 50}"/>
-      <u-text :config="{text: `${state.defense.current}/${state.defense.max}`, x: 197, y: 597, width: 50, fill: 'lightblue'}"/>
-      <u-text :config="{text: state.attack, x: 270, y: 597, width: 50, fill: 'lightgray'}"/>
+      <u-text :config="{text: '+'+state.game.enemy, x: 130, y: 597, width: 50}"/>
+      <u-text :config="{text: `${state.character.state.shields}/${totalArmor}`, x: 197, y: 597, width: 50, fill: 'lightblue'}"/>
+      <u-text :config="{text: '+'+totalAttack, x: 270, y: 597, width: 50, fill: 'lightgray'}"/>
     </v-group>
 
     <v-group id="coins"><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
@@ -35,7 +35,7 @@
                :key="'coins-'+fill.coins+'-'+i"
                :config="col"
       />
-      <u-text :config="{text: `${state.coins.current}/${state.coins.max}`, x: 20, y: 597, width: 100, fill: 'yellow'}"/>
+      <u-text :config="{text: `${state.collectibles.current.coins}/${state.collectibles.max}`, x: 20, y: 597, width: 100, fill: 'yellow'}"/>
     </v-group>
 
   </v-layer>
@@ -71,6 +71,9 @@ export default Vue.extend({
     },
     fill() { return this.$store.getters['run/fill'] },
     state() { return this.$store.state.run },
+    totalHealth() { return this.$store.getters['run/totalHealth'] },
+    totalArmor() { return this.$store.getters['run/totalArmor'] },
+    totalAttack() { return this.$store.getters['run/totalAttack'] },
     tileset() { return this.$store.state.tiles }
   },
   methods: {
@@ -83,8 +86,8 @@ export default Vue.extend({
         let fill = this.fill.coins;
         if (fill < 0) fill = 0;
         let cropped = [] as IKonvaHUD[];
-        let columns = Math.floor(this.state.coins.current / (this.state.coins.max / 5));
-        if (this.state.coins.current % (this.state.coins.max / 5) > 0) columns++;
+        let columns = Math.floor(this.state.collectibles.current.coins / (this.state.collectibles.max / 5));
+        if (this.state.collectibles.current.coins % (this.state.collectibles.max / 5) > 0) columns++;
         for (let i = 0; i < columns; i++) {
           let toPush = {
             x: 16 + (21.5 * i),
@@ -100,8 +103,8 @@ export default Vue.extend({
             },
             type: 'coins'
           } as IKonvaHUD
-          if (i === columns - 1 && this.state.coins.current % (this.state.coins.max / 5) > 0) {
-            let currentColFill = (this.state.coins.current - Math.floor(this.state.coins.current / (this.state.coins.max / 5)) * (this.state.coins.max / 5)) / (this.state.coins.max / 5);
+          if (i === columns - 1 && this.state.collectibles.current.coins % (this.state.collectibles.max / 5) > 0) {
+            let currentColFill = (this.state.collectibles.current.coins - Math.floor(this.state.collectibles.current.coins / (this.state.collectibles.max / 5)) * (this.state.collectibles.max / 5)) / (this.state.collectibles.max / 5);
             toPush.y           = toPush.y + (toPush.height * (1 - currentColFill));
             toPush.height      = toPush.height * currentColFill;
             toPush.crop.y      = toPush.crop.y + (20 - 20 * currentColFill) * 3;

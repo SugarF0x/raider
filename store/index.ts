@@ -39,10 +39,10 @@ export const getters: GetterTree<RootState, RootState> = {
     }
     return 'none'
   },
-  currentDamage(state, getters, root): number {
+  currentDamage(state, getters, root, rootGetters): number {
     let rootState = root as CombinedStates
     if (getters.selectedFamily === 'sword') {
-      return rootState.arrow.keys.filter(entry => rootState.dungeon.tiles[entry].family === 'sword').length * rootState.run.attack + rootState.run.attack;
+      return rootState.arrow.keys.filter(entry => rootState.dungeon.tiles[entry].family === 'sword').length * rootGetters['run/totalAttack'] + rootGetters['run/totalAttack'];
     } else return 0
   }
 }

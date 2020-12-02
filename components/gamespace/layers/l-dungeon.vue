@@ -39,7 +39,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import uText from '../utils/u-text.vue'
-import * as C from "~/components/gamespace/consts"
+import * as C from "~/assets/consts"
 import { Skull, TFamily, Tile } from "~/assets/Tiles"
 import { IDungeon, IKonvaTile } from "~/components/gamespace/types"
 
@@ -293,21 +293,21 @@ export default Vue.extend({
         })
 
         // 2
-        let overkill = totalDamage - this.state.defense.current;
+        let overkill = totalDamage - this.state.character.state.shields;
         if (overkill < 0) overkill = 0;
 
         // 3
-        let defenseResult = parseInt(this.$store.state.run.defense.current) // to unbind
+        let defenseResult = parseInt(this.state.character.state.shields) // to unbind
         for (let i = 0; i < totalDamage - overkill; i++) {
           // 30% chance for armor not to break
           if (Math.random() > .3) defenseResult--;
         }
-        this.$store.commit('run/MODIFY_STATE', { target: 'defense', value: defenseResult })
+        this.$store.commit('run/MODIFY_CHARACTER', { target: 'shields', value: defenseResult })
 
         // 4
-        if (overkill > 0) this.$store.commit('run/MODIFY_STATE', { target: 'health', value: this.state.health.current-overkill })
-        if (this.state.health.current <= 0) {
-          this.$store.commit('run/MODIFY_STATE', { target: 'health', value: 0 })
+        if (overkill > 0) this.$store.commit('run/MODIFY_CHARACTER', { target: 'health', value: this.state.character.state.health-overkill })
+        if (this.state.character.state.health <= 0) {
+          this.$store.commit('run/MODIFY_CHARACTER', { target: 'health', value: 0 })
           this.$store.commit('TEMP_GAMEOVER_TRIGGER')
         } // placeholder game over screen
 

@@ -1,32 +1,37 @@
 import { GetterTree, MutationTree, ActionTree } from 'vuex'
 import { CombinedStates, RootState } from './index'
 import { IFill } from "~/components/gamespace/types"
+import { Item } from "~/assets/Tiles"
 
 const defaultState = () => {
   return {
-    score: 0,
-    turn: 0,
-    coins: {
+    game: {
+      score: 0,
+      turn: 0,
+      enemy: 1,
+    },
+    collectibles: {
       max: 100,
-      current: 0
+      current: {
+        coins: 0,
+        upgrade: 0,
+        experience: 0
+      }
     },
-    enemy: 1,
-    defense: {
-      max: 4,
-      current: 4
-    },
-    attack: 1,
-    upgrade: {
-      max: 100,
-      current: 0
-    },
-    experience: {
-      max: 100,
-      current: 0
-    },
-    health: {
-      max: 50,
-      current: 50
+    character: {
+      state: {
+        health: 50,
+        shields: 3,
+        level: 1
+      },
+      equipment: {
+        helmet: new Item('helmet'),
+        armor: new Item('armor'),
+        shield: new Item('shield'),
+        weapon: new Item('weapon'),
+        accessory: new Item('accessory')
+      },
+      spells: {},
     }
   }
 }
@@ -36,20 +41,37 @@ export const state = () => (defaultState())
 export type RunState = ReturnType<typeof state>
 
 export const getters: GetterTree<RunState, RootState> = {
-  fill(state): IFill {
+  fill(state, getters): IFill {
     return {
-      coins: state.coins.current / state.coins.max,
-      upgrade: state.upgrade.current / state.upgrade.max,
-      experience: state.experience.current / state.experience.max,
-      health: state.health.current / state.health.max
+      coins: state.collectibles.current.coins / state.collectibles.max,
+      upgrade: state.collectibles.current.upgrade / state.collectibles.max,
+      experience: state.collectibles.current.experience / state.collectibles.max,
+      health: state.character.state.health / getters.totalHealth
     }
   },
+  totalArmor(state) {
+    return [state.character.equipment.helmet, state.character.equipment.armor, state.character.equipment.armor].reduce((a, v) => {
+      return a + v.stat
+    }, 0)
+  },
+  totalAttack: state => state.character.equipment.weapon.stat,
+  totalHealth: state => 35 + state.character.equipment.accessory.stat*15
 }
 
-interface IModifyStatePayload {
-  target: keyof RunState
-  value: number
-  isMax?: boolean
+interface IModifyPayload {
+  value: number | string
+}
+
+interface IModifyStatePayload extends IModifyPayload {
+  target: 'coins' | 'upgrade' | 'experience'
+}
+
+interface IModifyGamePayload extends IModifyPayload {
+  target: 'turn' | 'score' | 'enemy'
+}
+
+interface IModifyCharacterPayload extends IModifyPayload {
+  target: 'health' | 'shields' | 'level'
 }
 
 // noinspection JSUnusedGlobalSymbols
@@ -57,29 +79,66 @@ export const mutations: MutationTree<RunState> = {
   RESET_STATE(state) {
     Object.assign(state, defaultState())
   },
-  MODIFY_STATE(state, { target, value, isMax }: IModifyStatePayload) {
-    switch(target) {
-      case 'coins':
-      case 'defense':
-      case 'upgrade':
-      case 'experience':
-      case 'health':
-        if (isMax) {
-          state[target].max = value
-        } else {
-          state[target].current = value
-        }
-        break;
-      default:
-          state[target] = value
-        break;
+  // TODO: unify function used in these two
+  MODIFY_COLLECTIBLES(state, { target, value }: IModifyStatePayload) {
+    if (typeof value === 'string') {
+      let parsedValue = parseInt(value.slice(1))
+      switch(value[0]) {
+        case '-':
+          state.collectibles.current[target] -= parsedValue
+          break
+        case '+':
+          state.collectibles.current[target] += parsedValue
+          break
+        default:
+          state.collectibles.current[target] = parseInt(value)
+          break
+      }
+    } else {
+      state.collectibles.current[target] = value
+    }
+  },
+  MODIFY_GAME(state, { target, value }: IModifyGamePayload) {
+    if (typeof value === 'string') {
+      let parsedValue = parseInt(value.slice(1))
+      switch(value[0]) {
+        case '-':
+          state.game[target] -= parsedValue
+          break
+        case '+':
+          state.game[target] += parsedValue
+          break
+        default:
+          state.game[target] = parseInt(value)
+          break
+      }
+    } else {
+      state.game[target] = value
+    }
+  },
+  MODIFY_CHARACTER(state, { target, value }: IModifyCharacterPayload) {
+    if (typeof value === 'string') {
+      let parsedValue = parseInt(value.slice(1))
+      switch(value[0]) {
+        case '-':
+          state.character.state[target] -= parsedValue
+          break
+        case '+':
+          state.character.state[target] += parsedValue
+          break
+        default:
+          state.character.state[target] = parseInt(value)
+          break
+      }
+    } else {
+      state.character.state[target] = value
     }
   },
   NEXT_TURN(state) {
-    state.turn++
+    state.game.turn++
   },
   ENEMY_POWER_CHECK(state) {
-    state.enemy = Math.floor(state.turn/50) + 1;
+    state.game.enemy = Math.floor(state.game.turn/50) + 1;
   }
 }
 
@@ -97,48 +156,53 @@ export const actions: ActionTree<RunState, RootState> = {
       count = root.arrow.keys.length
     }
 
+    // update score
+    switch(rootGetters.selectedFamily) {
+      case 'sword':
+        commit('MODIFY_GAME', { target: 'score', value: `+${count*10}` })
+        break;
+      default:
+        commit('MODIFY_GAME', { target: 'score', value: `+${count}` })
+    }
+
     // TODO: clean this up
+    // TODO: integrate shop
+    // handle collection
     switch (rootGetters.selectedFamily) {
       case 'coin':
-        commit('MODIFY_STATE', { target: 'score', value: state.score+count })
-        if (state.coins.current+count >= state.coins.max) {
-          commit('MODIFY_STATE', { target: 'coins', value: state.coins.current+count-state.coins.max })
-          commit('MODIFY_STATE', { target: 'attack', value: state.attack+1 })
+        if (state.collectibles.current.coins+count >= state.collectibles.max) {
+          commit('MODIFY_COLLECTIBLES', { target: 'coins', value: state.collectibles.current.coins+count-state.collectibles.max })
+          // TODO: add item shop handling
         } else {
-          commit('MODIFY_STATE', { target: 'coins', value: state.coins.current+count })
+          commit('MODIFY_COLLECTIBLES', { target: 'coins', value: state.collectibles.current.coins+count })
         }
         break;
       case 'sword':
-        commit('MODIFY_STATE', { target: 'score', value: state.score+count*10 })
-        if (state.experience.current+count >= state.experience.max) {
-          commit('MODIFY_STATE', { target: 'experience', value: state.experience.current+count-state.experience.max })
-          commit('MODIFY_STATE', { target: 'health', value: state.health.max+15, isMax: true })
-          commit('MODIFY_STATE', { target: 'health', value: state.health.max })
+        if (state.collectibles.current.experience+count >= state.collectibles.max) {
+          commit('MODIFY_COLLECTIBLES', { target: 'experience', value: state.collectibles.current.experience+count-state.collectibles.max })
+          // TODO: add levelup shop handling
         } else {
-          commit('MODIFY_STATE', { target: 'experience', value: state.experience.current+count })
+          commit('MODIFY_COLLECTIBLES', { target: 'experience', value: state.collectibles.current.experience+count })
         }
         break;
       case 'shield':
-        commit('MODIFY_STATE', { target: 'score', value: state.score+count })
-        if (state.defense.current+count > state.defense.max) {
-          if (state.upgrade.current+(count-(state.defense.max-state.defense.current)) >= state.upgrade.max) {
-            commit('MODIFY_STATE', { target: 'upgrade', value: state.upgrade.current+(count-(state.defense.max-state.defense.current))-state.upgrade.max })
-            commit('MODIFY_STATE', { target: 'defense', value: state.defense.max+1, isMax: true })
-            commit('MODIFY_STATE', { target: 'defense', value: state.defense.max })
+        if (state.character.state.shields+count > rootGetters['run/totalArmor']) {
+          if (state.collectibles.current.upgrade+(count-(rootGetters['run/totalArmor']-state.character.state.shields)) >= state.collectibles.max) {
+            commit('MODIFY_COLLECTIBLES', { target: 'upgrade', value: state.collectibles.current.upgrade+(count-(rootGetters['run/totalArmor']-state.character.state.shields))-state.collectibles.max })
+            // TODO: add upgrade shop handling
           } else {
-            commit('MODIFY_STATE', { target: 'upgrade', value: state.upgrade.current+count-(state.defense.max-state.defense.current) })
+            commit('MODIFY_COLLECTIBLES', { target: 'upgrade', value: state.collectibles.current.upgrade+count-(rootGetters['run/totalArmor']-state.character.state.shields) })
           }
-          commit('MODIFY_STATE', { target: 'defense', value: state.defense.max })
+          commit('MODIFY_CHARACTER', { target: 'shields', value: rootGetters['run/totalArmor'] })
         } else {
-          commit('MODIFY_STATE', { target: 'defense', value: state.defense.current+count })
+          commit('MODIFY_CHARACTER', { target: 'shields', value: state.character.state.shields+count })
         }
         break;
       case 'potion':
-        commit('MODIFY_STATE', { target: 'score', value: state.score+count })
-        if (state.health.current+count > state.health.max) {
-          commit('MODIFY_STATE', { target: 'health', value: state.health.max })
+        if (state.character.state.health+count > rootGetters['run/totalHealth']) {
+          commit('MODIFY_CHARACTER', { target: 'health', value: rootGetters['run/totalHealth'] })
         } else {
-          commit('MODIFY_STATE', { target: 'health', value: state.health.current+count })
+          commit('MODIFY_CHARACTER', { target: 'health', value: state.character.state.health+count })
         }
         break;
     }

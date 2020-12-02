@@ -3,6 +3,7 @@ import { TFamily } from "~/assets/Tiles"
 export const KONVA_HEIGHT = 800
 export const KONVA_WIDTH = 450
 export const KONVA_BACKGROUND_COLOR = '#1D214E'
+export const KONVA_STROKE_COLOR = '#503E90'
 
 /**
  * Coords of every tile

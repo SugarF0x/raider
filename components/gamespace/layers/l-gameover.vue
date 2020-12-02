@@ -17,7 +17,7 @@
 import Vue from 'vue'
 import uText from '../utils/u-text.vue'
 
-import * as C from '../consts'
+import * as C from '~/assets/consts'
 
 export default Vue.extend({
   name: "l-gameover",
@@ -35,7 +35,7 @@ export default Vue.extend({
     }
   },
   computed: {
-    score() { return this.$store.state.run.score }
+    score() { return this.$store.state.run.game.score }
   }
 })
 </script>

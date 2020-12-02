@@ -1,6 +1,66 @@
+import { KONVA_BACKGROUND_COLOR,  KONVA_STROKE_COLOR } from '~/assets/consts'
 const seedrandom = require('seedrandom');
 
-// tile type can only equal to one of these
+// items related
+
+export type TShop = 'none' | 'item' | 'upgrade' | 'levelup'
+export type TItem = 'helmet' | 'armor' | 'shield' | 'weapon' | 'accessory'
+export type TBuffs = TBuffsArmor | TBuffsWeapon | TBuffsAccessory
+export type TBuffsArmor = '' // TODO: define armor buffs
+export type TBuffsWeapon = '' // TODO: define weapon buffs
+export type TBuffsAccessory = '' // TODO: define accessory buffs
+
+export class Item {
+  id: number
+  type: TItem
+  stat: number
+  buffs: TBuffs[]
+
+  constructor(type: TItem, previousItem?: Item) {
+    this.id = Math.floor(Math.random() * 1000000)
+    this.type = type
+
+    const rng = new seedrandom(this.id)
+
+    if (previousItem) {
+      // upgrade based on previous item
+      this.stat = previousItem.stat+1 + (rng() > .7 ? 1 : 0)
+      // TODO: have a chance to increase/decrease buffs
+      this.buffs = previousItem.buffs
+    } else {
+      // generate new item
+      this.stat = 1
+      this.buffs = []
+    }
+  }
+
+  getIconConfig(x: number, y: number, icons: HTMLImageElement) {
+    let cropY = {
+      weapon: 1,
+      helmet: 201,
+      armor: 401,
+      shield: 601,
+      accessory: 801
+    }
+
+    return {
+      x: x,
+      y: y,
+      image: icons,
+      width: 62,
+      height: 62,
+      crop: {
+        x: 1 + (this.id%20)*50,
+        y: cropY[this.type]+(this.id%4)*50,
+        width: 50,
+        height: 50
+      }
+    }
+  }
+}
+
+// tile related
+
 export type TFamily = 'coin' | 'skull' | 'potion' | 'sword' | 'shield' | 'effect'
 export type TType = TTCoin | TTSkull | TTPotion | TTSword | TTShield | TTEffect
 export type THud = 'coins' | 'upgrade' | 'experience' | 'health'
@@ -99,63 +159,64 @@ export class Skull extends Tile {
   }
 }
 
-const dungeonMD_Stroke = '#503E90'
+// markdown
+
 export const dungeonMD = {
   header: {
     x: 10,
     y: 10,
     width: 430,
     height: 40,
-    stroke: dungeonMD_Stroke,
+    stroke: KONVA_STROKE_COLOR,
   },
   spell1: {
     x: 10,
     y: 60,
     width: 80,
     height: 80,
-    stroke: dungeonMD_Stroke,
+    stroke: KONVA_STROKE_COLOR,
   },
   spell2: {
     x: 100,
     y: 60,
     width: 80,
     height: 80,
-    stroke: dungeonMD_Stroke,
+    stroke: KONVA_STROKE_COLOR,
   },
   spell3: {
     x: 190,
     y: 60,
     width: 80,
     height: 80,
-    stroke: dungeonMD_Stroke,
+    stroke: KONVA_STROKE_COLOR,
   },
   spell4: {
     x: 280,
     y: 60,
     width: 80,
     height: 80,
-    stroke: dungeonMD_Stroke,
+    stroke: KONVA_STROKE_COLOR,
   },
   menu: {
     x: 370,
     y: 60,
     width: 70,
     height: 35,
-    stroke: dungeonMD_Stroke,
+    stroke: KONVA_STROKE_COLOR,
   },
   stats: {
     x: 370,
     y: 105,
     width: 70,
     height: 35,
-    stroke: dungeonMD_Stroke,
+    stroke: KONVA_STROKE_COLOR,
   },
   dungeon: {
     x: 10,
     y: 150,
     width: 430,
     height: 430,
-    stroke: dungeonMD_Stroke,
+    stroke: KONVA_STROKE_COLOR,
     fill: 'black'
   },
   hud: {
@@ -163,13 +224,48 @@ export const dungeonMD = {
     y: 590,
     width: 430,
     height: 150,
-    stroke: dungeonMD_Stroke,
+    stroke: KONVA_STROKE_COLOR,
   },
   footer: {
     x: 10,
     y: 750,
     width: 430,
     height: 40,
-    stroke: dungeonMD_Stroke,
+    stroke: KONVA_STROKE_COLOR,
   },
+}
+export const shopMD = {
+  background: {
+    x: 0,
+    y: 0,
+    width: 450,
+    height: 850,
+    fill: 'black',
+    opacity: .5
+  },
+  screen: {
+    x: 40,
+    y: 190,
+    width: 450,
+    height: 350,
+    stroke: KONVA_STROKE_COLOR,
+    strokeWidth: 5,
+    fill: KONVA_BACKGROUND_COLOR
+  },
+  screen_accept: {
+    x: 40,
+    y: 540.5,
+    width: 100,
+    height: 50,
+    stroke: KONVA_STROKE_COLOR,
+    strokeWidth: 5,
+    fill: KONVA_BACKGROUND_COLOR
+  },
+  screen_acceptOverflow: {
+    x: 42.5,
+    y: 535,
+    width: 95,
+    height: 10,
+    fill: KONVA_BACKGROUND_COLOR
+  }
 }

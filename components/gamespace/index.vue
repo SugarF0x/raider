@@ -14,7 +14,7 @@
 
 import Vue from 'vue'
 
-import * as C from './consts'
+import * as C from '~/assets/consts'
 
 import lBackground from './layers/l-background.vue'
 import lHud from './layers/l-hud.vue'

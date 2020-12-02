@@ -66,12 +66,10 @@ export const mutations: MutationTree<DungeonState> = {
   },
   APPLY_DAMAGE(state, payload: ISetVulnerabilityPayload | ISetVulnerabilityPayload[]) {
     if (!Array.isArray(payload)) {
-      console.log(`Applying damage to ${payload.key} of ${payload.damage}`)
       let skull = state.tiles[payload.key] as Skull
       skull.applyDamage(payload.damage)
     } else {
       payload.forEach(entry => {
-        console.log(`Applying damage to ${entry.key} of ${entry.damage}`)
         let skull = state.tiles[entry.key] as Skull
         skull.applyDamage(entry.damage)
       })
@@ -86,13 +84,14 @@ export const actions: ActionTree<DungeonState, RootState> = {
     for (let y = 0; y < 6; y++) {
       for (let x = 0; x < 6; x++) {
         let key = `X${ x }Y${ y }`
-        tiles.push({ key, tile: getRandomTile(root.run.attack) })
+        tiles.push({ key, tile: getRandomTile(root.run.game.enemy) })
       }
     }
     commit('SET_TILE', tiles)
   },
 
   // TODO: Fix bug where skull gets removed when there is a deletable tile beneath
+  // TODO: Fix bug where skull dont get removed when it's a whole row of swords and skulls
   repopulate({ commit, state, rootState, rootGetters }) {
     let root = rootState as CombinedStates
 
@@ -133,7 +132,7 @@ export const actions: ActionTree<DungeonState, RootState> = {
       if (entry !== null) {
         let result = Object.assign([], entry);
         for (let i = 0; i < 6 - entry.length; i++) {
-          result.unshift(getRandomTile(root.run.enemy));
+          result.unshift(getRandomTile(root.run.game.enemy));
         }
         let tiles = [] as ISetTilePayload[]
         result.forEach((tile: Tile, y: number) => {
