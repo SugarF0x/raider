@@ -204,8 +204,8 @@ export const titleBase = {
 
 export const shopTiles = {
   itemFrame: {
-    width: 62,
-    height: 62,
+    width: 66,
+    height: 66,
     crop: {
       x: 1,
       y: 382,
@@ -213,9 +213,9 @@ export const shopTiles = {
       height: 53
     }
   },
-  itemFrameSelectedBG: {
-    width: 62,
-    height: 62,
+  itemFrameSelected: {
+    width: 66,
+    height: 66,
     crop: {
       x: 55,
       y: 382,
@@ -224,23 +224,55 @@ export const shopTiles = {
     }
   },
   selectedItemBG: {
-    width: 62,
-    height: 62,
-    crop: {
-      x: 309,
-      y: 380,
-      width: 9,
-      height: 55
+    begin: {
+      crop: {
+        x: 309,
+        y: 380,
+        width: 3,
+        height: 55
+      }
+    },
+    mid: {
+      crop: {
+        x: 312,
+        y: 380,
+        width: 3,
+        height: 55
+      }
+    },
+    end: {
+      crop: {
+        x: 315,
+        y: 380,
+        width: 3,
+        height: 55
+      }
     }
   },
   currentItemBG: {
-    width: 62,
-    height: 62,
-    crop: {
-      x: 319,
-      y: 380,
-      width: 9,
-      height: 55
+    begin: {
+      crop: {
+        x: 319,
+        y: 380,
+        width: 3,
+        height: 55
+      }
+    },
+    mid: {
+      crop: {
+        x: 322,
+        y: 380,
+        width: 3,
+        height: 55
+      }
+    },
+    end: {
+      crop: {
+        x: 325,
+        y: 380,
+        width: 3,
+        height: 55
+      }
     }
   },
   acceptButton: {

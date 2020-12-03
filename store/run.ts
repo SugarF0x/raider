@@ -1,7 +1,7 @@
 import { GetterTree, MutationTree, ActionTree } from 'vuex'
 import { CombinedStates, RootState } from './index'
 import { IFill } from "~/components/gamespace/types"
-import { Item } from "~/assets/Tiles"
+import { TItem, Item } from "~/assets/Tiles"
 
 const defaultState = () => {
   return {
@@ -50,7 +50,7 @@ export const getters: GetterTree<RunState, RootState> = {
     }
   },
   totalArmor(state) {
-    return [state.character.equipment.helmet, state.character.equipment.armor, state.character.equipment.armor].reduce((a, v) => {
+    return [state.character.equipment.helmet, state.character.equipment.armor, state.character.equipment.shield].reduce((a, v) => {
       return a + v.stat
     }, 0)
   },
@@ -135,6 +135,19 @@ export const mutations: MutationTree<RunState> = {
       state.character.state[target] = value
     }
   },
+  UPGRADE_ITEM(state, item: TItem) {
+    // TODO: add buffs and what not, stat increase is a placeholder
+    state.character.equipment[item].upgradeItem()
+  },
+  APPLY_UPGRADES(state, items: Item[]) {
+    // TODO: account for upgrades levelup upgrades
+    let type = items[0].type
+
+    if (type === 'accessory') state.character.state.health += (items[0].stat - state.character.equipment[type].stat)*15
+    else if (type !== 'weapon') state.character.state.shields += items[0].stat - state.character.equipment[type].stat
+
+    state.character.equipment[type] = items[0]
+  },
   NEXT_TURN(state) {
     state.game.turn++
   },
@@ -181,7 +194,7 @@ export const actions: ActionTree<RunState, RootState> = {
           commit('MODIFY_COLLECTIBLES', { target: 'experience', value: state.collectibles.current.experience+count-state.collectibles.max })
           // TODO: enable levelup shop on spells completion
           // commit('shop/SELECT_SHOP', 'levelup', { root: true })
-
+          // THIS IS A PLACEHOLDER - SEE ABOVE
           commit('MODIFY_CHARACTER', { target: 'level', value: `+1` })
           commit('MODIFY_CHARACTER', { target: 'health', value: rootGetters['run/totalHealth'] })
         } else {
@@ -192,7 +205,13 @@ export const actions: ActionTree<RunState, RootState> = {
         if (state.character.state.shields+count > rootGetters['run/totalArmor']) {
           if (state.collectibles.current.upgrade+(count-(rootGetters['run/totalArmor']-state.character.state.shields)) >= state.collectibles.max) {
             commit('MODIFY_COLLECTIBLES', { target: 'upgrade', value: state.collectibles.current.upgrade+(count-(rootGetters['run/totalArmor']-state.character.state.shields))-state.collectibles.max })
-            commit('shop/SELECT_SHOP', 'upgrade', { root: true })
+
+            // TODO: enable levelup shop on spells completion
+            // commit('shop/SELECT_SHOP', 'upgrade', { root: true })
+            // THIS IS A PLACEHOLDER - SEE ABOVE
+
+            commit('UPGRADE_ITEM', 'armor')
+            commit('MODIFY_CHARACTER', { target: 'shields', value: rootGetters['run/totalArmor'] })
           } else {
             commit('MODIFY_COLLECTIBLES', { target: 'upgrade', value: state.collectibles.current.upgrade+count-(rootGetters['run/totalArmor']-state.character.state.shields) })
           }

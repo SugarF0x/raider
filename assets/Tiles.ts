@@ -1,4 +1,3 @@
-import { KONVA_BACKGROUND_COLOR,  KONVA_STROKE_COLOR } from '~/assets/consts'
 const seedRandom = require('seedrandom');
 
 // items related
@@ -14,19 +13,23 @@ export class Item {
   id: number
   type: TItem
   stat: number
+  statName: string
   buffs: TBuffs[]
+  name: string
 
-  constructor(type: TItem, previousItem?: Item) {
+  constructor(item: TItem | Item) {
     this.id = Math.floor(Math.random() * 1000000)
-    this.type = type
+    this.type = typeof item === 'object' ? item.type : item
+    this.statName = this.type === 'weapon' ? 'dmg' : this.type === 'accessory' ? 'hp' : 'def'
+    this.name = `${this.type} #${this.id%80+1}`
 
     const rng = new seedRandom(this.id)
 
-    if (previousItem) {
+    if (typeof item === 'object') {
       // upgrade based on previous item
-      this.stat = previousItem.stat+1 + (rng() > .7 ? 1 : 0)
+      this.stat = item.stat+1 + (rng() > .7 ? 1 : 0)
       // TODO: have a chance to increase/decrease buffs
-      this.buffs = previousItem.buffs
+      this.buffs = item.buffs
     } else {
       // generate new item
       this.stat = 1
@@ -34,12 +37,17 @@ export class Item {
     }
   }
 
+  upgradeItem() {
+    this.stat++; // this shall be replaced with buffs for upgrades
+    // TODO: add buffs application
+  }
+
   getIconConfig(x: number, y: number, icons: HTMLImageElement) {
     let cropY = {
       weapon: 1,
       helmet: 201,
-      armor: 401,
-      shield: 601,
+      shield: 401,
+      armor: 601,
       accessory: 801
     }
 

@@ -91,7 +91,7 @@ export const actions: ActionTree<DungeonState, RootState> = {
   },
 
   // TODO: Fix bug where skull gets removed when there is a deletable tile beneath
-  // TODO: Fix bug where skull dont get removed when it's a whole row of swords and skulls
+  // TODO: Fix bug where tiles dont get removed when it's a whole column of same family collected
   repopulate({ commit, state, rootState, rootGetters }) {
     let root = rootState as CombinedStates
 
