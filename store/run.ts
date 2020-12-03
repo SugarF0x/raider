@@ -152,7 +152,7 @@ export const mutations: MutationTree<RunState> = {
     state.game.turn++
   },
   ENEMY_POWER_CHECK(state) {
-    state.game.enemy = Math.floor(state.game.turn/50) + 1;
+    state.game.enemy = Math.floor(state.game.turn/75) + 1;
   }
 }
 
