@@ -30,15 +30,13 @@
     </v-group>
 
     <v-group id="tooltips">
-      <u-text v-if="selectedFamily === 'sword'" :config="{text: currentDamage + ' damage', x: getTileCoords(lastKey, 'x')-50, y: getTileCoords(lastKey, 'y')-50, width: 100, fontSize: 20, fill: 'red'}"/>
+      <u-text v-if="selectedFamily === 'sword'" :config="{text: currentDamage + ' damage', ...containText(getTileCoords(lastKey, 'x')-50), y: getTileCoords(lastKey, 'y')-50, width: 110, fontSize: 20, fill: 'red'}"/>
     </v-group>
 
   </v-layer>
 </template>
 
 <script lang="ts">
-// TODO: contain currentDamage tooltip on screen
-
 import Vue from 'vue'
 import uText from '../utils/u-text.vue'
 import * as C from "~/assets/consts"
@@ -110,6 +108,25 @@ export default Vue.extend({
             x: C.DUNGEON_TILE_COORDS.x[parseInt(tile[1])],
             y: C.DUNGEON_TILE_COORDS.y[parseInt(tile[3])],
           }
+      }
+    },
+
+    containText(x: number) {
+      if (x <= 50) {
+        return {
+          x: 10,
+          align: 'left'
+        }
+      } else if (x >= 340) {
+        return {
+          x: 330,
+          align: 'right'
+        }
+      } else {
+        return {
+          x: x,
+          align: 'center'
+        }
       }
     },
 
