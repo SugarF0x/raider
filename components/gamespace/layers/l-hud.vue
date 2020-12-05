@@ -25,7 +25,7 @@
     </v-group>
 
     <v-group id="stats">
-      <u-text :config="{text: '+'+state.game.enemy, x: 130, y: 597, width: 50}"/>
+      <u-text :config="{text: '+'+$store.getters['run/enemyPower'], x: 130, y: 597, width: 50}"/>
       <u-text :config="{text: `${state.character.state.shields}/${totalArmor}`, x: 197, y: 597, width: 50, fill: 'lightblue'}"/>
       <u-text :config="{text: '+'+totalAttack, x: 270, y: 597, width: 50, fill: 'lightgray'}"/>
     </v-group>

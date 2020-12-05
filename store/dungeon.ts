@@ -99,13 +99,12 @@ export const mutations: MutationTree<DungeonState> = {
 
 // noinspection JSUnusedGlobalSymbols
 export const actions: ActionTree<DungeonState, RootState> = {
-  populate({ commit, rootState }) {
-    let root = rootState as CombinedStates
+  populate({ commit, rootGetters }) {
     let tiles = [] as Tile[]
     for (let y = 0; y < 6; y++) {
       for (let x = 0; x < 6; x++) {
         let key = `X${ x }Y${ y }`
-        tiles.push(getRandomTile(key, root.run.game.enemy))
+        tiles.push(getRandomTile(key, rootGetters['run/enemyPower']))
       }
     }
     commit('SET_TILES', tiles)
@@ -137,7 +136,7 @@ export const actions: ActionTree<DungeonState, RootState> = {
       for (let y = 0; y < 6; y++) {
         let currentKey = `X${ x }Y${ y }`
         if (!state.tiles.find(entry => entry.key === currentKey)) {
-          newTiles.push(getRandomTile(currentKey, root.run.game.enemy))
+          newTiles.push(getRandomTile(currentKey, rootGetters['run/enemyPower']))
         }
       }
     }

@@ -7,8 +7,7 @@ const defaultState = () => {
   return {
     game: {
       score: 0,
-      turn: 0,
-      enemy: 1,
+      turn: 0
     },
     collectibles: {
       max: 100,
@@ -40,6 +39,7 @@ export const state = () => (defaultState())
 
 export type RunState = ReturnType<typeof state>
 
+// noinspection JSUnusedGlobalSymbols
 export const getters: GetterTree<RunState, RootState> = {
   fill(state, getters): IFill {
     return {
@@ -55,7 +55,8 @@ export const getters: GetterTree<RunState, RootState> = {
     }, 0)
   },
   totalAttack: state => state.character.equipment.weapon.stat,
-  totalHealth: state => 25 + state.character.equipment.accessory.stat*15 + state.character.state.level*10
+  totalHealth: state => 25 + state.character.equipment.accessory.stat*15 + state.character.state.level*10,
+  enemyPower: state => Math.floor(state.game.turn/100) + 1
 }
 
 interface IModifyPayload {
@@ -67,7 +68,7 @@ interface IModifyStatePayload extends IModifyPayload {
 }
 
 interface IModifyGamePayload extends IModifyPayload {
-  target: 'turn' | 'score' | 'enemy'
+  target: 'turn' | 'score'
 }
 
 interface IModifyCharacterPayload extends IModifyPayload {
@@ -150,9 +151,6 @@ export const mutations: MutationTree<RunState> = {
   },
   NEXT_TURN(state) {
     state.game.turn++
-  },
-  ENEMY_POWER_CHECK(state) {
-    state.game.enemy = Math.floor(state.game.turn/75) + 1;
   }
 }
 

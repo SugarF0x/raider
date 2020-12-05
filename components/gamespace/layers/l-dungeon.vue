@@ -279,9 +279,6 @@ export default Vue.extend({
         // progress turn
         this.$store.commit('run/NEXT_TURN')
 
-        // TEMPORARY POWER CREEP
-        this.$store.commit('run/ENEMY_POWER_CHECK')
-
         return true
       } else {
         if (this.arrow.keys.length > 0 && this.selectedFamily === 'sword') {
