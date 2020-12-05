@@ -156,6 +156,7 @@ export const mutations: MutationTree<RunState> = {
   }
 }
 
+// noinspection JSUnusedGlobalSymbols
 export const actions: ActionTree<RunState, RootState> = {
   handleCollection({ commit, state, rootState, rootGetters }) {
     let root = rootState as CombinedStates

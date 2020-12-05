@@ -69,6 +69,7 @@ export const mutations: MutationTree<RootState> = {
   }
 }
 
+// noinspection JSUnusedGlobalSymbols
 export const actions: ActionTree<RootState, RootState> = {
   initAssetsLoading({ state, commit }) {
     state.tiles.onload = () => {

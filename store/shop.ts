@@ -47,6 +47,7 @@ export const mutations: MutationTree<ShopState> = {
   }
 }
 
+// noinspection JSUnusedGlobalSymbols
 export const actions: ActionTree<ShopState, RootState> = {
   generateItems({ rootState, commit }) {
     let root = rootState as CombinedStates

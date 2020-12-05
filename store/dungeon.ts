@@ -77,6 +77,7 @@ export const mutations: MutationTree<DungeonState> = {
   }
 }
 
+// noinspection JSUnusedGlobalSymbols
 export const actions: ActionTree<DungeonState, RootState> = {
   populate({ commit, rootState }) {
     let root = rootState as CombinedStates
