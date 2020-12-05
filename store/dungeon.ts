@@ -160,8 +160,8 @@ export const actions: ActionTree<DungeonState, RootState> = {
 
 const tilesetOrder  = ['potion', 'skull', 'coin', 'shield', 'sword'] as TFamily[]; // TODO: change this to spawn chance
 
-function getRandomTile(position: string, power: number): Tile {
+function getRandomTile(key: string, power: number): Tile {
   let family = tilesetOrder[Math.floor(Math.random() * tilesetOrder.length)];
-  if (family === 'skull') return new Skull(position, power);
-  else return new Tile(position, family);
+  if (family === 'skull') return new Skull(key, power);
+  else return new Tile(key, family);
 }
