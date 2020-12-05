@@ -163,7 +163,8 @@ export const actions: ActionTree<RunState, RootState> = {
     let count = 0
     if (rootGetters.selectedFamily === 'sword') {
       root.arrow.keys.forEach(key => {
-        if (root.dungeon.tiles[key].family === 'skull' && root.dungeon.tiles[key].effects.indexOf('vulnerable') !== -1) {
+        if (root.dungeon.tiles.find(entry => entry.key === key)?.family === 'skull'
+        && root.dungeon.tiles.find(entry => entry.key === key)?.effects.indexOf('vulnerable') !== -1) {
           count++
         }
       })

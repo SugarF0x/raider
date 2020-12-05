@@ -97,11 +97,17 @@ export class Tile {
   type: TType;
   effects: TTEffect[] = [];
   id: number;
+  key: string;
 
-  constructor(family: TFamily, type: TType = 'common') {
-    this.family = family;
-    this.type   = type;
-    this.id     = Math.floor(Math.random() * 1000000)
+  constructor(key: string, family: TFamily, type: TType = 'common') {
+    this.key = key
+    this.family = family
+    this.type = type
+    this.id = Math.floor(Math.random() * 1000000)
+  }
+
+  moveTile(newKey: string) {
+    this.key = newKey
   }
 }
 
@@ -110,8 +116,8 @@ export class Skull extends Tile {
   base: TileState;
   isFresh = true;
 
-  constructor(power: number) {
-    super('skull');
+  constructor(key: string, power: number) {
+    super(key, 'skull');
     const rng = new seedRandom(this.id)
 
     // generate base stats

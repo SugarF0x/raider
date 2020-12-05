@@ -1,23 +1,23 @@
 <template>
   <v-layer :config="{ opacity: $store.state.TEMP_GAMEOVER ? .5 : 1 }" ><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
 
-    <v-group v-for="(entry,key) in dungeon"
+    <v-group v-for="entry in dungeon"
              :key="entry.id"
     ><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
-      <v-image :config="getTileConfig(entry, key)"
-               @mousedown="printArrow(key)"
-               @mouseenter="dragArrow(key)"
-               @touchstart="printArrow(key)"
-               @touchmove="dragArrow(key)"
+      <v-image :config="getTileConfig(entry)"
+               @mousedown="printArrow(entry.key)"
+               @mouseenter="dragArrow(entry.key)"
+               @touchstart="printArrow(entry.key)"
+               @touchmove="dragArrow(entry.key)"
                :key="(selectedFamily === 'sword' || selectedFamily === 'none' || !selectedFamily) + entry.id"
       /><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
       <v-group v-if="entry.family === 'skull'" :config="{ opacity: selectedFamily === 'sword' || selectedFamily === 'none' ? 1 : .5 }"><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
-        <u-text :config="{text: entry.state.attack, x: getTileCoords(key, 'x')+7, y: getTileCoords(key, 'y')-25, width: 25, fill: 'lightgray', fontSize: 14, align: 'right'}"/><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
-        <u-text :config="{text: entry.state.armor, x: getTileCoords(key, 'x')+7, y: getTileCoords(key, 'y')-5, width: 25, fill: 'lightblue', fontSize: 14, align: 'right'}"/><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
-        <u-text :config="{text: entry.state.health, x: getTileCoords(key, 'x')+7, y: getTileCoords(key, 'y')+15, width: 25, fill: 'red', fontSize: 14, align: 'right'}"/>
+        <u-text :config="{text: entry.state.attack, x: getTileCoords(entry.key, 'x')+7, y: getTileCoords(entry.key, 'y')-25, width: 25, fill: 'lightgray', fontSize: 14, align: 'right'}"/><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
+        <u-text :config="{text: entry.state.armor, x: getTileCoords(entry.key, 'x')+7, y: getTileCoords(entry.key, 'y')-5, width: 25, fill: 'lightblue', fontSize: 14, align: 'right'}"/><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
+        <u-text :config="{text: entry.state.health, x: getTileCoords(entry.key, 'x')+7, y: getTileCoords(entry.key, 'y')+15, width: 25, fill: 'red', fontSize: 14, align: 'right'}"/>
       </v-group>
       <v-group id="effects"><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
-        <v-image v-for="effect in getEffectsConfig(entry, key)"
+        <v-image v-for="effect in getEffectsConfig(entry)"
                  :config="effect"
                  :key="entry.effects.length + entry.id + effect.type"
         />
@@ -43,7 +43,7 @@ import Vue from 'vue'
 import uText from '../utils/u-text.vue'
 import * as C from "~/assets/consts"
 import { Skull, TFamily, Tile } from "~/assets/Tiles"
-import { IDungeon, IKonvaTile } from "~/components/gamespace/types"
+import { IKonvaTile } from "~/components/gamespace/types"
 
 export default Vue.extend({
   name: "l-dungeon",
@@ -53,7 +53,7 @@ export default Vue.extend({
   computed: {
     tileset() { return this.$store.state.tiles },
     selectedFamily(): TFamily | 'none' { return this.$store.getters['selectedFamily'] },
-    dungeon(): IDungeon { return this.$store.state.dungeon.tiles },
+    dungeon(): Array<Tile | Skull> { return this.$store.state.dungeon.tiles },
     isMouseDown(): boolean { return this.$store.state.isMouseDown },
     state() { return this.$store.state.run },
     lastKey(): string { return this.$store.getters['arrow/lastKey'] },
@@ -116,7 +116,7 @@ export default Vue.extend({
     /**
      * Format tile to Konva Image config object based on tile type and name
      */
-    getTileConfig(tile: Tile, pos: string): IKonvaTile {
+    getTileConfig(tile: Tile): IKonvaTile {
       let x: number = 1;
       let y: number = 928;
 
@@ -136,8 +136,8 @@ export default Vue.extend({
       }
 
       let result = {
-        x: this.getTileCoords(pos, 'x') as number,
-        y: this.getTileCoords(pos, 'y') as number,
+        x: this.getTileCoords(tile.key, 'x') as number,
+        y: this.getTileCoords(tile.key, 'y') as number,
         image: this.tileset,
         width: 62,
         height: 62,
@@ -174,13 +174,13 @@ export default Vue.extend({
     /**
      * Get array of tile effects if any as IKonvaTile objects for rendering
      */
-    getEffectsConfig(tile: Tile, pos: string): IKonvaTile[] {
+    getEffectsConfig(tile: Tile): IKonvaTile[] {
       let effects = [] as IKonvaTile[];
 
       tile.effects.forEach(entry => {
         effects.push({
-          x: this.getTileCoords(pos, 'x') as number,
-          y: this.getTileCoords(pos, 'y') as number,
+          x: this.getTileCoords(tile.key, 'x') as number,
+          y: this.getTileCoords(tile.key, 'y') as number,
           image: this.tileset,
           width: 62,
           height: 62,
@@ -223,10 +223,16 @@ export default Vue.extend({
      * Or if it is matching skills with swords
      */
     isSameFamily(base: string, target: string): boolean {
-      const TBase   = this.dungeon[base].family;
-      const TTarget = this.dungeon[target].family;
-      return TBase === TTarget
-          || C.TILESET_COORDS[TBase].hasOwnProperty(TTarget)
+      const baseFamily = this.dungeon.find(entry => entry.key === base)?.family
+      const targetFamily = this.dungeon.find(entry => entry.key === target)?.family
+
+      if (!baseFamily || !targetFamily) {
+        console.error(new Error('Family match check failed: base or target family is not found'))
+        return false
+      } else {
+        return baseFamily === targetFamily
+            || C.TILESET_COORDS[baseFamily].hasOwnProperty(targetFamily)
+      }
     },
 
     /**
@@ -261,7 +267,7 @@ export default Vue.extend({
 
         return true
       } else {
-        if (this.arrow.keys.length > 0) {
+        if (this.arrow.keys.length > 0 && this.selectedFamily === 'sword') {
           this.$store.dispatch('dungeon/calculateVulnerability', 0)
         }
         return false
@@ -274,10 +280,7 @@ export default Vue.extend({
      * Special boss actions will most likely end up here as well
      */
     enemyTurn(): boolean {
-      let skulls = [] as [string, Skull][];
-      Object.entries(this.dungeon).forEach(entry => {
-        if (entry[1].family === 'skull') skulls.push(entry as [string, Skull])
-      })
+      let skulls = this.dungeon.filter(entry => entry.family === 'skull') as Skull[]
       if (skulls.length > 0) {
 
         /*
@@ -291,7 +294,7 @@ export default Vue.extend({
         // 1
         let totalDamage = 0;
         skulls.forEach(entry => {
-          if (!entry[1].isFresh) totalDamage += entry[1].state.attack
+          if (!entry.isFresh) totalDamage += entry.state.attack
         })
 
         // 2
@@ -314,11 +317,7 @@ export default Vue.extend({
         } // placeholder game over screen
 
         // 5
-        let toReady = [] as string[]
-        skulls.forEach(entry => {
-          toReady.push(entry[0])
-        })
-        this.$store.commit('dungeon/SET_READY', toReady)
+        this.$store.commit('dungeon/SET_READY', skulls)
 
         return true
       } else return false
@@ -337,11 +336,13 @@ export default Vue.extend({
           base.push('' + this.arrow.points[i * 2] + this.arrow.points[i * 2 + 1]);
         }
         if (base[base.length - 2] === sample) {
-          if (this.dungeon[this.lastKey].family === 'skull') {
+          if (this.dungeon.find(entry => entry.key === this.lastKey)?.family === 'skull') {
             this.$store.commit('dungeon/SET_VULNERABILITY', { key: this.lastKey, damage: 0 })
           }
           this.$store.commit('arrow/REMOVE_KEY')
-          this.$store.dispatch('dungeon/calculateVulnerability')
+          if (this.selectedFamily === 'sword') {
+            this.$store.dispatch('dungeon/calculateVulnerability')
+          }
           return true
         } else {
           base.forEach(e => {
@@ -352,7 +353,9 @@ export default Vue.extend({
           });
           if (returns) {
             this.$store.commit('arrow/ADD_KEY', { x, y, key: n})
-            this.$store.dispatch('dungeon/calculateVulnerability')
+            if (this.selectedFamily === 'sword') {
+              this.$store.dispatch('dungeon/calculateVulnerability')
+            }
           }
           return returns;
         }
@@ -410,7 +413,7 @@ export default Vue.extend({
     }
   },
   mounted() {
-    if (!this.dungeon.hasOwnProperty('X0Y0')) this.$store.dispatch('dungeon/populate')
+    if (this.dungeon.length === 0) this.$store.dispatch('dungeon/populate')
 
     /**
      * User input events
