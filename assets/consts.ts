@@ -66,7 +66,7 @@ export const TILESET_COORDS = {
     frozen: { x: 328, y: 394 },
     burning: { x: 414, y: 572 }
   }
-} as { [key in TFamily]: any }
+} as { [key in TFamily | 'effect']: any }
 
 
 // markdown

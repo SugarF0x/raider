@@ -104,7 +104,7 @@ export const actions: ActionTree<DungeonState, RootState> = {
     for (let y = 0; y < 6; y++) {
       for (let x = 0; x < 6; x++) {
         let key = `X${ x }Y${ y }`
-        tiles.push(getRandomTile(key, rootGetters['run/enemyPower']))
+        tiles.push(getRandomTile(key, rootGetters['run/enemyPower'], spawnWeight.initial))
       }
     }
     commit('SET_TILES', tiles)
@@ -157,10 +157,41 @@ export const actions: ActionTree<DungeonState, RootState> = {
 
 // utils
 
-const tilesetOrder  = ['potion', 'skull', 'coin', 'shield', 'sword'] as TFamily[]; // TODO: change this to spawn chance
+type TWeights = {
+  [K in TFamily]: number
+}
+type TSpawnWeights = {
+  [property: string]: TWeights
+}
 
-function getRandomTile(key: string, power: number): Tile {
-  let family = tilesetOrder[Math.floor(Math.random() * tilesetOrder.length)];
+const spawnWeight: TSpawnWeights = {
+  initial: {
+    potion: 1,
+    skull: 0,
+    coin: 2,
+    shield: 2,
+    sword: 1
+  },
+  normal: {
+    potion: 4,
+    skull: 3,
+    coin: 4,
+    shield: 4,
+    sword: 3
+  }
+}
+
+function getRandomTile(key: string, power: number, weights?: TWeights): Tile {
+  if (!weights) weights = spawnWeight.normal
+
+  let poll = [] as TFamily[]
+  Object.entries(weights).forEach(entry => {
+    let family = entry[0] as TFamily
+    let weight = entry[1]
+    for (let i=0; i<weight; i++) poll.push(family)
+  })
+
+  let family = poll[Math.floor(Math.random() * poll.length)];
   if (family === 'skull') return new Skull(key, power);
   else return new Tile(key, family);
 }

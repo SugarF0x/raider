@@ -69,7 +69,7 @@ export class Item {
 
 // tile related
 
-export type TFamily = 'coin' | 'skull' | 'potion' | 'sword' | 'shield' | 'effect'
+export type TFamily = 'coin' | 'skull' | 'potion' | 'sword' | 'shield'
 export type TType = TTCoin | TTSkull | TTPotion | TTSword | TTShield | TTEffect
 export type THud = 'coins' | 'upgrade' | 'experience' | 'health'
 
