@@ -51,7 +51,7 @@ export const TILESET_COORDS = {
   skull: {
     common: 54,
     boss: {
-      base: 671,
+      base: { x: 0, y: 671 },
       order: [
         'tough', 'spiked', 'golden', 'healing', 'invisible', 'undefined-1', 'flaming', 'undefined-2',
         'venomous', 'boomer', 'leader', 'corrupt', 'alchemist', 'jumper', 'mage', 'assassin',
@@ -65,8 +65,30 @@ export const TILESET_COORDS = {
     vulnerable: { x: 160, y: 330 },
     frozen: { x: 328, y: 394 },
     burning: { x: 414, y: 572 }
+  },
+  spell: {
+    base: { x: 513, y: 0 }, // every tile is 50x50
+    order: [
+      'steal', 'freeze', 'heal', 'repair', 'counter-attack', 'trample', 'golden sword', 'teleport', 'explosives', 'liquid exp',
+      'enchant', 'slash', 'treasure', 'fortify', 'disarm', 'daze', 'double damage', 'double coins', 'double potions', 'double shields',
+      'exorcise', 'banish', 'trap', 'big game hunter', 'treasure room', 'magic sword', 'earthquake', 'explosive armor', 'fire ball', 'mana potions',
+      'hack', 'arrow', 'masochism', 'wish', 'bloodlust', 'undefined-1', 'theft', 'undying', 'undefined-2', 'undefined-3'
+    ]
+  },
+  perk: {
+    base: { x: 513, y: 200 }, //every tiles is 50x50
+    order: [
+      'strength', 'dexterity', 'vitality', 'luck', 'damage', 'defense', 'health', 'charisma'
+    ]
+  },
+  buff: {
+    base: { x: 513, y: 250 }, // every tile is 50x50
+    order: [
+      'damage', 'undefined-1', 'leech', 'poison', 'armor piercing', 'quick', 'experience per skull', 'gold per coin', 'strength', 'luck',
+      'undefined-2', 'upgrade per shield', 'thorns', 'undefined-3', 'armor strength', 'blunting', 'undefined-4', 'regeneration', 'dexterity', 'vitality'
+    ]
   }
-} as { [key in TFamily | 'effect']: any }
+} as { [key in TFamily | 'effect' | 'spell']: any } // TODO: make union type for all the coords
 
 
 // markdown
