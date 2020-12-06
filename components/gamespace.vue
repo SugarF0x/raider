@@ -4,7 +4,7 @@
       <l-background />
       <l-hud />
       <l-dungeon />
-      <l-gameover v-on:rerender="$emit('rerender')" />
+      <l-gameover />
       <l-shop />
     </v-stage>
   </v-row>

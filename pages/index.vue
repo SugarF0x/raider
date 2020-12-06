@@ -1,5 +1,5 @@
 <template>
-  <gamespace v-if="isTilesetLoaded" v-on:rerender="rerender" />
+  <gamespace v-if="isTilesetLoaded" />
 </template>
 
 <script lang="ts">
@@ -14,13 +14,6 @@ export default Vue.extend({
   computed: {
     isTilesetLoaded() {
       return this.$store.getters.isTilesetLoaded
-    }
-  },
-  methods: {
-    rerender() {
-      this.$store.commit('TEMP_GAMEOVER_TRIGGER')
-      this.$store.dispatch('resetStore')
-      this.$store.dispatch('dungeon/populate')
     }
   },
   mounted() {
