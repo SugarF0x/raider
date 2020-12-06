@@ -30,7 +30,11 @@
     </v-group>
 
     <v-group id="tooltips">
-      <u-text v-if="selectedFamily === 'sword'" :config="{text: currentDamage + ' damage', ...containText(getTileCoords(lastKey, 'x')-50), y: getTileCoords(lastKey, 'y')-50, width: 110, fontSize: 20, fill: 'red'}"/>
+      <u-text v-if="selectedFamily === 'sword'" :config="{
+        text: currentDamage + ' damage', ...containText(getTileCoords(lastKey, 'x')-50),
+        y: getTileCoords(lastKey, 'y')-50, fontSize: 24, fill: 'red',
+        stroke: 'black', strokeWidth: 5
+      }"/>
     </v-group>
 
   </v-layer>
@@ -112,22 +116,19 @@ export default Vue.extend({
     },
 
     containText(x: number) {
-      if (x <= 50) {
-        return {
-          x: 10,
-          align: 'left'
-        }
-      } else if (x >= 340) {
-        return {
-          x: 330,
-          align: 'right'
-        }
-      } else {
-        return {
-          x: x,
-          align: 'center'
-        }
+      let result = {
+        width: 120,
+        x: x,
+        align: 'center'
       }
+      if (x <= 50) {
+        result.x = 15
+        result.align = 'left'
+      } else if (x >= 340) {
+        result.x = 435-result.width
+        result.align = 'right'
+      }
+      return result
     },
 
     /**

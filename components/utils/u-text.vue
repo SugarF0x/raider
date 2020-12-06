@@ -26,7 +26,8 @@ export default Vue.extend({
         fill: 'white',
         fontSize: 16,
         align: 'center',
-        listening: false
+        listening: false,
+        fillAfterStrokeEnabled: true
       };
 
       /*

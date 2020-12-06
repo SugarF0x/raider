@@ -43,13 +43,14 @@ export interface IFill {
 }
 
 export interface ITextConfigOptions {
-  text: string | number;
-  x: number;
-  y: number;
-  width?: number;
-  fill?: string;
-  fontSize?: number;
-  align?: string;
-  listening?: boolean;
+  text: string | number
+  x: number
+  y: number
+  width?: number
+  fill?: string
+  fontSize?: number
+  align?: string
+  listening?: boolean
+  fillAfterStrokeEnabled?: boolean
 }
 export type ITextNonOptionals = Required<Omit<ITextConfigOptions, TGetOptionals<ITextConfigOptions>>>

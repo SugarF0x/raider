@@ -4,7 +4,7 @@
     <u-text :config="{ ...title[active].head }" /><!--suppress JSUnresolvedFunction -->
     <u-text :config="{ ...title[active].desc }" />
 
-    <v-group><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
+    <v-group id="selectedItemBG"><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
       <v-group v-for="n in selected"
                :key="'shopItemBackground-'+n.id"
       ><!--suppress JSUnresolvedVariable -->
@@ -67,7 +67,7 @@
       </v-group>
     </v-group>
 
-    <v-group><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
+    <v-group id="selectedItemFrames"><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
       <v-image v-for="n in 4"
                :key="'shopItemFrame-'+n+'-'+(items.indexOf(selected[n-1]) !== -1)"
                :config="{

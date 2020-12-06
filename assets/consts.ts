@@ -186,6 +186,8 @@ export const shopMD = {
 export const titleBase = {
   item: {
     head: {
+      stroke: 'black',
+      strokeWidth: 8,
       fontSize: 32,
       width: 200,
       align: 'left',
@@ -193,6 +195,8 @@ export const titleBase = {
       y: 200
     },
     desc: {
+      stroke: 'black',
+      strokeWidth: 8,
       fontSize: 18,
       width: 250,
       align: 'right',
