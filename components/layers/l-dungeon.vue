@@ -316,17 +316,17 @@ export default Vue.extend({
         if (overkill < 0) overkill = 0;
 
         // 3
-        let defenseResult = parseInt(this.state.character.state.shields) // to unbind
+        let shieldsToBreak = 0
         for (let i = 0; i < totalDamage - overkill; i++) {
           // 30% chance for armor not to break
-          if (Math.random() > .3) defenseResult--;
+          if (Math.random() > .3) shieldsToBreak--;
         }
-        this.$store.commit('run/MODIFY_CHARACTER', { target: 'shields', value: defenseResult })
+        this.$store.commit('run/MODIFY_CHARACTER', { target: 'shields', value: shieldsToBreak })
 
         // 4
-        if (overkill > 0) this.$store.commit('run/MODIFY_CHARACTER', { target: 'health', value: this.state.character.state.health-overkill })
+        if (overkill > 0) this.$store.commit('run/MODIFY_CHARACTER', { target: 'health', value: -overkill })
         if (this.state.character.state.health <= 0) {
-          this.$store.commit('run/MODIFY_CHARACTER', { target: 'health', value: 0 })
+          this.$store.commit('run/MODIFY_CHARACTER', { target: 'health', value: 0, set: true })
           this.$store.commit('TEMP_GAMEOVER_TRIGGER')
         } // placeholder game over screen
 

@@ -60,7 +60,8 @@ export const getters: GetterTree<RunState, RootState> = {
 }
 
 interface IModifyPayload {
-  value: number | string
+  value: number
+  set: boolean
 }
 
 interface IModifyStatePayload extends IModifyPayload {
@@ -80,58 +81,23 @@ export const mutations: MutationTree<RunState> = {
   RESET_STATE(state) {
     Object.assign(state, defaultState())
   },
-  // TODO: unify function used in these two
-  // TODO: rethink functionality? question mark? perhaps add by default and use another payload key like {set: true}
-  MODIFY_COLLECTIBLES(state, { target, value }: IModifyStatePayload) {
-    if (typeof value === 'string') {
-      let parsedValue = parseInt(value.slice(1))
-      switch(value[0]) {
-        case '-':
-          state.collectibles.current[target] -= parsedValue
-          break
-        case '+':
-          state.collectibles.current[target] += parsedValue
-          break
-        default:
-          state.collectibles.current[target] = parseInt(value)
-          break
-      }
+  MODIFY_COLLECTIBLES(state, { target, value, set = false }: IModifyStatePayload) {
+    if (!set) {
+      state.collectibles.current[target] += value
     } else {
       state.collectibles.current[target] = value
     }
   },
-  MODIFY_GAME(state, { target, value }: IModifyGamePayload) {
-    if (typeof value === 'string') {
-      let parsedValue = parseInt(value.slice(1))
-      switch(value[0]) {
-        case '-':
-          state.game[target] -= parsedValue
-          break
-        case '+':
-          state.game[target] += parsedValue
-          break
-        default:
-          state.game[target] = parseInt(value)
-          break
-      }
+  MODIFY_GAME(state, { target, value, set = false }: IModifyGamePayload) {
+    if (!set) {
+      state.game[target] += value
     } else {
       state.game[target] = value
     }
   },
-  MODIFY_CHARACTER(state, { target, value }: IModifyCharacterPayload) {
-    if (typeof value === 'string') {
-      let parsedValue = parseInt(value.slice(1))
-      switch(value[0]) {
-        case '-':
-          state.character.state[target] -= parsedValue
-          break
-        case '+':
-          state.character.state[target] += parsedValue
-          break
-        default:
-          state.character.state[target] = parseInt(value)
-          break
-      }
+  MODIFY_CHARACTER(state, { target, value, set = false }: IModifyCharacterPayload) {
+    if (!set) {
+      state.character.state[target] += value
     } else {
       state.character.state[target] = value
     }
@@ -173,58 +139,57 @@ export const actions: ActionTree<RunState, RootState> = {
     // update score
     switch(rootGetters.selectedFamily) {
       case 'sword':
-        commit('MODIFY_GAME', { target: 'score', value: `+${count*10}` })
+        commit('MODIFY_GAME', { target: 'score', value: count*10 })
         break;
       default:
-        commit('MODIFY_GAME', { target: 'score', value: `+${count}` })
+        commit('MODIFY_GAME', { target: 'score', value: count })
     }
 
     // handle collection
     switch (rootGetters.selectedFamily) {
       case 'coin':
         if (state.collectibles.current.coins+count >= state.collectibles.max) {
-          commit('MODIFY_COLLECTIBLES', { target: 'coins', value: state.collectibles.current.coins+count-state.collectibles.max })
+          commit('MODIFY_COLLECTIBLES', { target: 'coins', value: state.collectibles.current.coins+count-state.collectibles.max, set: true })
           commit('shop/SELECT_SHOP', 'item', { root: true })
         } else {
-          commit('MODIFY_COLLECTIBLES', { target: 'coins', value: state.collectibles.current.coins+count })
+          commit('MODIFY_COLLECTIBLES', { target: 'coins', value: count })
         }
         break;
       case 'sword':
         if (state.collectibles.current.experience+count >= state.collectibles.max) {
-          commit('MODIFY_COLLECTIBLES', { target: 'experience', value: state.collectibles.current.experience+count-state.collectibles.max })
+          commit('MODIFY_COLLECTIBLES', { target: 'experience', value: state.collectibles.current.experience+count-state.collectibles.max, set: true })
           // TODO: enable levelup shop on spells completion
           // commit('shop/SELECT_SHOP', 'levelup', { root: true })
           // THIS IS A PLACEHOLDER - SEE ABOVE
-          commit('MODIFY_CHARACTER', { target: 'level', value: `+1` })
-          commit('MODIFY_CHARACTER', { target: 'health', value: rootGetters['run/totalHealth'] })
+          commit('MODIFY_CHARACTER', { target: 'level', value: 1 })
+          commit('MODIFY_CHARACTER', { target: 'health', value: rootGetters['run/totalHealth'], set: true })
         } else {
-          commit('MODIFY_COLLECTIBLES', { target: 'experience', value: state.collectibles.current.experience+count })
+          commit('MODIFY_COLLECTIBLES', { target: 'experience', value: count })
         }
         break;
       case 'shield':
         if (state.character.state.shields+count > rootGetters['run/totalArmor']) {
           if (state.collectibles.current.upgrade+(count-(rootGetters['run/totalArmor']-state.character.state.shields)) >= state.collectibles.max) {
-            commit('MODIFY_COLLECTIBLES', { target: 'upgrade', value: state.collectibles.current.upgrade+(count-(rootGetters['run/totalArmor']-state.character.state.shields))-state.collectibles.max })
+            commit('MODIFY_COLLECTIBLES', { target: 'upgrade', value: state.collectibles.current.upgrade+(count-(rootGetters['run/totalArmor']-state.character.state.shields))-state.collectibles.max, set: true })
 
             // TODO: enable levelup shop on spells completion
             // commit('shop/SELECT_SHOP', 'upgrade', { root: true })
             // THIS IS A PLACEHOLDER - SEE ABOVE
 
             commit('UPGRADE_ITEM', 'armor')
-            commit('MODIFY_CHARACTER', { target: 'shields', value: rootGetters['run/totalArmor'] })
           } else {
-            commit('MODIFY_COLLECTIBLES', { target: 'upgrade', value: state.collectibles.current.upgrade+count-(rootGetters['run/totalArmor']-state.character.state.shields) })
+            commit('MODIFY_COLLECTIBLES', { target: 'upgrade', value: count-(rootGetters['run/totalArmor']-state.character.state.shields) })
           }
-          commit('MODIFY_CHARACTER', { target: 'shields', value: rootGetters['run/totalArmor'] })
+          commit('MODIFY_CHARACTER', { target: 'shields', value: rootGetters['run/totalArmor'], set: true })
         } else {
-          commit('MODIFY_CHARACTER', { target: 'shields', value: state.character.state.shields+count })
+          commit('MODIFY_CHARACTER', { target: 'shields', value: count })
         }
         break;
       case 'potion':
         if (state.character.state.health+count > rootGetters['run/totalHealth']) {
-          commit('MODIFY_CHARACTER', { target: 'health', value: rootGetters['run/totalHealth'] })
+          commit('MODIFY_CHARACTER', { target: 'health', value: rootGetters['run/totalHealth'], set: true })
         } else {
-          commit('MODIFY_CHARACTER', { target: 'health', value: state.character.state.health+count })
+          commit('MODIFY_CHARACTER', { target: 'health', value: count })
         }
         break;
     }
