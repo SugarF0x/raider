@@ -1,6 +1,5 @@
 <template>
   <v-layer>
-    <u-text :config="{text: score, x: 175, y: 20, width: 100, fontSize: 24}"></u-text>
     <v-group v-if="$store.state.TEMP_GAMEOVER"
              :config="{listening: true}"
              @mousedown="$emit('rerender')"

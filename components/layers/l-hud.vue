@@ -3,6 +3,10 @@
 
     <v-image :config="hud"></v-image>
 
+    <v-group id="score">
+      <u-text :config="{text: score, x: 175, y: 20, width: 100, fontSize: 24}" />
+    </v-group>
+
     <v-group id="health">
       <v-image :key="'health-'+fill.health"
                :config="getHudConfig('health')"
@@ -74,7 +78,8 @@ export default Vue.extend({
     totalHealth() { return this.$store.getters['run/totalHealth'] },
     totalArmor() { return this.$store.getters['run/totalArmor'] },
     totalAttack() { return this.$store.getters['run/totalAttack'] },
-    tileset() { return this.$store.state.tiles }
+    tileset() { return this.$store.state.tiles },
+    score() { return this.$store.state.run.game.score }
   },
   methods: {
     /**
