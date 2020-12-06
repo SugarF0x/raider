@@ -26,7 +26,7 @@ export default Vue.extend({
         fill: 'white',
         fontSize: 16,
         align: 'center',
-        listen: false
+        listening: false
       };
 
       /*

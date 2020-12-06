@@ -1,5 +1,5 @@
 <template>
-  <v-layer :config="{ opacity: $store.state.TEMP_GAMEOVER ? .5 : 1 }" ><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
+  <v-layer><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
 
     <v-group v-for="entry in dungeon"
              :key="entry.id"

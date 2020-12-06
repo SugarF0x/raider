@@ -50,6 +50,6 @@ export interface ITextConfigOptions {
   fill?: string;
   fontSize?: number;
   align?: string;
-  listen?: boolean;
+  listening?: boolean;
 }
 export type ITextNonOptionals = Required<Omit<ITextConfigOptions, TGetOptionals<ITextConfigOptions>>>
