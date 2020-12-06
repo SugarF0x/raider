@@ -41,7 +41,7 @@ import Vue from 'vue'
 import uText from '../utils/u-text.vue'
 import * as C from "~/assets/consts"
 import { Skull, TFamily, Tile } from "~/assets/Tiles"
-import { IKonvaTile } from "~/components/gamespace/types"
+import { IKonvaTile } from "~/components/types"
 
 export default Vue.extend({
   name: "l-dungeon",

@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import gamespace from '@/components/gamespace/index.vue';
+import gamespace from '~/components/gamespace.vue';
 
 export default Vue.extend({
   name: 'home',

@@ -46,7 +46,7 @@ import Vue from 'vue'
 import { THud } from "~/assets/Tiles"
 
 import uText from '../utils/u-text.vue'
-import { IKonvaHUD } from "~/components/gamespace/types"
+import { IKonvaHUD } from "~/components/types"
 
 export default Vue.extend({
   name: "l-hud",

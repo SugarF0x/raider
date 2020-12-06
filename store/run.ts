@@ -1,6 +1,6 @@
 import { GetterTree, MutationTree, ActionTree } from 'vuex'
 import { CombinedStates, RootState } from './index'
-import { IFill } from "~/components/gamespace/types"
+import { IFill } from "~/components/types"
 import { TItem, Item } from "~/assets/Tiles"
 
 const defaultState = () => {
