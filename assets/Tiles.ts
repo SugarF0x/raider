@@ -5,9 +5,9 @@ const seedRandom = require('seedrandom');
 export type TShop = 'none' | 'item' | 'upgrade' | 'levelup'
 export type TItem = 'helmet' | 'armor' | 'shield' | 'weapon' | 'accessory'
 export type TBuffs = TBuffsArmor | TBuffsWeapon | TBuffsAccessory
-export type TBuffsArmor = '' // TODO: define armor buffs
-export type TBuffsWeapon = '' // TODO: define weapon buffs
-export type TBuffsAccessory = '' // TODO: define accessory buffs
+export type TBuffsArmor = 'gold per coin' | 'upgrade per shield' | 'thorns' | 'armor strength' | 'blunting' | 'dexterity'
+export type TBuffsWeapon = 'damage' | 'leech' | 'poison' | 'armor piercing' | 'experience per skull' | 'strength'
+export type TBuffsAccessory = 'quick' | 'luck' | 'regeneration' | 'vitality'
 
 export class Item {
   id: number
