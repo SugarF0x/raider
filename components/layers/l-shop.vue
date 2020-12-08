@@ -79,33 +79,37 @@
       />
     </v-group>
 
-    <v-group v-if="active === 'item'">
-      <!-- item shop with 1 item to pick out of 3 and 4rth slot is reserved for current item display --><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
-      <v-group v-for="n in 3"
-               :key="'shopItemIcon-'+n"
-      ><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
-        <v-image :config="items[n-1].getIconConfig(57, 170 + 73*n, icons)" /><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
-        <u-text :config="{ text: items[n-1].name, x: 130, y: 172 + 73*n, align: 'left', width: 200 }" /><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
-        <u-text :config="{ text: `${items[n-1].stat} ${items[n-1].statName}`, x: 130, y: 210 + 73*n, align: 'left', width: 100, fill: 'gray' }" />
-      </v-group>
-      <!-- currently worn item -->
-      <v-group v-if="selected.length">
-        <v-image :config="equipment[selected[0].type].getIconConfig(57, 170 + 73*4, icons)" /><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
-        <u-text :config="{ text: equipment[selected[0].type].name, x: 130, y: 172 + 73*4, align: 'left', width: 200 }" /><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
-        <u-text :config="{ text: `${equipment[selected[0].type].stat} ${equipment[selected[0].type].statName}`, x: 130, y: 210 + 73*4, align: 'left', width: 100, fill: 'gray' }" />
-      </v-group>
-    </v-group>
+    <ls-item v-if="active==='item'" />
+    <ls-upgrade v-else-if="active==='upgrade'" />
+    <ls-levelup v-else-if="active==='levelup'" />
 
-    <v-group v-else-if="active === 'upgrade'">
-      <!-- upgrade shop with 1 upgrade to pick out of 4 -->
-    </v-group>
+<!--    <v-group v-if="active === 'item'">-->
+<!--      &lt;!&ndash; item shop with 1 item to pick out of 3 and 4rth slot is reserved for current item display &ndash;&gt;&lt;!&ndash;suppress JSUnresolvedVariable, JSUnusedLocalSymbols &ndash;&gt;-->
+<!--      <v-group v-for="n in 3"-->
+<!--               :key="'shopItemIcon-'+n"-->
+<!--      >&lt;!&ndash;suppress JSUnresolvedVariable, JSUnusedLocalSymbols &ndash;&gt;-->
+<!--        <v-image :config="items[n-1].getIconConfig(57, 170 + 73*n, icons)" />&lt;!&ndash;suppress JSUnresolvedVariable, JSUnusedLocalSymbols &ndash;&gt;-->
+<!--        <u-text :config="{ text: items[n-1].name, x: 130, y: 172 + 73*n, align: 'left', width: 200 }" />&lt;!&ndash;suppress JSUnresolvedVariable, JSUnusedLocalSymbols &ndash;&gt;-->
+<!--        <u-text :config="{ text: `${items[n-1].stat} ${items[n-1].statName}`, x: 130, y: 210 + 73*n, align: 'left', width: 100, fill: 'gray' }" />-->
+<!--      </v-group>-->
+<!--      &lt;!&ndash; currently worn item &ndash;&gt;-->
+<!--      <v-group v-if="selected.length">-->
+<!--        <v-image :config="equipment[selected[0].type].getIconConfig(57, 170 + 73*4, icons)" />&lt;!&ndash;suppress JSUnresolvedVariable, JSUnusedLocalSymbols &ndash;&gt;-->
+<!--        <u-text :config="{ text: equipment[selected[0].type].name, x: 130, y: 172 + 73*4, align: 'left', width: 200 }" />&lt;!&ndash;suppress JSUnresolvedVariable, JSUnusedLocalSymbols &ndash;&gt;-->
+<!--        <u-text :config="{ text: `${equipment[selected[0].type].stat} ${equipment[selected[0].type].statName}`, x: 130, y: 210 + 73*4, align: 'left', width: 100, fill: 'gray' }" />-->
+<!--      </v-group>-->
+<!--    </v-group>-->
 
-    <v-group v-else-if="active === 'levelup'">
-      <!-- levelup shop with 2 skills to pick out of 2 skills and 2 stats -->
-    </v-group>
+<!--    <v-group v-else-if="active === 'upgrade'">-->
+<!--      &lt;!&ndash; upgrade shop with 1 upgrade to pick out of 4 &ndash;&gt;-->
+<!--    </v-group>-->
 
-    <v-group>
-      <!-- hitboxes --><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
+<!--    <v-group v-else-if="active === 'levelup'">-->
+<!--      &lt;!&ndash; levelup shop with 2 skills to pick out of 2 skills and 2 stats &ndash;&gt;-->
+<!--    </v-group>-->
+
+    <!-- hitboxes -->
+    <v-group><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
       <v-rect v-for="n in (active === 'item' ? 3 : 4)"
               :key="'shopItemHitbox-'+n"
               :config="{
@@ -127,18 +131,22 @@
 </template>
 
 <script lang="ts">
-// TODO: split template into components UUUUUGHHHH
-
 import Vue from 'vue';
 
 import uText from '../utils/u-text.vue'
+import lsItem from './l-shop/item.vue'
+import lsUpgrade from './l-shop/upgrade.vue'
+import lsLevelup from './l-shop/levelup.vue'
 
 import { shopMD, titleBase, shopTiles } from '~/assets/consts'
 
 export default Vue.extend({
   name: "Shop",
   components: {
-    'u-text': uText
+    'u-text': uText,
+    'ls-item': lsItem,
+    'ls-upgrade': lsUpgrade,
+    'ls-levelup': lsLevelup
   },
   data() {
     return {
@@ -186,7 +194,6 @@ export default Vue.extend({
   },
   computed: {
     tileset() { return this.$store.state.tiles },
-    icons() { return this.$store.state.icons },
     active() {
       if (this.$store.state.shop.active !== 'none' && this.$store.state.shop.items.length === 0) {
         this.$store.dispatch('shop/generateItems')
@@ -196,7 +203,6 @@ export default Vue.extend({
     },
     items() { return this.$store.state.shop.items },
     selected() { return this.$store.state.shop.selected },
-    equipment() { return this.$store.state.run.character.equipment },
     isValid() { return this.$store.state.shop.selected.length === (this.$store.state.shop.active === 'levelup' ? 2 : 1) }
   },
   methods: {

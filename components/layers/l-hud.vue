@@ -133,7 +133,7 @@ export default Vue.extend({
             crop: { x: 325, y: 447 + (64 * (1 - this.fill.health)), width: 71, height: 64 * this.fill.health }
           },
         } as any;
-        let returns = {
+        return {
           x: coords[type].canvas.x,
           y: coords[type].canvas.y,
           image: this.tileset,
@@ -142,7 +142,6 @@ export default Vue.extend({
           crop: coords[type].crop,
           type: type
         }
-        return returns
       }
     },
   }
