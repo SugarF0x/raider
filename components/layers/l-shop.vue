@@ -83,31 +83,6 @@
     <ls-upgrade v-else-if="active==='upgrade'" />
     <ls-levelup v-else-if="active==='levelup'" />
 
-<!--    <v-group v-if="active === 'item'">-->
-<!--      &lt;!&ndash; item shop with 1 item to pick out of 3 and 4rth slot is reserved for current item display &ndash;&gt;&lt;!&ndash;suppress JSUnresolvedVariable, JSUnusedLocalSymbols &ndash;&gt;-->
-<!--      <v-group v-for="n in 3"-->
-<!--               :key="'shopItemIcon-'+n"-->
-<!--      >&lt;!&ndash;suppress JSUnresolvedVariable, JSUnusedLocalSymbols &ndash;&gt;-->
-<!--        <v-image :config="items[n-1].getIconConfig(57, 170 + 73*n, icons)" />&lt;!&ndash;suppress JSUnresolvedVariable, JSUnusedLocalSymbols &ndash;&gt;-->
-<!--        <u-text :config="{ text: items[n-1].name, x: 130, y: 172 + 73*n, align: 'left', width: 200 }" />&lt;!&ndash;suppress JSUnresolvedVariable, JSUnusedLocalSymbols &ndash;&gt;-->
-<!--        <u-text :config="{ text: `${items[n-1].stat} ${items[n-1].statName}`, x: 130, y: 210 + 73*n, align: 'left', width: 100, fill: 'gray' }" />-->
-<!--      </v-group>-->
-<!--      &lt;!&ndash; currently worn item &ndash;&gt;-->
-<!--      <v-group v-if="selected.length">-->
-<!--        <v-image :config="equipment[selected[0].type].getIconConfig(57, 170 + 73*4, icons)" />&lt;!&ndash;suppress JSUnresolvedVariable, JSUnusedLocalSymbols &ndash;&gt;-->
-<!--        <u-text :config="{ text: equipment[selected[0].type].name, x: 130, y: 172 + 73*4, align: 'left', width: 200 }" />&lt;!&ndash;suppress JSUnresolvedVariable, JSUnusedLocalSymbols &ndash;&gt;-->
-<!--        <u-text :config="{ text: `${equipment[selected[0].type].stat} ${equipment[selected[0].type].statName}`, x: 130, y: 210 + 73*4, align: 'left', width: 100, fill: 'gray' }" />-->
-<!--      </v-group>-->
-<!--    </v-group>-->
-
-<!--    <v-group v-else-if="active === 'upgrade'">-->
-<!--      &lt;!&ndash; upgrade shop with 1 upgrade to pick out of 4 &ndash;&gt;-->
-<!--    </v-group>-->
-
-<!--    <v-group v-else-if="active === 'levelup'">-->
-<!--      &lt;!&ndash; levelup shop with 2 skills to pick out of 2 skills and 2 stats &ndash;&gt;-->
-<!--    </v-group>-->
-
     <!-- hitboxes -->
     <v-group><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
       <v-rect v-for="n in (active === 'item' ? 3 : 4)"

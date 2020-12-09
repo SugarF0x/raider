@@ -1,4 +1,4 @@
-import { TFamily } from "~/assets/Tiles"
+import { TBuffs, TFamily } from "~/assets/Tiles"
 
 export const KONVA_HEIGHT = 800
 export const KONVA_WIDTH = 450
@@ -84,12 +84,96 @@ export const TILESET_COORDS = {
   buff: {
     base: { x: 513, y: 250 }, // every tile is 50x50
     order: [
-      'damage', 'undefined-1', 'leech', 'poison', 'armor piercing', 'quick', 'experience per skull', 'gold per coin', 'strength', 'luck',
-      'undefined-2', 'upgrade per shield', 'thorns', 'undefined-3', 'armor strength', 'blunting', 'undefined-4', 'regeneration', 'dexterity', 'vitality'
+      'damage', 'undefined-1', 'leech', 'poison', 'armor piercing', 'quick', 'xp', 'gold', 'strength', 'luck',
+      'undefined-2', 'upgrade', 'thorns', 'undefined-3', 'armor strength', 'blunting', 'undefined-4', 'regeneration', 'dexterity', 'vitality'
     ]
   }
-} as { [key in TFamily | 'effect' | 'spell']: any } // TODO: make union type for all the coords
+} as { [key in TFamily | 'effect' | 'spell' | 'perk' | 'buff']: any } // TODO: make union type for all the coords
 
+// text and shit (this is to be exported to a locale)
+
+export const BUFF_TEXT = {
+  'damage': {
+    title: 'Damage Buff',
+    description: '+Damage',
+    short: '+DMG'
+  },
+  'leech': {
+    title: 'Leech',
+    description: 'Heal 5% of damage',
+    short: 'Leech'
+  },
+  'poison': {
+    title: 'Poison',
+    description: 'Apply poison to skulls',
+    short: 'P.DMG'
+  },
+  'armor piercing': {
+    title: 'Armor piercing',
+    description: 'Damage to skull armor',
+    short: 'Ar.DMG'
+  },
+  'quick': {
+    title: 'Quick',
+    description: "Reduce skills' cooldown",
+    short: 'CD'
+  },
+  'xp': {
+    title: 'Boost XP',
+    description: 'Experience per skull',
+    short: '+XP'
+  },
+  'gold': {
+    title: 'Boost Gold',
+    description: 'Gold per coin',
+    short: '+GP'
+  },
+  'strength': {
+    title: 'Boost Strength',
+    description: '(+1 dmg, +5% exp)',
+    short: '+STR'
+  },
+  'luck': {
+    title: 'Boost Luck',
+    description: '+5% bonus potion',
+    short: '+LUK'
+  },
+  'upgrade': {
+    title: 'Boost Upgrade',
+    description: 'Upgrade per shield',
+    short: '+UP'
+  },
+  'thorns': {
+    title: 'Thorns',
+    description: 'Damage attackers',
+    short: 'Th.DMG'
+  },
+  'armor strength': {
+    title: 'Armor strength',
+    description: 'Armor durability',
+    short: 'A.STR'
+  },
+  'blunting': {
+    title: 'Blunting',
+    description: "Reduce enemies' attack",
+    short: 'B.DMG'
+  },
+  'regeneration': {
+    title: 'Regeneration',
+    description: 'Heal per turn',
+    short: 'REG'
+  },
+  'dexterity': {
+    title: 'Boost Dexterity',
+    description: '(+1 repair, +5% shield)',
+    short: ''
+  },
+  'vitality': {
+    title: 'Boost Vitality',
+    description: '(+1 vitality, +5% hp)',
+    short: '+VIT'
+  },
+} as {[K in TBuffs]: { title: string, description: string, short: string }}
 
 // markdown
 
@@ -229,6 +313,16 @@ export const titleBase = {
 }
 
 export const shopTiles = {
+  plus: {
+    width: 50,
+    height: 50,
+    crop: {
+      x: 490,
+      y: 92,
+      width: 22,
+      height: 22
+    }
+  },
   itemFrame: {
     width: 66,
     height: 66,

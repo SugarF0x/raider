@@ -51,11 +51,11 @@ export const getters: GetterTree<RunState, RootState> = {
   },
   totalArmor(state) {
     return [state.character.equipment.helmet, state.character.equipment.armor, state.character.equipment.shield].reduce((a, v) => {
-      return a + v.stat
+      return a + v.power
     }, 0)
   },
-  totalAttack: state => state.character.equipment.weapon.stat,
-  totalHealth: state => 25 + state.character.equipment.accessory.stat*15 + state.character.state.level*10,
+  totalAttack: state => state.character.equipment.weapon.power,
+  totalHealth: state => 25 + state.character.equipment.accessory.power*15 + state.character.state.level*10,
   enemyPower: state => Math.floor(state.game.turn/100) + 1
 }
 
@@ -110,8 +110,8 @@ export const mutations: MutationTree<RunState> = {
     // TODO: account for upgrades levelup upgrades
     let type = items[0].type
 
-    if (type === 'accessory') state.character.state.health += (items[0].stat - state.character.equipment[type].stat)*15
-    else if (type !== 'weapon') state.character.state.shields += items[0].stat - state.character.equipment[type].stat
+    if (type === 'accessory') state.character.state.health += (items[0].power - state.character.equipment[type].power)*15
+    else if (type !== 'weapon') state.character.state.shields += items[0].power - state.character.equipment[type].power
 
     state.character.equipment[type] = items[0]
   },

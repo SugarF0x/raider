@@ -1,3 +1,4 @@
+import * as C from './consts'
 const seedRandom = require('seedrandom');
 
 // items related
@@ -5,41 +6,46 @@ const seedRandom = require('seedrandom');
 export type TShop = 'none' | 'item' | 'upgrade' | 'levelup'
 export type TItem = 'helmet' | 'armor' | 'shield' | 'weapon' | 'accessory'
 export type TBuffs = TBuffsArmor | TBuffsWeapon | TBuffsAccessory
-export type TBuffsArmor = 'gold per coin' | 'upgrade per shield' | 'thorns' | 'armor strength' | 'blunting' | 'dexterity'
-export type TBuffsWeapon = 'damage' | 'leech' | 'poison' | 'armor piercing' | 'experience per skull' | 'strength'
+export type TBuffsArmor = 'gold' | 'upgrade' | 'thorns' | 'armor strength' | 'blunting' | 'dexterity'
+export type TBuffsWeapon = 'damage' | 'leech' | 'poison' | 'armor piercing' | 'xp' | 'strength'
 export type TBuffsAccessory = 'quick' | 'luck' | 'regeneration' | 'vitality'
 
 export class Item {
   id: number
   type: TItem
-  stat: number
-  statName: string
-  buffs: TBuffs[]
+  power: number
+  powerName: string
+  buffs: Buff[]
   name: string
 
   constructor(item: TItem | Item) {
     this.id = Math.floor(Math.random() * 1000000)
     this.type = typeof item === 'object' ? item.type : item
-    this.statName = this.type === 'weapon' ? 'dmg' : this.type === 'accessory' ? 'hp' : 'def'
+    this.powerName = this.type === 'weapon' ? 'dmg' : this.type === 'accessory' ? 'hp' : 'def'
     this.name = `${this.type} #${this.id%80+1}`
 
     const rng = new seedRandom(this.id)
 
     if (typeof item === 'object') {
       // upgrade based on previous item
-      this.stat = item.stat+1 + (rng() > .7 ? 1 : 0)
+      this.power = item.power+1 + (rng() > .7 ? 1 : 0)
       // TODO: have a chance to increase/decrease buffs
       this.buffs = item.buffs
     } else {
       // generate new item
-      this.stat = 1
+      this.power = 1
       this.buffs = []
     }
   }
 
   upgradeItem() {
-    this.stat++; // this shall be replaced with buffs for upgrades
+    this.power++; // this shall be replaced with buffs for upgrades
     // TODO: add buffs application
+  }
+
+  getPowerText() {
+    if (this.powerName === 'hp') return `${this.power*15} ${this.powerName}`
+    else return `${this.power} ${this.powerName}`
   }
 
   getIconConfig(x: number, y: number, icons: HTMLImageElement) {
@@ -64,6 +70,36 @@ export class Item {
         height: 50
       }
     }
+  }
+}
+
+class Buff {
+  type: TBuffs
+  power: number
+
+  constructor(type: TBuffs, power: number) {
+    this.type = type
+    this.power = power
+  }
+
+  getIconConfig(x: number, y: number, icons: HTMLImageElement) {
+    return {
+      x: x,
+      y: y,
+      image: icons,
+      width: 62,
+      height: 62,
+      crop: {
+        x: C.TILESET_COORDS.buff.base.x + 50*(C.TILESET_COORDS.buff.order.indexOf(this.type) % 10),
+        y: C.TILESET_COORDS.buff.base.y + 50*Math.floor(C.TILESET_COORDS.buff.order.indexOf(this.type) / 10),
+        width: 50,
+        height: 50
+      }
+    }
+  }
+
+  getText() {
+    return C.BUFF_TEXT[this.type]
   }
 }
 
