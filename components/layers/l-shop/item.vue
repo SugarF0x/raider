@@ -1,5 +1,78 @@
 <template>
-  <v-group>
+  <v-group><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
+    <v-group id="selectedItemBG"><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
+      <v-group v-for="n in selected"
+               :key="'shopItemBackground-'+n.id"
+      ><!--suppress JSUnresolvedVariable -->
+        <v-image :config="{
+                   x: 51,
+                   y: 236 + 73*(items.indexOf(n)),
+                   width: 6,
+                   height: 73,
+                   image: tileset,
+                   ...shopTiles.selectedItemBG.begin
+                 }"
+        /><!--suppress JSUnresolvedVariable -->
+        <v-image :config="{
+                   x: 57,
+                   y: 236 + 73*(items.indexOf(n)),
+                   width: 380,
+                   height: 73,
+                   image: tileset,
+                   ...shopTiles.selectedItemBG.mid
+                 }"
+        /><!--suppress JSUnresolvedVariable -->
+        <v-image :config="{
+                   x: 437,
+                   y: 236 + 73*(items.indexOf(n)),
+                   width: 6,
+                   height: 73,
+                   image: tileset,
+                   ...shopTiles.selectedItemBG.end
+                 }"
+        />
+      </v-group>
+      <v-image :config="{
+                   x: 51,
+                   y: 456,
+                   width: 6,
+                   height: 73,
+                   image: tileset,
+                   ...shopTiles.currentItemBG.begin
+                 }"
+      /><!--suppress JSUnresolvedVariable -->
+      <v-image :config="{
+                   x: 57,
+                   y: 456,
+                   width: 380,
+                   height: 73,
+                   image: tileset,
+                   ...shopTiles.currentItemBG.mid
+                 }"
+      /><!--suppress JSUnresolvedVariable -->
+      <v-image :config="{
+                   x: 437,
+                   y: 456,
+                   width: 6,
+                   height: 73,
+                   image: tileset,
+                   ...shopTiles.currentItemBG.end
+                 }"
+      />
+    </v-group>
+
+    <v-group id="selectedItemFrames"><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
+      <v-image v-for="n in 4"
+               :key="'shopItemFrame-'+n+'-'+(items.indexOf(selected[n-1]) !== -1)"
+               :config="{
+                 x: 55,
+                 y: 167 + 73*n,
+                 image: tileset,
+                 ...(selected.indexOf(items[n-1]) !== -1 ? shopTiles.itemFrameSelected : shopTiles.itemFrame)
+               }"
+      />
+    </v-group>
+
     <!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
     <v-group v-for="n in 3"
              :key="'shopItemIcon-'+n"
@@ -27,13 +100,20 @@
 import Vue from 'vue'
 import uText from '@/components/utils/u-text.vue'
 import { Item } from "~/assets/Tiles"
+import { shopTiles } from "~/assets/consts"
 
 export default Vue.extend({
   name: "l-shop-item",
   components: {
     'u-text': uText
   },
+  data() {
+    return {
+      shopTiles: shopTiles,
+    }
+  },
   computed: {
+    tileset() { return this.$store.state.tiles },
     icons() { return this.$store.state.icons },
     items() { return this.$store.state.shop.items },
     selected() { return this.$store.state.shop.selected },
@@ -55,10 +135,15 @@ export default Vue.extend({
           if (buff1.power === buff2.power) { color = 'grey' }
           else if (buff1.power < buff2.power) { color = 'red' }
         }
-        result.push({ text: buff1.power + buff1.getText().short, color }) // TODO: make it more like it's done with item
+        result.push({ text: `${buff1.power} ${buff1.getText().short}`, color })
       })
 
       return result
+    }
+  },
+  created() {
+    if (this.$store.state.shop.items.length === 0) {
+      this.$store.dispatch('shop/generateItems')
     }
   }
 })

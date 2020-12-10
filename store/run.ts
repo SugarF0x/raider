@@ -1,7 +1,7 @@
 import { GetterTree, MutationTree, ActionTree } from 'vuex'
 import { CombinedStates, RootState } from './index'
 import { IFill } from "~/components/types"
-import { TItem, Item } from "~/assets/Tiles"
+import { TItem, Item, Buff } from "~/assets/Tiles"
 
 const defaultState = () => {
   return {
@@ -76,6 +76,17 @@ interface IModifyCharacterPayload extends IModifyPayload {
   target: 'health' | 'shields' | 'level'
 }
 
+type TApplyUpgradesPayload  = {
+  type: 'item'
+  selected: Item[]
+} | {
+  type: 'upgrade'
+  selected: Array<{ item: TItem, buff: Buff }>
+} | {
+  type: 'levelup'
+  selected: undefined
+}
+
 // noinspection JSUnusedGlobalSymbols
 export const mutations: MutationTree<RunState> = {
   RESET_STATE(state) {
@@ -106,14 +117,28 @@ export const mutations: MutationTree<RunState> = {
     // TODO: add buffs and what not, stat increase is a placeholder
     state.character.equipment[item].upgradeItem()
   },
-  APPLY_UPGRADES(state, items: Item[]) {
-    // TODO: account for upgrades levelup upgrades
-    let type = items[0].type
+  APPLY_UPGRADES(state, payload: TApplyUpgradesPayload) {
+    if (payload.type === 'item') {
+      let selected = payload.selected[0]
+      let itemType = selected.type
 
-    if (type === 'accessory') state.character.state.health += (items[0].power - state.character.equipment[type].power)*15
-    else if (type !== 'weapon') state.character.state.shields += items[0].power - state.character.equipment[type].power
+      if (itemType === 'accessory') state.character.state.health += (selected.power - state.character.equipment[itemType].power)*15 // heal by health increase
+      else if (itemType !== 'weapon') state.character.state.shields += selected.power - state.character.equipment[itemType].power // repair by armor increase
 
-    state.character.equipment[type] = items[0]
+      state.character.equipment[itemType] = selected
+    } else if (payload.type === 'upgrade') {
+      let { item, buff } = payload.selected[0]
+      let wornItem = state.character.equipment[item]
+
+      let sameBuff = wornItem.buffs.find(entry => entry.type === buff.type)
+      if (sameBuff) {
+        sameBuff.upgrade()
+      } else {
+        wornItem.buffs.push(buff)
+      }
+    } else {
+      // TODO: account for levelup
+    }
   },
   NEXT_TURN(state) {
     state.game.turn++
@@ -172,11 +197,7 @@ export const actions: ActionTree<RunState, RootState> = {
           if (state.collectibles.current.upgrade+(count-(rootGetters['run/totalArmor']-state.character.state.shields)) >= state.collectibles.max) {
             commit('MODIFY_COLLECTIBLES', { target: 'upgrade', value: state.collectibles.current.upgrade+(count-(rootGetters['run/totalArmor']-state.character.state.shields))-state.collectibles.max, set: true })
 
-            // TODO: enable levelup shop on spells completion
-            // commit('shop/SELECT_SHOP', 'upgrade', { root: true })
-            // THIS IS A PLACEHOLDER - SEE ABOVE
-
-            commit('UPGRADE_ITEM', 'armor')
+            commit('shop/SELECT_SHOP', 'upgrade', { root: true })
           } else {
             commit('MODIFY_COLLECTIBLES', { target: 'upgrade', value: count-(rootGetters['run/totalArmor']-state.character.state.shields) })
           }

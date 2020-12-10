@@ -4,81 +4,6 @@
     <u-text :config="{ ...title[active].head }" /><!--suppress JSUnresolvedFunction -->
     <u-text :config="{ ...title[active].desc }" />
 
-    <v-group id="selectedItemBG"><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
-      <v-group v-for="n in selected"
-               :key="'shopItemBackground-'+n.id"
-      ><!--suppress JSUnresolvedVariable -->
-        <v-image :config="{
-                   x: 51,
-                   y: 236 + 73*(items.indexOf(n)),
-                   width: 6,
-                   height: 73,
-                   image: tileset,
-                   ...shopTiles.selectedItemBG.begin
-                 }"
-        /><!--suppress JSUnresolvedVariable -->
-        <v-image :config="{
-                   x: 57,
-                   y: 236 + 73*(items.indexOf(n)),
-                   width: 380,
-                   height: 73,
-                   image: tileset,
-                   ...shopTiles.selectedItemBG.mid
-                 }"
-        /><!--suppress JSUnresolvedVariable -->
-        <v-image :config="{
-                   x: 437,
-                   y: 236 + 73*(items.indexOf(n)),
-                   width: 6,
-                   height: 73,
-                   image: tileset,
-                   ...shopTiles.selectedItemBG.end
-                 }"
-        />
-      </v-group>
-      <v-group v-if="active === 'item'">
-        <v-image :config="{
-                   x: 51,
-                   y: 456,
-                   width: 6,
-                   height: 73,
-                   image: tileset,
-                   ...shopTiles.currentItemBG.begin
-                 }"
-        /><!--suppress JSUnresolvedVariable -->
-        <v-image :config="{
-                   x: 57,
-                   y: 456,
-                   width: 380,
-                   height: 73,
-                   image: tileset,
-                   ...shopTiles.currentItemBG.mid
-                 }"
-        /><!--suppress JSUnresolvedVariable -->
-        <v-image :config="{
-                   x: 437,
-                   y: 456,
-                   width: 6,
-                   height: 73,
-                   image: tileset,
-                   ...shopTiles.currentItemBG.end
-                 }"
-        />
-      </v-group>
-    </v-group>
-
-    <v-group id="selectedItemFrames"><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
-      <v-image v-for="n in 4"
-               :key="'shopItemFrame-'+n+'-'+(items.indexOf(selected[n-1]) !== -1)"
-               :config="{
-                 x: 55,
-                 y: 167 + 73*n,
-                 image: tileset,
-                 ...(selected.indexOf(items[n-1]) !== -1 ? shopTiles.itemFrameSelected : shopTiles.itemFrame)
-               }"
-      />
-    </v-group>
-
     <ls-item v-if="active==='item'" />
     <ls-upgrade v-else-if="active==='upgrade'" />
     <ls-levelup v-else-if="active==='levelup'" />
@@ -169,14 +94,9 @@ export default Vue.extend({
   },
   computed: {
     tileset() { return this.$store.state.tiles },
-    active() {
-      if (this.$store.state.shop.active !== 'none' && this.$store.state.shop.items.length === 0) {
-        this.$store.dispatch('shop/generateItems')
-      }
-
-      return this.$store.state.shop.active
-    },
+    active() { return this.$store.state.shop.active },
     items() { return this.$store.state.shop.items },
+    buffs() { return this.$store.state.shop.buffs },
     selected() { return this.$store.state.shop.selected },
     isValid() { return this.$store.state.shop.selected.length === (this.$store.state.shop.active === 'levelup' ? 2 : 1) }
   },
@@ -187,7 +107,14 @@ export default Vue.extend({
       }
     },
     select(item: number) {
-      this.$store.commit('shop/SELECT_ITEM', this.items[item])
+      switch (this.active) {
+        case 'item':
+          this.$store.commit('shop/SELECT_ITEM', this.items[item])
+          break;
+        case 'upgrade':
+          this.$store.commit('shop/SELECT_ITEM', this.buffs[item])
+          break
+      }
     },
   }
 })

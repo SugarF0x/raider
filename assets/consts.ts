@@ -92,6 +92,10 @@ export const TILESET_COORDS = {
 
 // text and shit (this is to be exported to a locale)
 
+export const ARMOR_BUFFS = ['gold', 'upgrade', 'thorns', 'armor strength', 'blunting', 'dexterity'] as const
+export const WEAPON_BUFFS = ['damage', 'leech', 'poison', 'armor piercing', 'xp', 'strength'] as const
+export const ACCESSORY_BUFFS = ['quick', 'luck', 'regeneration', 'vitality'] as const
+
 export const BUFF_TEXT = {
   'damage': {
     title: 'Damage Buff',
@@ -166,7 +170,7 @@ export const BUFF_TEXT = {
   'dexterity': {
     title: 'Boost Dexterity',
     description: '(+1 repair, +5% shield)',
-    short: ''
+    short: '+DEX'
   },
   'vitality': {
     title: 'Boost Vitality',
@@ -314,11 +318,11 @@ export const titleBase = {
 
 export const shopTiles = {
   plus: {
-    width: 50,
-    height: 50,
+    width: 35,
+    height: 35,
     crop: {
       x: 490,
-      y: 92,
+      y: 92.5,
       width: 22,
       height: 22
     }

@@ -1,12 +1,16 @@
 import { ActionTree, GetterTree, MutationTree } from 'vuex'
 import { CombinedStates, RootState } from './index'
-import { Item, TShop } from '~/assets/Tiles.ts'
+import { Item, Buff, TShop, TBuffs, TItem } from '~/assets/Tiles.ts'
+import { ARMOR_BUFFS, WEAPON_BUFFS, ACCESSORY_BUFFS } from '~/assets/consts'
+
+type TShopBuff = { item: TItem, buff: Buff }
 
 const defaultState = () => {
   return {
     active: 'none' as TShop, // active shop
-    selected: [] as Item[], // selected items/skills
+    selected: [] as Item[] | TShopBuff[], // selected items/skills
     items: [] as Item[], // items one can pick from
+    buffs: [] as TShopBuff[] // buffs to be applied to certain items
   }
 }
 
@@ -26,23 +30,38 @@ export const mutations: MutationTree<ShopState> = {
   SELECT_SHOP(state, shop: TShop) {
     state.active = shop
   },
-  SELECT_ITEM(state, item: Item) {
+  SELECT_ITEM(state, item: Item | TShopBuff) {
     let maxItems = state.active === 'levelup' ? 2 : 1
 
-    if (state.selected.indexOf(item) !== -1) {
-      state.selected = state.selected.filter(entry => entry.id !== item.id)
-    } else {
-      state.selected.push(item)
-      if (state.selected.length > maxItems) {
-        state.selected.shift()
+    if (item instanceof Item) {
+      let selected = state.selected as Item[]
+      if (selected.indexOf(item) !== -1) {
+        selected = selected.filter((entry: Item) => entry.id !== item.id)
+      } else {
+        selected.push(item)
       }
+    } else { // upgrade section
+      let selected = state.selected as TShopBuff[]
+      if (selected.indexOf(item) !== -1) {
+        selected.pop()
+      } else {
+        selected.push(item)
+      }
+    }
+
+    if (state.selected.length > maxItems) {
+      state.selected.shift()
     }
   },
   SET_NEW_ITEMS(state, newItems) {
     state.items = newItems
   },
-  CLEAR_ITEMS(state) {
+  SET_NEW_BUFFS(state, newBuffs) {
+    state.buffs = newBuffs
+  },
+  CLEAR_STORE(state) {
     state.items = []
+    state.buffs = []
     state.selected = []
   }
 }
@@ -61,10 +80,42 @@ export const actions: ActionTree<ShopState, RootState> = {
 
     commit('SET_NEW_ITEMS', newItems)
   },
+  generateBuffs({ rootState, commit }) { // TODO: account for stat cap e.g. A.STR can go as high as 90%
+    let root = rootState as CombinedStates
+    let equipment = [] as Item[]
+
+    Object.entries(root.run.character.equipment).forEach(item => {
+      equipment.push(item[1])
+    })
+    shuffle(equipment)
+    equipment.pop()
+
+    let buffs = [] as TShopBuff[]
+    equipment.forEach(entry => {
+      let type: TBuffs
+      switch(entry.type) {
+        case 'helmet':
+        case 'armor':
+        case 'shield':
+          type = ARMOR_BUFFS[Math.floor(Math.random()*ARMOR_BUFFS.length)]
+          break;
+        case 'weapon':
+          type = WEAPON_BUFFS[Math.floor(Math.random()*WEAPON_BUFFS.length)]
+          break;
+        case 'accessory':
+          type = ACCESSORY_BUFFS[Math.floor(Math.random()*ACCESSORY_BUFFS.length)]
+          break;
+      }
+      let oldBuffPower = entry.buffs.find(entry => entry.type === type)?.power
+      buffs.push({ item: entry.type, buff: new Buff(type, oldBuffPower)})
+    })
+
+    commit('SET_NEW_BUFFS', buffs)
+  },
   applySelected({ state, commit }) {
-    commit('run/APPLY_UPGRADES', state.selected, { root: true })
+    commit('run/APPLY_UPGRADES', { selected: state.selected, type: state.active }, { root: true })
     commit('SELECT_SHOP', 'none')
-    commit('CLEAR_ITEMS', 'none')
+    commit('CLEAR_STORE')
   }
 }
 

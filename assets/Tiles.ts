@@ -1,21 +1,23 @@
-import * as C from './consts'
+import { TILESET_COORDS, BUFF_TEXT, ARMOR_BUFFS, WEAPON_BUFFS, ACCESSORY_BUFFS } from './consts'
 const seedRandom = require('seedrandom');
 
 // items related
 
+// TODO: segment buffs in such a way that ARMOR_BUFFS can not overlap - e.g. some are for helmets, some are for torso, some are for shield ONLY
+
 export type TShop = 'none' | 'item' | 'upgrade' | 'levelup'
 export type TItem = 'helmet' | 'armor' | 'shield' | 'weapon' | 'accessory'
 export type TBuffs = TBuffsArmor | TBuffsWeapon | TBuffsAccessory
-export type TBuffsArmor = 'gold' | 'upgrade' | 'thorns' | 'armor strength' | 'blunting' | 'dexterity'
-export type TBuffsWeapon = 'damage' | 'leech' | 'poison' | 'armor piercing' | 'xp' | 'strength'
-export type TBuffsAccessory = 'quick' | 'luck' | 'regeneration' | 'vitality'
+export type TBuffsArmor = typeof ARMOR_BUFFS[number]
+export type TBuffsWeapon = typeof WEAPON_BUFFS[number]
+export type TBuffsAccessory = typeof ACCESSORY_BUFFS[number]
 
 export class Item {
   id: number
   type: TItem
   power: number
   powerName: string
-  buffs: Buff[]
+  buffs: Buff[] // max of 5 // TODO: turn base power into a buff as well? e.g. weapons have a base Damage buff of 1?
   name: string
 
   constructor(item: TItem | Item) {
@@ -73,13 +75,17 @@ export class Item {
   }
 }
 
-class Buff {
+export class Buff {
   type: TBuffs
   power: number
 
-  constructor(type: TBuffs, power: number) {
+  constructor(type: TBuffs, power = 1) {
     this.type = type
     this.power = power
+  }
+
+  upgrade() { // TODO: make it individual to buffs due to them having different effects e.g. +XP will have a +0.25 and A.STR will have a diminishing return
+    this.power++
   }
 
   getIconConfig(x: number, y: number, icons: HTMLImageElement) {
@@ -90,8 +96,8 @@ class Buff {
       width: 62,
       height: 62,
       crop: {
-        x: C.TILESET_COORDS.buff.base.x + 50*(C.TILESET_COORDS.buff.order.indexOf(this.type) % 10),
-        y: C.TILESET_COORDS.buff.base.y + 50*Math.floor(C.TILESET_COORDS.buff.order.indexOf(this.type) / 10),
+        x: TILESET_COORDS.buff.base.x + 50*(TILESET_COORDS.buff.order.indexOf(this.type) % 10),
+        y: TILESET_COORDS.buff.base.y + 50*Math.floor(TILESET_COORDS.buff.order.indexOf(this.type) / 10),
         width: 50,
         height: 50
       }
@@ -99,7 +105,7 @@ class Buff {
   }
 
   getText() {
-    return C.BUFF_TEXT[this.type]
+    return BUFF_TEXT[this.type] // TODO: mace custom getText handlers so that e.g. Armor Strength will return % chance of each point to break
   }
 }
 
@@ -122,6 +128,7 @@ export interface TileState {
   attack: number;
 }
 
+// TODO: refactor Effects to be of dedicated classes
 export interface IEffect {
   current: TTEffect[];
   duration: number;
