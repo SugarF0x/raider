@@ -4,7 +4,8 @@
     <v-image :config="hud"></v-image>
 
     <v-group id="score">
-      <u-text :config="{text: score, x: 175, y: 20, width: 100, fontSize: 24}" />
+      <u-text :config="{text: `Score: ${game.score}`, x: 25, y: 20, align: 'left', width: 200, fontSize: 24}" />
+      <u-text :config="{text: `Turn: ${game.turn}`, x: 225, y: 20, align: 'right', width: 200, fontSize: 24}" />
     </v-group>
 
     <v-group id="health">
@@ -79,7 +80,7 @@ export default Vue.extend({
     totalArmor() { return this.$store.getters['run/totalArmor'] },
     totalAttack() { return this.$store.getters['run/totalAttack'] },
     tileset() { return this.$store.state.tiles },
-    score() { return this.$store.state.run.game.score }
+    game() { return this.$store.state.run.game }
   },
   methods: {
     /**
