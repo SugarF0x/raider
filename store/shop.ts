@@ -1,7 +1,7 @@
 import { ActionTree, GetterTree, MutationTree } from 'vuex'
 import { CombinedStates, RootState } from './index'
 import { Item, Buff, TShop, TBuffs, TItem } from '~/assets/Tiles.ts'
-import { ARMOR_BUFFS, WEAPON_BUFFS, ACCESSORY_BUFFS } from '~/assets/consts'
+import { BUFF_EQUIPMENT } from '~/assets/consts'
 
 type TShopBuff = { item: TItem, buff: Buff }
 
@@ -92,22 +92,9 @@ export const actions: ActionTree<ShopState, RootState> = {
 
     let buffs = [] as TShopBuff[]
     equipment.forEach(entry => {
-      let type: TBuffs
-      switch(entry.type) {
-        case 'helmet':
-        case 'armor':
-        case 'shield':
-          type = ARMOR_BUFFS[Math.floor(Math.random()*ARMOR_BUFFS.length)]
-          break;
-        case 'weapon':
-          type = WEAPON_BUFFS[Math.floor(Math.random()*WEAPON_BUFFS.length)]
-          break;
-        case 'accessory':
-          type = ACCESSORY_BUFFS[Math.floor(Math.random()*ACCESSORY_BUFFS.length)]
-          break;
-      }
-      let oldBuffPower = entry.buffs.find(entry => entry.type === type)?.power
-      buffs.push({ item: entry.type, buff: new Buff(type, oldBuffPower)})
+      let availableBuffs = BUFF_EQUIPMENT[entry.type]
+      let type: TBuffs = availableBuffs[Math.floor(Math.random()*availableBuffs.length)]
+      buffs.push({ item: entry.type, buff: new Buff(type)})
     })
 
     commit('SET_NEW_BUFFS', buffs)

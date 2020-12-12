@@ -1,4 +1,4 @@
-import { TBuffs, TFamily } from "~/assets/Tiles"
+import { TBuffs, TFamily, TItem } from "~/assets/Tiles"
 
 export const KONVA_HEIGHT = 800
 export const KONVA_WIDTH = 450
@@ -85,18 +85,22 @@ export const TILESET_COORDS = {
     base: { x: 513, y: 250 }, // every tile is 50x50
     order: [
       'damage', 'undefined-1', 'leech', 'poison', 'armor piercing', 'quick', 'xp', 'gold', 'strength', 'luck',
-      'undefined-2', 'upgrade', 'thorns', 'undefined-3', 'armor strength', 'blunting', 'undefined-4', 'regeneration', 'dexterity', 'vitality'
+      'undefined-2', 'defense', 'thorns', 'upgrade', 'armor strength', 'blunting', 'undefined-3', 'regeneration', 'dexterity', 'vitality'
     ]
   }
 } as { [key in TFamily | 'effect' | 'spell' | 'perk' | 'buff']: any } // TODO: make union type for all the coords
 
 // text and shit (this is to be exported to a locale)
 
-export const ARMOR_BUFFS = ['gold', 'upgrade', 'thorns', 'armor strength', 'blunting', 'dexterity'] as const
-export const WEAPON_BUFFS = ['damage', 'leech', 'poison', 'armor piercing', 'xp', 'strength'] as const
-export const ACCESSORY_BUFFS = ['quick', 'luck', 'regeneration', 'vitality'] as const
+export const BUFF_EQUIPMENT = {
+  helmet: ['defense', 'dexterity', 'armor strength'] as const,
+  armor: ['defense', 'gold', 'thorns'] as const,
+  shield: ['defense', 'upgrade', 'blunting'] as const,
+  weapon: ['damage', 'leech', 'poison', 'armor piercing', 'xp', 'strength'] as const,
+  accessory: ['vitality', 'quick', 'luck', 'regeneration'] as const
+}
 
-export const BUFF_TEXT = {
+export const BUFF_TEXT: {[K in TBuffs]: { title: string, description: string, short: string }} = {
   'damage': {
     title: 'Damage Buff',
     description: '+Damage',
@@ -142,15 +146,20 @@ export const BUFF_TEXT = {
     description: '+5% bonus potion',
     short: '+LUK'
   },
-  'upgrade': {
-    title: 'Boost Upgrade',
-    description: 'Upgrade per shield',
-    short: '+UP'
+  'defense': {
+    title: 'Defense',
+    description: 'Max armor defense',
+    short: '+DEF'
   },
   'thorns': {
     title: 'Thorns',
     description: 'Damage attackers',
     short: 'Th.DMG'
+  },
+  'upgrade': {
+    title: 'Boost Upgrade',
+    description: 'Upgrade per shield',
+    short: '+UP'
   },
   'armor strength': {
     title: 'Armor strength',
@@ -177,7 +186,7 @@ export const BUFF_TEXT = {
     description: '(+1 vitality, +5% hp)',
     short: '+VIT'
   },
-} as {[K in TBuffs]: { title: string, description: string, short: string }}
+}
 
 // markdown
 
