@@ -38,6 +38,12 @@ export default {
   plugins: [
     '@/plugins/vue-konva.ts'
   ],
+
+  googleAnalytics: {
+    id: process.env.GA_ID,
+    dev: !process.env.GA_ID
+  },
+
   /*
   ** Auto import components
   ** See https://nuxtjs.org/api/configuration-components
@@ -49,6 +55,8 @@ export default {
   buildModules: [
     '@nuxt/typescript-build',
     '@nuxtjs/vuetify',
+    '@nuxtjs/google-analytics',
+    '@nuxtjs/dotenv'
   ],
   /*
   ** Nuxt.js modules
