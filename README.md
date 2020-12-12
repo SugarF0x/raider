@@ -115,3 +115,8 @@ Commit syntax is subjective. Committer is to pick most appropriate commit catego
 * :pill: Testing - Completion and maintenance of test units
 * :construction: WIP - A stepping stone for a Work in Progress change
 
+## Misc
+
+If you like this project and want to support its development - feel free to buy me a coffee
+
+[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Z8Z72XA7P)
