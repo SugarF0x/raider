@@ -20,6 +20,8 @@ You can fiddle around with it yourself [here](http://raid.sugarfox.ru).
 
 ![snapshot-1](https://raw.githubusercontent.com/SugarF0x/raider/master/git/snapshot-1.jpg)
 ![snapshot-2](https://raw.githubusercontent.com/SugarF0x/raider/master/git/snapshot-2.jpg)
+![snapshot-3](https://raw.githubusercontent.com/SugarF0x/raider/master/git/snapshot-3.jpg)
+![snapshot-4](https://raw.githubusercontent.com/SugarF0x/raider/master/git/snapshot-4.jpg)
 
 ## Roadmap
 
@@ -65,14 +67,22 @@ Given my lack of experience if this field, every point here is subject to change
     - [X] Setup level progression display
     - [X] Setup upgrade progression display
 - [ ] Setup baseline gameplay necessities
-    - [ ] Add shop handling
-    - [ ] Add upgrade handling
+    - [X] Add shop handling
+    - [X] Add upgrade handling
     - [ ] Add levelup handling
     - [ ] Add difficulty progression
         - [X] Add increasing difficulty curve
         - [ ] Add bosses
+            - [ ] Boss mechanics
+            - [ ] Actual bosses
     - [X] Add skull state handling
-
+    - [ ] Add perks (not the ones on new game screen, but like STR VIT DEX)
+    - [ ] Add spells
+        - [ ] Spell mechanics
+        - [ ] Actual spells
+    - [ ] Add buffs
+        - [X] Buff mechanics
+        - [ ] Actual buffs
 ## Build Setup
 
 ```bash
