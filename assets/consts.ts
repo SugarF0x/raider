@@ -93,14 +93,15 @@ export const TILESET_COORDS = {
 // text and shit (this is to be exported to a locale)
 
 export const BUFF_EQUIPMENT = {
-  helmet: ['defense', 'dexterity', 'armor strength'] as const,
-  armor: ['defense', 'gold', 'thorns'] as const,
-  shield: ['defense', 'upgrade', 'blunting'] as const,
-  weapon: ['damage', 'leech', 'poison', 'armor piercing', 'xp', 'strength'] as const,
-  accessory: ['vitality', 'quick', 'luck', 'regeneration'] as const
+  helmet: ['defense', /*'dexterity', 'armor strength'*/] as const,
+  armor: ['defense', /*'gold', 'thorns'*/] as const,
+  shield: ['defense', /*'upgrade', 'blunting'*/] as const,
+  weapon: ['damage', /*'leech', 'poison', 'armor piercing', 'xp', 'strength'*/] as const,
+  accessory: ['vitality', /*'quick', 'luck', 'regeneration'*/] as const
 }
 
-export const BUFF_TEXT: {[K in TBuffs]: { title: string, description: string, short: string }} = {
+// TODO: remove any from type assertion after all buffs are back in play
+export const BUFF_TEXT: {[K in TBuffs | any]: { title: string, description: string, short: string }} = {
   'damage': {
     title: 'Damage Buff',
     description: '+Damage',
