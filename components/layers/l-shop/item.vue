@@ -123,13 +123,8 @@ export default Vue.extend({
     comparisonText(item1: Item, item2: Item): Array<{ text: string, color: string }> {
       let result = [] as Array<{ text: string, color: string }>
 
-      let color = 'grey'
-      if (item1.power > item2.power) { color = 'green' }
-      else if (item1.power < item2.power) { color = 'red' }
-      result.push({ text: item1.getPowerText(), color})
-
       item1.buffs.forEach(buff1 => {
-        color = 'green'
+        let color = 'green'
         let buff2 = item2.buffs.find(entry => entry.type === buff1.type)
         if (buff2) {
           if (buff1.power === buff2.power) { color = 'grey' }

@@ -51,11 +51,11 @@ export const getters: GetterTree<RunState, RootState> = {
   },
   totalArmor(state) {
     return [state.character.equipment.helmet, state.character.equipment.armor, state.character.equipment.shield].reduce((a, v) => {
-      return a + v.power
+      return a + v.getBaseBuff().power
     }, 0)
   },
-  totalAttack: state => state.character.equipment.weapon.power,
-  totalHealth: state => 25 + state.character.equipment.accessory.power*15 + state.character.state.level*10,
+  totalAttack: state => state.character.equipment.weapon.getBaseBuff().power,
+  totalHealth: state => 25 + state.character.equipment.accessory.getBaseBuff().power*15 + state.character.state.level*10,
   enemyPower: state => Math.floor(state.game.turn/100) + 1
 }
 
@@ -113,29 +113,27 @@ export const mutations: MutationTree<RunState> = {
       state.character.state[target] = value
     }
   },
-  UPGRADE_ITEM(state, item: TItem) {
-    // TODO: add buffs and what not, stat increase is a placeholder
-    state.character.equipment[item].upgradeItem()
-  },
   APPLY_UPGRADES(state, payload: TApplyUpgradesPayload) {
     if (payload.type === 'item') {
       let selected = payload.selected[0]
       let itemType = selected.type
 
-      if (itemType === 'accessory') state.character.state.health += (selected.power - state.character.equipment[itemType].power)*15 // heal by health increase
-      else if (itemType !== 'weapon') state.character.state.shields += selected.power - state.character.equipment[itemType].power // repair by armor increase
+      // heal or repair if upgrade qualifies
+      if (itemType === 'accessory') state.character.state.health += (selected.getBaseBuff().power - state.character.equipment[itemType].getBaseBuff().power)*15 // heal by health increase
+      else if (itemType !== 'weapon') state.character.state.shields += selected.getBaseBuff().power - state.character.equipment[itemType].getBaseBuff().power // repair by armor increase
 
       state.character.equipment[itemType] = selected
     } else if (payload.type === 'upgrade') {
       let { item, buff } = payload.selected[0]
-      let wornItem = state.character.equipment[item]
 
-      let sameBuff = wornItem.buffs.find(entry => entry.type === buff.type)
-      if (sameBuff) {
-        sameBuff.upgrade()
-      } else {
-        wornItem.buffs.push(buff)
+      switch (buff.type) {
+        case 'defense':
+          state.character.state.shields += 1; break
+        case 'vitality':
+          state.character.state.health += 15; break
       }
+
+      state.character.equipment[item].applyBuff(buff)
     } else {
       // TODO: account for levelup
     }

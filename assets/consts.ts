@@ -104,7 +104,7 @@ export const BUFF_TEXT: {[K in TBuffs]: { title: string, description: string, sh
   'damage': {
     title: 'Damage Buff',
     description: '+Damage',
-    short: '+DMG'
+    short: 'Dmg'
   },
   'leech': {
     title: 'Leech',
@@ -149,7 +149,7 @@ export const BUFF_TEXT: {[K in TBuffs]: { title: string, description: string, sh
   'defense': {
     title: 'Defense',
     description: 'Max armor defense',
-    short: '+DEF'
+    short: 'Def'
   },
   'thorns': {
     title: 'Thorns',
@@ -184,7 +184,7 @@ export const BUFF_TEXT: {[K in TBuffs]: { title: string, description: string, sh
   'vitality': {
     title: 'Boost Vitality',
     description: '(+1 vitality, +5% hp)',
-    short: '+VIT'
+    short: 'HP'
   },
 }
 

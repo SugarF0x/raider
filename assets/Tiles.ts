@@ -17,9 +17,8 @@ export type TBuffsAccessory = typeof BUFF_EQUIPMENT.accessory[number]
 export class Item {
   id: number
   type: TItem
-  power: number
   powerName: string
-  buffs: Buff[] // max of 5 // TODO: turn base power into a buff as well? e.g. weapons have a base Damage buff of 1?
+  buffs: Buff[] = []
   name: string
 
   constructor(item: TItem | Item) {
@@ -31,25 +30,42 @@ export class Item {
     const rng = new seedRandom(this.id)
 
     if (typeof item === 'object') {
-      // upgrade based on previous item
-      this.power = item.power+1 + (rng() > .7 ? 1 : 0)
-      // TODO: have a chance to increase/decrease buffs
-      this.buffs = item.buffs
+      // TODO: have a chance to increase/decrease other buffs
+      item.buffs.forEach(buff => {
+        this.buffs.push(new Buff(buff.type, buff.power))
+      })
+      this.upgradeItem()
+      if (rng() > .85) this.upgradeItem() // chance for double upgrade
     } else {
       // generate new item
-      this.power = 1
-      this.buffs = []
+      let baseBuff: Buff
+      switch (item) {
+        case 'helmet': case 'armor': case 'shield':
+          baseBuff = new Buff('defense'); break
+        case 'weapon':
+          baseBuff = new Buff('damage'); break
+        case 'accessory':
+          baseBuff = new Buff('vitality'); break
+      }
+      this.buffs = [baseBuff]
     }
   }
 
   upgradeItem() {
-    this.power++; // this shall be replaced with buffs for upgrades
-    // TODO: add buffs application
+    this.getBaseBuff()?.upgrade() // upgrade main stat
   }
 
-  getPowerText() {
-    if (this.powerName === 'hp') return `${this.power*15} ${this.powerName}`
-    else return `${this.power} ${this.powerName}`
+  applyBuff(buff: Buff) {
+    let ownBuff = this.buffs.find(entry => entry.type === buff.type)
+    if (ownBuff) {
+      ownBuff.upgrade()
+    } else {
+      this.buffs.push(buff)
+    }
+  }
+
+  getBaseBuff() {
+    return this.buffs[0]
   }
 
   getIconConfig(x: number, y: number, icons: HTMLImageElement) {
