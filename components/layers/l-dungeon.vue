@@ -279,6 +279,7 @@ export default Vue.extend({
 
         // progress turn
         this.$store.commit('run/NEXT_TURN')
+        this.$ga.event('raid','play', 'collect', this.arrow.keys.length)
 
         return true
       } else {

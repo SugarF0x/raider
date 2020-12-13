@@ -35,6 +35,7 @@ export default Vue.extend({
   },
   methods: {
     restart() {
+      this.$ga.event('raid','restart', 'dead', this.$store.state.run.game.score)
       this.$store.dispatch('resetStore')
       this.$store.dispatch('dungeon/populate')
       this.$store.commit('TEMP_GAMEOVER_TRIGGER')
