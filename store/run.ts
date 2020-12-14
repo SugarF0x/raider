@@ -161,7 +161,7 @@ export const mutations: MutationTree<RunState> = {
 
 // noinspection JSUnusedGlobalSymbols
 export const actions: ActionTree<RunState, RootState> = {
-  handleCollection({ commit, state, rootState, rootGetters }) {
+  handleCollection({ commit, state, rootState, rootGetters }) { // TODO: this really needs yet another cleanup UUUGGHHHHHH
     let root = rootState as CombinedStates
     let count = 0
     if (rootGetters.selectedFamily === 'sword') {
@@ -185,7 +185,8 @@ export const actions: ActionTree<RunState, RootState> = {
     }
 
     // handle collection
-    let endCount: number // this one here is for final calculations with added bonuses
+    let endCount = 0 // this one here is for final calculations with added bonuses
+    let overkill = 0 // this one is for overflow handling
     switch (rootGetters.selectedFamily) {
       case 'coin':
         if (state.collectibles.current.coins+count >= state.collectibles.max) {
@@ -196,31 +197,41 @@ export const actions: ActionTree<RunState, RootState> = {
         }
         break;
       case 'sword':
-        endCount = 0
         for (let i = 0; i<count; i++) Math.random() < rootGetters['run/totalAttributes'].strength*0.05 ? endCount+=2 : endCount++
         if (state.collectibles.current.experience+endCount >= state.collectibles.max) {
           commit('MODIFY_COLLECTIBLES', { target: 'experience', value: state.collectibles.current.experience+endCount-state.collectibles.max, set: true })
           // TODO: enable levelup shop on spells completion
           // commit('shop/SELECT_SHOP', 'levelup', { root: true })
-          // THIS IS A PLACEHOLDER - SEE ABOVE
-          commit('MODIFY_CHARACTER', { target: 'level', value: 1 })
-          commit('MODIFY_CHARACTER', { target: 'health', value: rootGetters['run/totalHealth'], set: true })
+                    // THIS IS A PLACEHOLDER - SEE ABOVE
+                    commit('MODIFY_CHARACTER', { target: 'level', value: 1 })
+                    commit('MODIFY_CHARACTER', { target: 'health', value: rootGetters['run/totalHealth'], set: true })
         } else {
           commit('MODIFY_COLLECTIBLES', { target: 'experience', value: endCount })
         }
         break;
       case 'shield':
-        if (state.character.state.shields+count > rootGetters['run/totalArmor']) {
-          if (state.collectibles.current.upgrade+(count-(rootGetters['run/totalArmor']-state.character.state.shields)) >= state.collectibles.max) {
-            commit('MODIFY_COLLECTIBLES', { target: 'upgrade', value: state.collectibles.current.upgrade+(count-(rootGetters['run/totalArmor']-state.character.state.shields))-state.collectibles.max, set: true })
+        let dexterity = rootGetters['run/totalAttributes'].dexterity
+        let repair = dexterity+1
 
-            commit('shop/SELECT_SHOP', 'upgrade', { root: true })
-          } else {
-            commit('MODIFY_COLLECTIBLES', { target: 'upgrade', value: count-(rootGetters['run/totalArmor']-state.character.state.shields) })
-          }
+        for (let i = 0; i<count; i++) Math.random() < dexterity*0.05 ? endCount+=2 : endCount++
+        overkill = state.character.state.shields+(endCount*repair) - rootGetters['run/totalArmor']
+        overkill = overkill > 0 ? overkill : 0
+
+        if (overkill) {
           commit('MODIFY_CHARACTER', { target: 'shields', value: rootGetters['run/totalArmor'], set: true })
+
+          let leftovers = Math.floor(overkill/repair) // how many shields are left to be applied to upgrades
+          if (leftovers) {
+            let overUpgrade = state.collectibles.current.upgrade+leftovers - state.collectibles.max
+            if (overUpgrade >= 0) {
+              commit('MODIFY_COLLECTIBLES', { target: 'upgrade', value: overUpgrade, set: true })
+              commit('shop/SELECT_SHOP', 'upgrade', { root: true })
+            } else {
+              commit('MODIFY_COLLECTIBLES', { target: 'upgrade', value: leftovers })
+            }
+          }
         } else {
-          commit('MODIFY_CHARACTER', { target: 'shields', value: count })
+          commit('MODIFY_CHARACTER', { target: 'shields', value: endCount*repair })
         }
         break;
       case 'potion':
