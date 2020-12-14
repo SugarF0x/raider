@@ -161,7 +161,7 @@ export const mutations: MutationTree<RunState> = {
 
 // noinspection JSUnusedGlobalSymbols
 export const actions: ActionTree<RunState, RootState> = {
-  handleCollection({ commit, state, rootState, rootGetters }) { // TODO: this really needs yet another cleanup UUUGGHHHHHH
+  handleCollection({ commit, state, getters, rootState, rootGetters }) { // TODO: this really needs yet another cleanup UUUGGHHHHHH
     let root = rootState as CombinedStates
     let count = 0
     if (rootGetters.selectedFamily === 'sword') {
@@ -197,28 +197,28 @@ export const actions: ActionTree<RunState, RootState> = {
         }
         break;
       case 'sword':
-        for (let i = 0; i<count; i++) Math.random() < rootGetters['run/totalAttributes'].strength*0.05 ? endCount+=2 : endCount++
+        for (let i = 0; i<count; i++) Math.random() < getters.totalAttributes.strength*0.05 ? endCount+=2 : endCount++
         if (state.collectibles.current.experience+endCount >= state.collectibles.max) {
           commit('MODIFY_COLLECTIBLES', { target: 'experience', value: state.collectibles.current.experience+endCount-state.collectibles.max, set: true })
           // TODO: enable levelup shop on spells completion
           // commit('shop/SELECT_SHOP', 'levelup', { root: true })
                     // THIS IS A PLACEHOLDER - SEE ABOVE
                     commit('MODIFY_CHARACTER', { target: 'level', value: 1 })
-                    commit('MODIFY_CHARACTER', { target: 'health', value: rootGetters['run/totalHealth'], set: true })
+                    commit('MODIFY_CHARACTER', { target: 'health', value: getters.totalHealth, set: true })
         } else {
           commit('MODIFY_COLLECTIBLES', { target: 'experience', value: endCount })
         }
         break;
       case 'shield':
-        let dexterity = rootGetters['run/totalAttributes'].dexterity
+        let dexterity = getters.totalAttributes.dexterity
         let repair = dexterity+1
 
         for (let i = 0; i<count; i++) Math.random() < dexterity*0.05 ? endCount+=2 : endCount++
-        overkill = state.character.state.shields+(endCount*repair) - rootGetters['run/totalArmor']
+        overkill = state.character.state.shields+(endCount*repair) - getters.totalArmor
         overkill = overkill > 0 ? overkill : 0
 
         if (overkill) {
-          commit('MODIFY_CHARACTER', { target: 'shields', value: rootGetters['run/totalArmor'], set: true })
+          commit('MODIFY_CHARACTER', { target: 'shields', value: getters.totalArmor, set: true })
 
           let leftovers = Math.floor(overkill/repair) // how many shields are left to be applied to upgrades
           if (leftovers) {
@@ -235,8 +235,8 @@ export const actions: ActionTree<RunState, RootState> = {
         }
         break;
       case 'potion':
-        if (state.character.state.health+count > rootGetters['run/totalHealth']) {
-          commit('MODIFY_CHARACTER', { target: 'health', value: rootGetters['run/totalHealth'], set: true })
+        if (state.character.state.health+count > getters.totalHealth) {
+          commit('MODIFY_CHARACTER', { target: 'health', value: getters.totalHealth, set: true })
         } else {
           commit('MODIFY_CHARACTER', { target: 'health', value: count })
         }
