@@ -2,6 +2,7 @@ import { ActionTree, GetterTree, MutationTree } from 'vuex'
 import { CombinedStates, RootState } from './index'
 import { Item, Buff, TShop, TBuffs, TItem } from '~/assets/Tiles.ts'
 import { BUFF_EQUIPMENT } from '~/assets/consts'
+import { shuffle } from '~/assets/utils'
 
 type TShopBuff = { item: TItem, buff: Buff }
 
@@ -104,24 +105,4 @@ export const actions: ActionTree<ShopState, RootState> = {
     commit('SELECT_SHOP', 'none')
     commit('CLEAR_STORE')
   }
-}
-
-// TODO: move this to util functions
-function shuffle(array: any[]) {
-  let currentIndex = array.length, temporaryValue, randomIndex;
-
-  // While there remain elements to shuffle...
-  while (0 !== currentIndex) {
-
-    // Pick a remaining element...
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
-
-    // And swap it with the current element.
-    temporaryValue = array[currentIndex];
-    array[currentIndex] = array[randomIndex];
-    array[randomIndex] = temporaryValue;
-  }
-
-  return array;
 }
