@@ -23,6 +23,14 @@ const defaultState = () => {
         shields: 3,
         level: 1
       },
+      attributes: {
+        strength: 0, // base damage & bonus exp chance +1 & +5% per tier respectively
+        dexterity: 0, // repair per shield & bonus shield chance +1 & +5% per tier respectively
+        vitality: 0, // health per potion & bonus potion chance +1 & +5% per tier respectively
+        luck: 0, // bonus coin chance +5% per tier
+        health: 0, // bonus health +15 per tier
+        charisma: 0 // bonus every chance +5% per tier
+      },
       equipment: {
         helmet: new Item('helmet'),
         armor: new Item('armor'),
@@ -55,7 +63,15 @@ export const getters: GetterTree<RunState, RootState> = {
     }, 0)
   },
   totalAttack: state => state.character.equipment.weapon.getBaseBuff().power,
-  totalHealth: state => 25 + state.character.equipment.accessory.getBaseBuff().power*15 + state.character.state.level*10,
+  totalHealth: state => 35 + (state.character.equipment.accessory.getBaseBuff().power+state.character.attributes.health)*15,
+  totalAttributes: state => ({
+    strength: (state.character.equipment.weapon.buffs.find(entry => entry.type === 'strength')?.power || 0) + state.character.attributes.strength,
+    dexterity: (state.character.equipment.helmet.buffs.find(entry => entry.type === 'dexterity')?.power || 0) + state.character.attributes.dexterity,
+    vitality: (state.character.equipment.accessory.buffs.find(entry => entry.type === 'vitality')?.power || 0) + state.character.attributes.vitality,
+    luck: (state.character.equipment.accessory.buffs.find(entry => entry.type === 'luck')?.power || 0) + state.character.attributes.luck,
+    health: state.character.attributes.health,
+    charisma: state.character.attributes.charisma
+  }),
   enemyPower: state => Math.floor(state.game.turn/100) + 1
 }
 
@@ -169,6 +185,7 @@ export const actions: ActionTree<RunState, RootState> = {
     }
 
     // handle collection
+    let endCount: number // this one here is for final calculations with added bonuses
     switch (rootGetters.selectedFamily) {
       case 'coin':
         if (state.collectibles.current.coins+count >= state.collectibles.max) {
@@ -179,15 +196,17 @@ export const actions: ActionTree<RunState, RootState> = {
         }
         break;
       case 'sword':
-        if (state.collectibles.current.experience+count >= state.collectibles.max) {
-          commit('MODIFY_COLLECTIBLES', { target: 'experience', value: state.collectibles.current.experience+count-state.collectibles.max, set: true })
+        endCount = 0
+        for (let i = 0; i<count; i++) Math.random() < rootGetters['run/totalAttributes'].strength*0.05 ? endCount+=2 : endCount++
+        if (state.collectibles.current.experience+endCount >= state.collectibles.max) {
+          commit('MODIFY_COLLECTIBLES', { target: 'experience', value: state.collectibles.current.experience+endCount-state.collectibles.max, set: true })
           // TODO: enable levelup shop on spells completion
           // commit('shop/SELECT_SHOP', 'levelup', { root: true })
           // THIS IS A PLACEHOLDER - SEE ABOVE
           commit('MODIFY_CHARACTER', { target: 'level', value: 1 })
           commit('MODIFY_CHARACTER', { target: 'health', value: rootGetters['run/totalHealth'], set: true })
         } else {
-          commit('MODIFY_COLLECTIBLES', { target: 'experience', value: count })
+          commit('MODIFY_COLLECTIBLES', { target: 'experience', value: endCount })
         }
         break;
       case 'shield':

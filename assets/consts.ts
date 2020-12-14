@@ -1,4 +1,4 @@
-import { TBuffs, TFamily, TItem } from "~/assets/Tiles"
+import { TBuffs, TFamily } from "~/assets/Tiles"
 
 export const KONVA_HEIGHT = 800
 export const KONVA_WIDTH = 450
@@ -75,7 +75,7 @@ export const TILESET_COORDS = {
       'hack', 'arrow', 'masochism', 'wish', 'bloodlust', 'undefined-1', 'theft', 'undying', 'undefined-2', 'undefined-3'
     ]
   },
-  perk: {
+  attribute: {
     base: { x: 513, y: 200 }, //every tiles is 50x50
     order: [
       'strength', 'dexterity', 'vitality', 'luck', 'damage', 'defense', 'health', 'charisma'
@@ -88,23 +88,23 @@ export const TILESET_COORDS = {
       'undefined-2', 'defense', 'thorns', 'upgrade', 'armor strength', 'blunting', 'undefined-3', 'regeneration', 'dexterity', 'vitality'
     ]
   }
-} as { [key in TFamily | 'effect' | 'spell' | 'perk' | 'buff']: any } // TODO: make union type for all the coords
+} as { [key in TFamily | 'effect' | 'spell' | 'attribute' | 'buff']: any } // TODO: make union type for all the coords
 
 // text and shit (this is to be exported to a locale)
 
 export const BUFF_EQUIPMENT = {
-  helmet: ['defense', /*'dexterity', 'armor strength'*/] as const,
+  helmet: ['defense', 'dexterity'/*, 'armor strength'*/] as const,
   armor: ['defense', /*'gold', 'thorns'*/] as const,
   shield: ['defense', /*'upgrade', 'blunting'*/] as const,
-  weapon: ['damage', /*'leech', 'poison', 'armor piercing', 'xp', 'strength'*/] as const,
-  accessory: ['vitality', /*'quick', 'luck', 'regeneration'*/] as const
+  weapon: ['damage', /*'leech', 'poison', 'armor piercing', 'xp',*/ 'strength'] as const,
+  accessory: ['vitality', /*'quick',*/ 'luck'/*, 'regeneration'*/] as const
 }
 
 // TODO: remove any from type assertion after all buffs are back in play
 export const BUFF_TEXT: {[K in TBuffs | any]: { title: string, description: string, short: string }} = {
   'damage': {
-    title: 'Damage Buff',
-    description: '+Damage',
+    title: 'Damage',
+    description: 'Damage per sword',
     short: 'Dmg'
   },
   'leech': {
@@ -139,12 +139,12 @@ export const BUFF_TEXT: {[K in TBuffs | any]: { title: string, description: stri
   },
   'strength': {
     title: 'Boost Strength',
-    description: '(+1 dmg, +5% exp)',
+    description: '(+1 base dmg, +5% exp)',
     short: '+STR'
   },
   'luck': {
     title: 'Boost Luck',
-    description: '+5% bonus potion',
+    description: '+5% bonus coin',
     short: '+LUK'
   },
   'defense': {
