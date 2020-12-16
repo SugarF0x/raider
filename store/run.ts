@@ -63,7 +63,7 @@ export const getters: GetterTree<RunState, RootState> = {
     }, 0)
   },
   totalAttack: state => state.character.equipment.weapon.getBaseBuff().power,
-  totalHealth: state => 35 + (state.character.equipment.accessory.getBaseBuff().power+state.character.attributes.health)*15,
+  totalHealth: (state, getters) => 35 + (getters.totalAttributes.vitality+state.character.attributes.health)*15,
   totalAttributes: state => ({
     strength: (state.character.equipment.weapon.buffs.find(entry => entry.type === 'strength')?.power || 0) + state.character.attributes.strength,
     dexterity: (state.character.equipment.helmet.buffs.find(entry => entry.type === 'dexterity')?.power || 0) + state.character.attributes.dexterity,
@@ -235,10 +235,11 @@ export const actions: ActionTree<RunState, RootState> = {
         }
         break;
       case 'potion':
-        if (state.character.state.health+count > getters.totalHealth) {
+        for (let i = 0; i<count; i++) Math.random() < getters.totalAttributes.vitality*0.05 ? endCount+=2 : endCount++
+        if (state.character.state.health+endCount > getters.totalHealth) {
           commit('MODIFY_CHARACTER', { target: 'health', value: getters.totalHealth, set: true })
         } else {
-          commit('MODIFY_CHARACTER', { target: 'health', value: count })
+          commit('MODIFY_CHARACTER', { target: 'health', value: endCount })
         }
         break;
     }
