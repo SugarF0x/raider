@@ -1,4 +1,4 @@
-import { TILESET_COORDS, BUFF_TEXT, BUFF_EQUIPMENT } from './consts'
+import { TILESET_COORDS, BUFF_TEXT, TBuffs } from './consts'
 const seedRandom = require('seedrandom');
 
 // items related
@@ -7,12 +7,6 @@ const seedRandom = require('seedrandom');
 
 export type TShop = 'none' | 'item' | 'upgrade' | 'levelup'
 export type TItem = 'helmet' | 'armor' | 'shield' | 'weapon' | 'accessory'
-export type TBuffs = TBuffsArmor | TBuffsWeapon | TBuffsAccessory | TBuffsHelmet | TBuffsShield
-export type TBuffsHelmet = typeof BUFF_EQUIPMENT.helmet[number]
-export type TBuffsArmor = typeof BUFF_EQUIPMENT.armor[number]
-export type TBuffsShield = typeof BUFF_EQUIPMENT.shield[number]
-export type TBuffsWeapon = typeof BUFF_EQUIPMENT.weapon[number]
-export type TBuffsAccessory = typeof BUFF_EQUIPMENT.accessory[number]
 
 export class Item {
   id: number

@@ -138,7 +138,8 @@ export default Vue.extend({
       let x: number = 1;
       let y: number = 928;
 
-      let tilesetPos = C.TILESET_COORDS[tile.family][tile.type];
+      // @ts-ignore // TODO: return to this bit here (TILESET_COORDS as const ruined type check)
+      const tilesetPos = C.TILESET_COORDS[tile.family][tile.type];
 
       if (!isNaN(tilesetPos)) {
         // generic type

@@ -1,5 +1,3 @@
-import { TBuffs, TFamily } from "~/assets/Tiles"
-
 export const KONVA_HEIGHT = 800
 export const KONVA_WIDTH = 450
 export const KONVA_BACKGROUND_COLOR = '#1D214E'
@@ -88,7 +86,11 @@ export const TILESET_COORDS = {
       'undefined-2', 'defense', 'thorns', 'upgrade', 'armor strength', 'blunting', 'undefined-3', 'regeneration', 'dexterity', 'vitality'
     ]
   }
-} as { [key in TFamily | 'effect' | 'spell' | 'attribute' | 'buff']: any } // TODO: make union type for all the coords
+} as const
+
+export type TAttributes = typeof TILESET_COORDS.attribute.order[number]
+export type TSpells = typeof TILESET_COORDS.spell.order[number]
+export type TBuffs = typeof TILESET_COORDS.buff.order[number]
 
 // text and shit (this is to be exported to a locale)
 
@@ -138,14 +140,14 @@ export const BUFF_TEXT: {[K in TBuffs | any]: { title: string, description: stri
     short: '+GP'
   },
   'strength': {
-    title: 'Boost Strength',
+    title: 'Strength',
     description: '(+1 base dmg, +5% exp)',
-    short: '+STR'
+    short: 'STR'
   },
   'luck': {
-    title: 'Boost Luck',
+    title: 'Luck',
     description: '+5% bonus coin',
-    short: '+LUK'
+    short: 'LUK'
   },
   'defense': {
     title: 'Defense',
@@ -178,15 +180,25 @@ export const BUFF_TEXT: {[K in TBuffs | any]: { title: string, description: stri
     short: 'REG'
   },
   'dexterity': {
-    title: 'Boost Dexterity',
+    title: 'Dexterity',
     description: '(+1 repair, +5% shield)',
-    short: '+DEX'
+    short: 'DEX'
   },
   'vitality': {
-    title: 'Boost Vitality',
+    title: 'Vitality',
     description: '(+1 vitality, +5% hp)',
+    short: 'VIT'
+  },
+  'health': {
+    title: 'Health',
+    description: '+15 health',
     short: 'HP'
   },
+  'charisma': {
+    title: 'Charisma',
+    description: '+5% in all categories',
+    short: 'CHA'
+  }
 }
 
 // markdown

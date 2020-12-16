@@ -2,6 +2,7 @@ import { GetterTree, MutationTree, ActionTree } from 'vuex'
 import { CombinedStates, RootState } from './index'
 import { IFill } from "~/components/types"
 import { TItem, Item, Buff } from "~/assets/Tiles"
+import { TAttributes, TSpells } from "~/assets/consts"
 
 const defaultState = () => {
   return {
@@ -23,13 +24,16 @@ const defaultState = () => {
         shields: 3,
         level: 1
       },
+      spells: [],
       attributes: {
         strength: 0, // base damage & bonus exp chance +1 & +5% per tier respectively
         dexterity: 0, // repair per shield & bonus shield chance +1 & +5% per tier respectively
         vitality: 0, // health per potion & bonus potion chance +1 & +5% per tier respectively
         luck: 0, // bonus coin chance +5% per tier
         health: 0, // bonus health +15 per tier
-        charisma: 0 // bonus every chance +5% per tier
+        charisma: 0, // bonus every chance +5% per tier
+        damage: 0, // these two are not yet implemented and will likely never be
+        defense: 0
       },
       equipment: {
         helmet: new Item('helmet'),
@@ -37,8 +41,7 @@ const defaultState = () => {
         shield: new Item('shield'),
         weapon: new Item('weapon'),
         accessory: new Item('accessory')
-      },
-      spells: {},
+      }
     }
   }
 }
@@ -100,7 +103,7 @@ type TApplyUpgradesPayload  = {
   selected: Array<{ item: TItem, buff: Buff }>
 } | {
   type: 'levelup'
-  selected: undefined
+  selected: Array<TAttributes | TSpells>
 }
 
 // noinspection JSUnusedGlobalSymbols
@@ -151,7 +154,12 @@ export const mutations: MutationTree<RunState> = {
 
       state.character.equipment[item].applyBuff(buff)
     } else {
-      // TODO: account for levelup
+      // TODO: account for skills
+      let attributes = payload.selected as TAttributes[]
+      attributes.forEach(entry => {
+        state.character.attributes[entry]++
+        if (entry === 'health' || entry === 'vitality') state.character.state.health += 15
+      })
     }
   },
   NEXT_TURN(state) {
@@ -201,11 +209,9 @@ export const actions: ActionTree<RunState, RootState> = {
         for (let i = 0; i<count; i++) Math.random() < (getters.totalAttributes.strength + getters.totalAttributes.charisma)*0.05 ? endCount+=2 : endCount++
         if (state.collectibles.current.experience+endCount >= state.collectibles.max) {
           commit('MODIFY_COLLECTIBLES', { target: 'experience', value: state.collectibles.current.experience+endCount-state.collectibles.max, set: true })
-          // TODO: enable levelup shop on spells completion
-          // commit('shop/SELECT_SHOP', 'levelup', { root: true })
-                    // THIS IS A PLACEHOLDER - SEE ABOVE
-                    commit('MODIFY_CHARACTER', { target: 'level', value: 1 })
-                    commit('MODIFY_CHARACTER', { target: 'health', value: getters.totalHealth, set: true })
+          commit('shop/SELECT_SHOP', 'levelup', { root: true })
+          commit('MODIFY_CHARACTER', { target: 'level', value: 1 })
+          commit('MODIFY_CHARACTER', { target: 'health', value: getters.totalHealth, set: true })
         } else {
           commit('MODIFY_COLLECTIBLES', { target: 'experience', value: endCount })
         }

@@ -97,6 +97,7 @@ export default Vue.extend({
     active() { return this.$store.state.shop.active },
     items() { return this.$store.state.shop.items },
     buffs() { return this.$store.state.shop.buffs },
+    levelup() { return this.$store.state.shop.levelup },
     selected() { return this.$store.state.shop.selected },
     isValid() { return this.$store.state.shop.selected.length === (this.$store.state.shop.active === 'levelup' ? 2 : 1) }
   },
@@ -113,6 +114,9 @@ export default Vue.extend({
           break;
         case 'upgrade':
           this.$store.commit('shop/SELECT_ITEM', this.buffs[item])
+          break
+        case 'levelup':
+          this.$store.commit('shop/SELECT_ITEM', this.levelup[item])
           break
       }
     },
