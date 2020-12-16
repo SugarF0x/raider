@@ -63,7 +63,7 @@ export const getters: GetterTree<RunState, RootState> = {
     }, 0)
   },
   totalAttack: state => state.character.equipment.weapon.getBaseBuff().power,
-  totalHealth: (state, getters) => 35 + (getters.totalAttributes.vitality+state.character.attributes.health)*15,
+  totalHealth: (state, getters) => 35 + (getters.totalAttributes.vitality+getters.totalAttributes.health)*15,
   totalAttributes: state => ({
     strength: (state.character.equipment.weapon.buffs.find(entry => entry.type === 'strength')?.power || 0) + state.character.attributes.strength,
     dexterity: (state.character.equipment.helmet.buffs.find(entry => entry.type === 'dexterity')?.power || 0) + state.character.attributes.dexterity,
