@@ -189,7 +189,7 @@ export const actions: ActionTree<RunState, RootState> = {
     let overkill = 0 // this one is for overflow handling
     switch (rootGetters.selectedFamily) {
       case 'coin':
-        for (let i = 0; i<count; i++) Math.random() < getters.totalAttributes.luck*0.05 ? endCount+=2 : endCount++
+        for (let i = 0; i<count; i++) Math.random() < (getters.totalAttributes.luck + getters.totalAttributes.charisma)*0.05 ? endCount+=2 : endCount++
         if (state.collectibles.current.coins+endCount >= state.collectibles.max) {
           commit('MODIFY_COLLECTIBLES', { target: 'coins', value: state.collectibles.current.coins+endCount-state.collectibles.max, set: true })
           commit('shop/SELECT_SHOP', 'item', { root: true })
@@ -198,7 +198,7 @@ export const actions: ActionTree<RunState, RootState> = {
         }
         break;
       case 'sword':
-        for (let i = 0; i<count; i++) Math.random() < getters.totalAttributes.strength*0.05 ? endCount+=2 : endCount++
+        for (let i = 0; i<count; i++) Math.random() < (getters.totalAttributes.strength + getters.totalAttributes.charisma)*0.05 ? endCount+=2 : endCount++
         if (state.collectibles.current.experience+endCount >= state.collectibles.max) {
           commit('MODIFY_COLLECTIBLES', { target: 'experience', value: state.collectibles.current.experience+endCount-state.collectibles.max, set: true })
           // TODO: enable levelup shop on spells completion
@@ -214,7 +214,7 @@ export const actions: ActionTree<RunState, RootState> = {
         let dexterity = getters.totalAttributes.dexterity
         let repair = dexterity+1
 
-        for (let i = 0; i<count; i++) Math.random() < dexterity*0.05 ? endCount+=2 : endCount++
+        for (let i = 0; i<count; i++) Math.random() < (dexterity + getters.totalAttributes.charisma)*0.05 ? endCount+=2 : endCount++
         overkill = state.character.state.shields+(endCount*repair) - getters.totalArmor
         overkill = overkill > 0 ? overkill : 0
 
@@ -236,7 +236,7 @@ export const actions: ActionTree<RunState, RootState> = {
         }
         break;
       case 'potion':
-        for (let i = 0; i<count; i++) Math.random() < getters.totalAttributes.vitality*0.05 ? endCount+=2 : endCount++
+        for (let i = 0; i<count; i++) Math.random() < (getters.totalAttributes.vitality + getters.totalAttributes.charisma)*0.05 ? endCount+=2 : endCount++
         if (state.character.state.health+endCount > getters.totalHealth) {
           commit('MODIFY_CHARACTER', { target: 'health', value: getters.totalHealth, set: true })
         } else {
