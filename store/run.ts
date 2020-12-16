@@ -75,7 +75,7 @@ export const getters: GetterTree<RunState, RootState> = {
     health: state.character.attributes.health,
     charisma: state.character.attributes.charisma
   }),
-  enemyPower: state => Math.floor(state.game.turn/100) + 1
+  enemyPower: state => Math.floor(state.game.turn/75) + 1
 }
 
 interface IModifyPayload {
