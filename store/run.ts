@@ -189,11 +189,12 @@ export const actions: ActionTree<RunState, RootState> = {
     let overkill = 0 // this one is for overflow handling
     switch (rootGetters.selectedFamily) {
       case 'coin':
-        if (state.collectibles.current.coins+count >= state.collectibles.max) {
-          commit('MODIFY_COLLECTIBLES', { target: 'coins', value: state.collectibles.current.coins+count-state.collectibles.max, set: true })
+        for (let i = 0; i<count; i++) Math.random() < getters.totalAttributes.luck*0.05 ? endCount+=2 : endCount++
+        if (state.collectibles.current.coins+endCount >= state.collectibles.max) {
+          commit('MODIFY_COLLECTIBLES', { target: 'coins', value: state.collectibles.current.coins+endCount-state.collectibles.max, set: true })
           commit('shop/SELECT_SHOP', 'item', { root: true })
         } else {
-          commit('MODIFY_COLLECTIBLES', { target: 'coins', value: count })
+          commit('MODIFY_COLLECTIBLES', { target: 'coins', value: endCount })
         }
         break;
       case 'sword':
