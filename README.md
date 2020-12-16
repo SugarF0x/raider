@@ -4,9 +4,6 @@
 
 A passion-replica of _Dungeon Raid_ - an old and no longer updated smartphone game.
 
-The source code is being distributed under **MIT license** - feel free to fork and modify any files.
-Any pull requests are more than welcome, just please follow commit syntax stated at the bottom of this **README**.
-
 ## Specification
 
 This project uses `Nuxt.js` as its main framework. `Konva.js` with its native `Vue` support manages canvas.
@@ -115,8 +112,15 @@ Commit syntax is subjective. Committer is to pick most appropriate commit catego
 * :pill: Testing - Completion and maintenance of test units
 * :construction: WIP - A stepping stone for a Work in Progress change
 
-## Misc
+## Contribution
 
-If you like this project and want to support its development - feel free to buy me a coffee
+The source code is being distributed under **MIT license** - feel free to fork and modify any files.
+Any pull requests are more than welcome, just please follow commit syntax stated at the bottom of this **README**.
+
+If you don't know where to start, there are always low-priority [issues](https://github.com/SugarF0x/raider/issues)
+to be tackled - go ahead and pick one!
+
+If you like this project and want to support its development in a way other than committing - feel free 
+to buy me a coffee :point_right::point_left:
 
 [![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Z8Z72XA7P)
