@@ -43,6 +43,16 @@
       <u-text :config="{text: `${state.collectibles.current.coins}/${state.collectibles.max}`, x: 20, y: 597, width: 100, fill: 'yellow'}"/>
     </v-group>
 
+    <v-group id="debug"
+             v-if="$route.query.debug"
+    >
+      <u-text :config="{text: 'Reset Store', x: 15, y: 762, width: 120, fontSize: 20}"/>
+      <v-rect :config="{x: 15, y: 758, width: 120, height: 24}"
+              @mousedown="resetStore"
+              @touchstart="resetStore"
+      />
+    </v-group>
+
   </v-layer>
 </template>
 
@@ -83,6 +93,11 @@ export default Vue.extend({
     game() { return this.$store.state.run.game }
   },
   methods: {
+    resetStore() {
+      this.$store.dispatch('resetStore')
+      this.$store.dispatch('dungeon/populate')
+    },
+
     /**
      * Format tile to Konva Image config object based on tile type and fill percentage
      * Coin type will return an array of coin column configs since their render is exceptional
