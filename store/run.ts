@@ -125,36 +125,27 @@ export const mutations: MutationTree<RunState> = {
   },
   APPLY_UPGRADES(state, payload: TShopEntry[]) {
     payload.forEach(entry => {
-      let item, type
       switch(entry.type) {
         case "item":
-          item = entry.item
-          type = entry.item.type
-
           // heal or repair if upgrade qualifies
-          if (type === 'accessory') state.character.state.health += (item.getBaseBuff().power - state.character.equipment[type].getBaseBuff().power)*15 // heal by health increase
-          else if (type !== 'weapon') state.character.state.shields += item.getBaseBuff().power - state.character.equipment[type].getBaseBuff().power // repair by armor increase
+          if (entry.item.type === 'accessory') state.character.state.health += (entry.item.getBaseBuff().power - state.character.equipment[entry.item.type].getBaseBuff().power)*15 // heal by health increase
+          else if (entry.item.type !== 'weapon') state.character.state.shields += entry.item.getBaseBuff().power - state.character.equipment[entry.item.type].getBaseBuff().power // repair by armor increase
 
-          state.character.equipment[type] = item
+          state.character.equipment[entry.item.type] = entry.item
           break;
         case "upgrade":
-          item = entry.item
-          type = entry.item.target
-
-          switch (item.type) {
+          switch (entry.item.type) {
             case 'defense':
               state.character.state.shields += 1; break
             case 'vitality':
               state.character.state.health += 15; break
           }
 
-          state.character.equipment[type].applyBuff(item)
+          state.character.equipment[entry.item.target].applyBuff(entry.item)
           break;
         case "attribute":
-          item = entry.item
-
-          state.character.attributes[item]++
-          if (item === 'health' || item === 'vitality') state.character.state.health += 15
+          state.character.attributes[entry.item]++
+          if (entry.item === 'health' || entry.item === 'vitality') state.character.state.health += 15
           break;
         case "spell":
           // TODO: cover spells slot
