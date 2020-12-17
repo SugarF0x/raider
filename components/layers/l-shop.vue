@@ -57,10 +57,7 @@ export default Vue.extend({
   computed: {
     tileset() { return this.$store.state.tiles },
     active(): 'item' | 'upgrade' | 'levelup' { return this.$store.state.shop.active },
-    items() { return this.$store.state.shop.items },
-    buffs() { return this.$store.state.shop.buffs },
-    levelup() { return this.$store.state.shop.levelup },
-    selected() { return this.$store.state.shop.selected },
+    entries() { return this.$store.state.shop.entries },
     isValid() { return this.$store.state.shop.selected.length === (this.$store.state.shop.active === 'levelup' ? 2 : 1) },
     displayText(): any {
       return Object.assign(
@@ -77,17 +74,7 @@ export default Vue.extend({
       }
     },
     select(item: number) {
-      switch (this.active) {
-        case 'item':
-          this.$store.commit('shop/SELECT_ITEM', this.items[item])
-          break;
-        case 'upgrade':
-          this.$store.commit('shop/SELECT_ITEM', this.buffs[item])
-          break
-        case 'levelup':
-          this.$store.commit('shop/SELECT_ITEM', this.levelup[item])
-          break
-      }
+      this.$store.commit('shop/SELECT_ITEM', this.entries[item])
     },
   }
 })

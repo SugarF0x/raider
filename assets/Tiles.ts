@@ -26,7 +26,7 @@ export class Item {
     if (typeof item === 'object') {
       // TODO: have a chance to increase/decrease other buffs
       item.buffs.forEach(buff => {
-        this.buffs.push(new Buff(buff.type, buff.power))
+        this.buffs.push(new Buff(buff.type, item.type, buff.power))
       })
       this.upgradeItem()
       if (rng() > .85) this.upgradeItem() // chance for double upgrade
@@ -35,11 +35,11 @@ export class Item {
       let baseBuff: Buff
       switch (item) {
         case 'helmet': case 'armor': case 'shield':
-          baseBuff = new Buff('defense'); break
+          baseBuff = new Buff('defense', 'helmet'); break
         case 'weapon':
-          baseBuff = new Buff('damage'); break
+          baseBuff = new Buff('damage', 'weapon'); break
         case 'accessory':
-          baseBuff = new Buff('vitality'); break
+          baseBuff = new Buff('vitality', 'accessory'); break
       }
       this.buffs = [baseBuff]
     }
@@ -89,11 +89,13 @@ export class Item {
 
 export class Buff {
   type: TBuffs
+  target: TItem
   power: number
 
-  constructor(type: TBuffs, power = 1) {
+  constructor(type: TBuffs, target: TItem, power = 1) {
     this.type = type
     this.power = power
+    this.target = target
   }
 
   upgrade() { // TODO: make it individual to buffs due to them having different effects e.g. +XP will have a +0.25 and A.STR will have a diminishing return

@@ -6,7 +6,7 @@
       ><!--suppress JSUnresolvedVariable -->
         <v-image :config="{
                    x: 51,
-                   y: 236 + 73*(items.indexOf(n)),
+                   y: 236 + 73*(entries.indexOf(n)),
                    width: 6,
                    height: 73,
                    image: tileset,
@@ -15,7 +15,7 @@
         /><!--suppress JSUnresolvedVariable -->
         <v-image :config="{
                    x: 57,
-                   y: 236 + 73*(items.indexOf(n)),
+                   y: 236 + 73*(entries.indexOf(n)),
                    width: 380,
                    height: 73,
                    image: tileset,
@@ -24,7 +24,7 @@
         /><!--suppress JSUnresolvedVariable -->
         <v-image :config="{
                    x: 437,
-                   y: 236 + 73*(items.indexOf(n)),
+                   y: 236 + 73*(entries.indexOf(n)),
                    width: 6,
                    height: 73,
                    image: tileset,
@@ -63,12 +63,12 @@
 
     <v-group id="selectedItemFrames"><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
       <v-image v-for="n in 4"
-               :key="'shopItemFrame-'+n+'-'+(items.indexOf(selected[n-1]) !== -1)"
+               :key="'shopItemFrame-'+n+'-'+(entries.indexOf(selected[n-1]) !== -1)"
                :config="{
                  x: 55,
                  y: 167 + 73*n,
                  image: tileset,
-                 ...(selected.indexOf(items[n-1]) !== -1 ? shopTiles.itemFrameSelected : shopTiles.itemFrame)
+                 ...(selected.indexOf(entries[n-1]) !== -1 ? shopTiles.itemFrameSelected : shopTiles.itemFrame)
                }"
       />
     </v-group>
@@ -77,18 +77,18 @@
     <v-group v-for="n in 3"
              :key="'shopItemIcon-'+n"
     ><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
-      <v-image :config="items[n-1].getIconConfig(57, 170 + 73*n, icons)" /><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
-      <u-text :config="{ text: items[n-1].name, x: 130, y: 172 + 73*n, align: 'left', width: 200 }" /><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
-      <u-text v-for="(t,i) in comparisonText(items[n-1],equipment[items[n-1].type])"
+      <v-image :config="entries[n-1].item.getIconConfig(57, 170 + 73*n, icons)" /><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
+      <u-text :config="{ text: entries[n-1].item.name, x: 130, y: 172 + 73*n, align: 'left', width: 200 }" /><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
+      <u-text v-for="(t,i) in comparisonText(entries[n-1].item,equipment[entries[n-1].item.type])"
               :key="t.text+n"
               :config="{ text: t.text, x: 130 + 50*i-1, y: 210 + 73*n, fill: t.color, width: 50, align: 'left' }"
       />
     </v-group>
     <!-- currently worn item -->
     <v-group v-if="selected.length">
-      <v-image :config="equipment[selected[0].type].getIconConfig(57, 170 + 73*4, icons)" /><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
-      <u-text :config="{ text: equipment[selected[0].type].name, x: 130, y: 172 + 73*4, align: 'left', width: 200 }" /><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
-      <u-text v-for="(t,i) in comparisonText(equipment[selected[0].type],selected[0])"
+      <v-image :config="equipment[selected[0].item.type].getIconConfig(57, 170 + 73*4, icons)" /><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
+      <u-text :config="{ text: equipment[selected[0].item.type].name, x: 130, y: 172 + 73*4, align: 'left', width: 200 }" /><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
+      <u-text v-for="(t,i) in comparisonText(equipment[selected[0].item.type],selected[0].item)"
               :key="t.text+'worn'"
               :config="{ text: t.text, x: 130 + 50*i-1, y: 210 + 73*4, fill: t.color, width: 50, align: 'left' }"
       />
@@ -115,7 +115,7 @@ export default Vue.extend({
   computed: {
     tileset() { return this.$store.state.tiles },
     icons() { return this.$store.state.icons },
-    items() { return this.$store.state.shop.items },
+    entries() { return this.$store.state.shop.entries },
     selected() { return this.$store.state.shop.selected },
     equipment() { return this.$store.state.run.character.equipment },
   },
@@ -137,7 +137,7 @@ export default Vue.extend({
     }
   },
   created() {
-    if (this.$store.state.shop.items.length === 0) {
+    if (this.$store.state.shop.entries.length === 0) {
       this.$store.dispatch('shop/generateItems')
     }
   }

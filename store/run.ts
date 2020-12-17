@@ -1,8 +1,8 @@
 import { GetterTree, MutationTree, ActionTree } from 'vuex'
 import { CombinedStates, RootState } from './index'
 import { IFill } from "~/components/types"
-import { TItem, Item, Buff } from "~/assets/Tiles"
-import { TAttributes, TSpells } from "~/assets/consts"
+import { Item } from "~/assets/Tiles"
+import { TShopEntry } from "~/store/shop";
 
 const defaultState = () => {
   return {
@@ -97,17 +97,6 @@ interface IModifyCharacterPayload extends IModifyPayload {
   target: 'health' | 'shields' | 'level'
 }
 
-type TApplyUpgradesPayload  = {
-  type: 'item'
-  selected: Item[]
-} | {
-  type: 'upgrade'
-  selected: Array<{ item: TItem, buff: Buff }>
-} | {
-  type: 'levelup'
-  selected: Array<TAttributes | TSpells>
-}
-
 // noinspection JSUnusedGlobalSymbols
 export const mutations: MutationTree<RunState> = {
   RESET_STATE(state) {
@@ -134,35 +123,44 @@ export const mutations: MutationTree<RunState> = {
       state.character.state[target] = value
     }
   },
-  APPLY_UPGRADES(state, payload: TApplyUpgradesPayload) {
-    if (payload.type === 'item') {
-      let selected = payload.selected[0]
-      let itemType = selected.type
+  APPLY_UPGRADES(state, payload: TShopEntry[]) {
+    payload.forEach(entry => {
+      let item, type
+      switch(entry.type) {
+        case "item":
+          item = entry.item
+          type = entry.item.type
 
-      // heal or repair if upgrade qualifies
-      if (itemType === 'accessory') state.character.state.health += (selected.getBaseBuff().power - state.character.equipment[itemType].getBaseBuff().power)*15 // heal by health increase
-      else if (itemType !== 'weapon') state.character.state.shields += selected.getBaseBuff().power - state.character.equipment[itemType].getBaseBuff().power // repair by armor increase
+          // heal or repair if upgrade qualifies
+          if (type === 'accessory') state.character.state.health += (item.getBaseBuff().power - state.character.equipment[type].getBaseBuff().power)*15 // heal by health increase
+          else if (type !== 'weapon') state.character.state.shields += item.getBaseBuff().power - state.character.equipment[type].getBaseBuff().power // repair by armor increase
 
-      state.character.equipment[itemType] = selected
-    } else if (payload.type === 'upgrade') {
-      let { item, buff } = payload.selected[0]
+          state.character.equipment[type] = item
+          break;
+        case "upgrade":
+          item = entry.item
+          type = entry.item.target
 
-      switch (buff.type) {
-        case 'defense':
-          state.character.state.shields += 1; break
-        case 'vitality':
-          state.character.state.health += 15; break
+          switch (item.type) {
+            case 'defense':
+              state.character.state.shields += 1; break
+            case 'vitality':
+              state.character.state.health += 15; break
+          }
+
+          state.character.equipment[type].applyBuff(item)
+          break;
+        case "attribute":
+          item = entry.item
+
+          state.character.attributes[item]++
+          if (item === 'health' || item === 'vitality') state.character.state.health += 15
+          break;
+        case "spell":
+          // TODO: cover spells slot
+          break;
       }
-
-      state.character.equipment[item].applyBuff(buff)
-    } else {
-      // TODO: account for skills
-      let attributes = payload.selected as TAttributes[]
-      attributes.forEach(entry => {
-        state.character.attributes[entry]++
-        if (entry === 'health' || entry === 'vitality') state.character.state.health += 15
-      })
-    }
+    })
   },
   NEXT_TURN(state) {
     state.game.turn++
