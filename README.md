@@ -115,7 +115,7 @@ Commit syntax is subjective. Committer is to pick most appropriate commit catego
 ## Contribution
 
 The source code is being distributed under **MIT license** - feel free to fork and modify any files.
-Any pull requests are more than welcome, just please follow commit syntax stated at the bottom of this **README**.
+Any pull requests are more than welcome, just please follow commit syntax above.
 
 If you don't know where to start, there are always low-priority [issues](https://github.com/SugarF0x/raider/issues)
 to be tackled - go ahead and pick one!
