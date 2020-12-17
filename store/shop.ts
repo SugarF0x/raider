@@ -119,7 +119,7 @@ export const actions: ActionTree<ShopState, RootState> = {
   generateSpellsAndAttributes({ commit }) {
     // TODO: add spells when ones are implemented
     let newAttributes = [] as TAttributes[]
-    Object.assign(newAttributes, TILESET_COORDS.attribute.order.filter(entry => entry !== 'damage' && entry !== 'defense'))
+    Object.assign(newAttributes, TILESET_COORDS.attribute.order)
     shuffle(newAttributes)
     commit('SET_NEW_SPELLS_AND_ATTRIBUTES', newAttributes)
   },

@@ -60,12 +60,12 @@ export const getters: GetterTree<RunState, RootState> = {
       health: state.character.state.health / getters.totalHealth
     }
   },
-  totalArmor(state) {
+  totalArmor: (state, getters) => {
     return [state.character.equipment.helmet, state.character.equipment.armor, state.character.equipment.shield].reduce((a, v) => {
       return a + v.getBaseBuff().power
-    }, 0)
+    }, 0)  + getters.totalAttributes.defense
   },
-  totalAttack: state => state.character.equipment.weapon.getBaseBuff().power,
+  totalAttack: (state, getters) => state.character.equipment.weapon.getBaseBuff().power + getters.totalAttributes.damage,
   totalHealth: (state, getters) => 35 + (getters.totalAttributes.vitality+getters.totalAttributes.health)*15,
   totalAttributes: state => ({
     strength: (state.character.equipment.weapon.buffs.find(entry => entry.type === 'strength')?.power || 0) + state.character.attributes.strength,
@@ -73,7 +73,9 @@ export const getters: GetterTree<RunState, RootState> = {
     vitality: (state.character.equipment.accessory.buffs.find(entry => entry.type === 'vitality')?.power || 0) + state.character.attributes.vitality,
     luck: (state.character.equipment.accessory.buffs.find(entry => entry.type === 'luck')?.power || 0) + state.character.attributes.luck,
     health: state.character.attributes.health,
-    charisma: state.character.attributes.charisma
+    charisma: state.character.attributes.charisma,
+    damage: state.character.attributes.damage,
+    defense: state.character.attributes.defense
   }),
   enemyPower: state => Math.floor(state.game.turn/75) + 1
 }
