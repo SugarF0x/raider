@@ -78,6 +78,7 @@ export const mutations: MutationTree<ShopState> = {
   CLEAR_STORE(state) {
     state.items = []
     state.buffs = []
+    state.levelup = []
     state.selected = []
   }
 }
