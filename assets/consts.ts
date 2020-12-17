@@ -316,25 +316,38 @@ export const shopMD = {
 }
 
 export const titleBase = {
+  head: {
+    stroke: 'black',
+    strokeWidth: 8,
+    fontSize: 32,
+    width: 200,
+    align: 'left',
+    x: 50,
+    y: 200
+  },
+  desc: {
+    stroke: 'black',
+    strokeWidth: 8,
+    fontSize: 18,
+    width: 250,
+    align: 'right',
+    x: 190,
+    y: 212
+  },
+  levelup: {
+    title: 'Level Up!',
+    description: 'Choose 2 skills to improve',
+    fill: '#26ff00'
+  },
+  upgrade: {
+    title: 'Upgrade!',
+    description: 'Choose 1 upgrade to apply',
+    fill: '#0054ff'
+  },
   item: {
-    head: {
-      stroke: 'black',
-      strokeWidth: 8,
-      fontSize: 32,
-      width: 200,
-      align: 'left',
-      x: 50,
-      y: 200
-    },
-    desc: {
-      stroke: 'black',
-      strokeWidth: 8,
-      fontSize: 18,
-      width: 250,
-      align: 'right',
-      x: 190,
-      y: 212
-    }
+    title: 'Item Shop!',
+    description: 'Choose 1 item to buy',
+    fill: '#f3ff00'
   }
 }
 

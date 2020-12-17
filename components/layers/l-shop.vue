@@ -1,8 +1,8 @@
 <template>
   <v-layer v-if="active !== 'none'"><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
     <v-rect v-for="(entry,key) in MD" :key="key+$options.name" :config="entry"/><!--suppress JSUnresolvedFunction -->
-    <u-text :config="{ ...title[active].head }" /><!--suppress JSUnresolvedFunction -->
-    <u-text :config="{ ...title[active].desc }" />
+    <u-text :config="{ ...displayText.head }" /><!--suppress JSUnresolvedFunction -->
+    <u-text :config="{ ...displayText.desc }" />
 
     <ls-item v-if="active==='item'" />
     <ls-upgrade v-else-if="active==='upgrade'" />
@@ -52,54 +52,23 @@ export default Vue.extend({
     return {
       MD: shopMD,
       shopTiles: shopTiles,
-      title: { // TODO: make it a computed property
-        item: {
-          head: {
-            text: 'Item Shop!',
-            fill: '#f3ff00',
-            ...titleBase.item.head
-          },
-          desc: {
-            text: 'Choose 1 item to buy',
-            fill: '#f3ff00',
-            ...titleBase.item.desc
-          }
-        },
-        upgrade: {
-          head: {
-            text: 'Upgrade!',
-            fill: '#0054ff',
-            ...titleBase.item.head
-          },
-          desc: {
-            text: 'Choose 1 upgrade to apply',
-            fill: '#0054ff',
-            ...titleBase.item.desc
-          }
-        },
-        levelup: {
-          head: {
-            text: 'Level Up!',
-            fill: '#26ff00',
-            ...titleBase.item.head
-          },
-          desc: {
-            text: 'Choose 2 skills to improve',
-            fill: '#26ff00',
-            ...titleBase.item.desc
-          }
-        },
-      }
     }
   },
   computed: {
     tileset() { return this.$store.state.tiles },
-    active() { return this.$store.state.shop.active },
+    active(): 'item' | 'upgrade' | 'levelup' { return this.$store.state.shop.active },
     items() { return this.$store.state.shop.items },
     buffs() { return this.$store.state.shop.buffs },
     levelup() { return this.$store.state.shop.levelup },
     selected() { return this.$store.state.shop.selected },
-    isValid() { return this.$store.state.shop.selected.length === (this.$store.state.shop.active === 'levelup' ? 2 : 1) }
+    isValid() { return this.$store.state.shop.selected.length === (this.$store.state.shop.active === 'levelup' ? 2 : 1) },
+    displayText(): any {
+      return Object.assign(
+        {},
+        { head: { ...titleBase.head, text: titleBase[this.active].title, fill: titleBase[this.active].fill } },
+        { desc: { ...titleBase.desc, text: titleBase[this.active].description, fill: titleBase[this.active].fill } }
+      )
+    }
   },
   methods: {
     accept() {
