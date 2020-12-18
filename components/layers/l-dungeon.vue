@@ -138,7 +138,7 @@ export default Vue.extend({
       let x: number = 1;
       let y: number = 928;
 
-      // @ts-ignore // TODO: return to this bit here (TILESET_COORDS as const ruined type check)
+      // @ts-ignore, comment: dunno how to type check this but should be good
       const tilesetPos = C.TILESET_COORDS[tile.family][tile.type];
 
       if (!isNaN(tilesetPos)) {

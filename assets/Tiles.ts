@@ -3,8 +3,6 @@ const seedRandom = require('seedrandom');
 
 // items related
 
-// TODO: segment buffs in such a way that ARMOR_BUFFS can not overlap - e.g. some are for helmets, some are for torso, some are for shield ONLY
-
 export type TShop = 'none' | 'item' | 'upgrade' | 'levelup'
 export type TItem = 'helmet' | 'armor' | 'shield' | 'weapon' | 'accessory'
 
@@ -98,7 +96,7 @@ export class Buff {
     this.target = target
   }
 
-  upgrade() { // TODO: make it individual to buffs due to them having different effects e.g. +XP will have a +0.25 and A.STR will have a diminishing return
+  upgrade() {
     this.power++
   }
 
@@ -118,8 +116,9 @@ export class Buff {
     }
   }
 
+  // TODO: make custom getText handlers so that e.g. Armor Strength will return % chance of each point to break
   getText() {
-    return BUFF_TEXT[this.type] // TODO: mace custom getText handlers so that e.g. Armor Strength will return % chance of each point to break
+    return BUFF_TEXT[this.type]
   }
 }
 

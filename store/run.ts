@@ -32,7 +32,7 @@ const defaultState = () => {
         luck: 0, // bonus coin chance +5% per tier
         health: 0, // bonus health +15 per tier
         charisma: 0, // bonus every chance +5% per tier
-        damage: 0, // these two are not yet implemented and will likely never be
+        damage: 0,
         defense: 0
       },
       equipment: {
@@ -160,7 +160,8 @@ export const mutations: MutationTree<RunState> = {
 
 // noinspection JSUnusedGlobalSymbols
 export const actions: ActionTree<RunState, RootState> = {
-  handleCollection({ commit, state, getters, rootState, rootGetters }) { // TODO: this really needs yet another cleanup UUUGGHHHHHH
+  // TODO: this really needs yet another cleanup UUUGGHHHHHH
+  handleCollection({ commit, state, getters, rootState, rootGetters }) {
     let root = rootState as CombinedStates
     let count = 0
     if (rootGetters.selectedFamily === 'sword') {
