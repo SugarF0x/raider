@@ -2,8 +2,8 @@
   <v-row justify="center" align="center" ref="row">
     <v-stage :config="konva" id="konva" :key="konva.resizeKey">
       <l-background />
-      <l-hud />
       <l-dungeon />
+      <l-hud />
       <l-gameover />
       <l-shop />
     </v-stage>

@@ -1,12 +1,8 @@
-import { TFamily, TType, THud, Tile } from '~/assets/Tiles'
+import { THud } from '~/assets/Tiles'
 
 type TGetOptionals<T> = {
   [k in keyof T]-?: undefined extends T[k] ? never : k
 }[keyof T]
-
-export interface IDungeon {
-  [property: string]: Tile
-}
 
 export interface IKonvaConfig {
   x: number,
@@ -26,8 +22,6 @@ export interface IKonvaTile extends IKonvaConfig {
     x: number,
     y: number
   },
-  family: TFamily,
-  type: TType,
   opacity: number,
   listening?: boolean
 }

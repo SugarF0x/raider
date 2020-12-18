@@ -1,4 +1,5 @@
 import { TILESET_COORDS, BUFF_TEXT, TBuffs } from './consts'
+import { IKonvaTile } from "~/components/types"
 const seedRandom = require('seedrandom');
 
 // items related
@@ -154,16 +155,94 @@ export class Tile {
   effects: TTEffect[] = [];
   id: number;
   key: string;
+  konva: IKonvaTile;
 
-  constructor(key: string, family: TFamily, type: TType = 'common') {
+  constructor(image: HTMLImageElement, key: string, family: TFamily, type: TType = 'common') {
     this.key = key
     this.family = family
     this.type = type
     this.id = Math.floor(Math.random() * 1000000)
+    this.konva = this.getTileKonva(image)
   }
 
   moveTile(newKey: string) {
     this.key = newKey
+    Object.assign(this.konva, { ...this.getInDungeonCoords() })
+    // TODO: add animation here
+  }
+
+  setOpacity(opacity: number) {
+    this.konva.opacity = opacity
+  }
+
+  getInDungeonCoords(): { x: number; y: number; } {
+    let x = parseInt(this.key[1])
+    let y = parseInt(this.key[3])
+
+    return {
+      x: 46 + 72*x,
+      y: 186 + 72*(y * (this.key[4] === '-' ? -1 : 1))
+    }
+  }
+
+  getTileKonva(image: HTMLImageElement): IKonvaTile {
+    let x: number = 1;
+    let y: number = 928;
+
+    // @ts-ignore, comment: dunno how to type check this but should be good
+    const tilesetPos = TILESET_COORDS[this.family][this.type];
+
+    if (!isNaN(tilesetPos)) {
+      // generic type
+      x = (52) * (this.id % 8) + 1 + (this.id % 8)
+      y = tilesetPos;
+    } else if(tilesetPos.hasOwnProperty('x')) {
+      x = tilesetPos.x;
+      y = tilesetPos.y;
+    } else if(tilesetPos.hasOwnProperty('base')) {
+      // boss
+      x = (52) * (tilesetPos.order.indexOf(this.type) % 8) + 1 + (tilesetPos.indexOf(this.type) % 8)
+      y = tilesetPos.base + (52) * Math.floor(tilesetPos.indexOf(this.type)/8)
+    }
+
+    return {
+      ...this.getInDungeonCoords(),
+      image: image,
+      width: 62,
+      height: 62,
+      crop: {
+        x: x,
+        y: y,
+        width: 52,
+        height: 52
+      },
+      offset: {
+        x: 31,
+        y: 31
+      },
+      opacity: 1
+    }
+  }
+
+  getEffectsKonva(): IKonvaTile[] {
+    let effects = [] as IKonvaTile[];
+
+    this.effects.forEach(entry => {
+      effects.push(Object.assign(
+        {},
+        this.konva,
+        {
+          crop: Object.assign(
+            {},
+            this.konva.crop,
+            { ...TILESET_COORDS.effect[entry] }
+          ),
+          listening: false
+        }
+      ))
+    })
+
+    return effects
   }
 }
 
@@ -172,8 +251,8 @@ export class Skull extends Tile {
   base: TileState;
   isFresh = true;
 
-  constructor(key: string, power: number) {
-    super(key, 'skull');
+  constructor(image: HTMLImageElement, key: string, power: number) {
+    super(image, key, 'skull');
     const rng = new seedRandom(this.id)
 
     // generate base stats

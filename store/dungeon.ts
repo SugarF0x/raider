@@ -75,6 +75,15 @@ export const mutations: MutationTree<DungeonState> = {
       })
     }
   },
+  SET_OPACITY(state, payload: { item: Array<Tile | Skull> | Tile | Skull, value: number }) {
+    if (!Array.isArray(payload.item)) {
+      payload.item.konva.opacity = payload.value
+    } else {
+      payload.item.forEach(entry => {
+        entry.konva.opacity = payload.value
+      })
+    }
+  },
   APPLY_DAMAGE(state, payload: ISetVulnerabilityPayload | ISetVulnerabilityPayload[]) {
     if (!Array.isArray(payload)) {
       let skull = state.tiles.find(entry => entry.key === payload.key)
@@ -99,12 +108,12 @@ export const mutations: MutationTree<DungeonState> = {
 
 // noinspection JSUnusedGlobalSymbols
 export const actions: ActionTree<DungeonState, RootState> = {
-  populate({ commit, rootGetters }) {
+  populate({ commit, rootState, rootGetters }) {
     let tiles = [] as Tile[]
     for (let y = 0; y < 6; y++) {
       for (let x = 0; x < 6; x++) {
         let key = `X${ x }Y${ y }`
-        tiles.push(getRandomTile(key, rootGetters['run/enemyPower'], spawnWeight.initial))
+        tiles.push(getRandomTile(rootState.tiles, key, rootGetters['run/enemyPower'], spawnWeight.initial))
       }
     }
     commit('SET_TILES', tiles)
@@ -136,7 +145,7 @@ export const actions: ActionTree<DungeonState, RootState> = {
       for (let y = 0; y < 6; y++) {
         let currentKey = `X${ x }Y${ y }`
         if (!state.tiles.find(entry => entry.key === currentKey)) {
-          newTiles.push(getRandomTile(currentKey, rootGetters['run/enemyPower']))
+          newTiles.push(getRandomTile(rootState.tiles, currentKey, rootGetters['run/enemyPower']))
         }
       }
     }
@@ -152,6 +161,21 @@ export const actions: ActionTree<DungeonState, RootState> = {
       }
     })
     commit('SET_VULNERABILITY', toCheck)
+  },
+
+  runSelectedFamilyCheck({ state, commit, rootGetters }) {
+    let toApplyOpacity = [] as Array<Tile | Skull>
+    let value = rootGetters.selectedFamily === 'none' ? 1 : .5
+
+    if (value === 1) {
+      Object.assign(toApplyOpacity, state.tiles.filter(entry => entry.konva.opacity !== 1))
+    } else {
+      Object.assign(toApplyOpacity, state.tiles.filter(entry =>
+        entry.family !== rootGetters.selectedFamily && !(entry.family === 'skull' && rootGetters.selectedFamily === 'sword')
+      ))
+    }
+
+    commit('SET_OPACITY', { item: toApplyOpacity, value: value })
   }
 }
 
@@ -181,7 +205,7 @@ const spawnWeight: TSpawnWeights = {
   }
 }
 
-function getRandomTile(key: string, power: number, weights?: TWeights): Tile {
+function getRandomTile(image: HTMLImageElement, key: string, power: number, weights?: TWeights): Tile {
   if (!weights) weights = spawnWeight.normal
 
   let poll = [] as TFamily[]
@@ -192,6 +216,6 @@ function getRandomTile(key: string, power: number, weights?: TWeights): Tile {
   })
 
   let family = poll[Math.floor(Math.random() * poll.length)];
-  if (family === 'skull') return new Skull(key, power);
-  else return new Tile(key, family);
+  if (family === 'skull') return new Skull(image, key, power);
+  else return new Tile(image, key, family);
 }

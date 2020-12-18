@@ -4,20 +4,20 @@
     <v-group v-for="entry in dungeon"
              :key="entry.id"
     ><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
-      <v-image :config="getTileConfig(entry)"
+      <v-image :config="entry.konva"
                @mousedown="printArrow(entry.key)"
                @mouseenter="dragArrow(entry.key)"
                @touchstart="printArrow(entry.key)"
                @touchmove="dragArrow(entry.key)"
                :key="(selectedFamily === 'sword' || selectedFamily === 'none' || !selectedFamily) + entry.id"
       /><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
-      <v-group v-if="entry.family === 'skull'" :config="{ opacity: selectedFamily === 'sword' || selectedFamily === 'none' ? 1 : .5 }"><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
+      <v-group v-if="entry.family === 'skull'" :config="{ opacity: entry.konva.opactiy }"><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
         <u-text :config="{text: entry.state.attack, x: getTileCoords(entry.key, 'x')+7, y: getTileCoords(entry.key, 'y')-25, width: 25, fill: 'lightgray', fontSize: 14, align: 'right'}"/><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
         <u-text :config="{text: entry.state.armor, x: getTileCoords(entry.key, 'x')+7, y: getTileCoords(entry.key, 'y')-5, width: 25, fill: 'lightblue', fontSize: 14, align: 'right'}"/><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
         <u-text :config="{text: entry.state.health, x: getTileCoords(entry.key, 'x')+7, y: getTileCoords(entry.key, 'y')+15, width: 25, fill: 'red', fontSize: 14, align: 'right'}"/>
-      </v-group>
-      <v-group id="effects"><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
-        <v-image v-for="effect in getEffectsConfig(entry)"
+      </v-group><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
+      <v-group id="effects" v-if="entry.effects.length"><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
+        <v-image v-for="effect in entry.getEffectsKonva()"
                  :config="effect"
                  :key="entry.effects.length + entry.id + effect.type"
         />
@@ -54,7 +54,10 @@ export default Vue.extend({
   },
   computed: {
     tileset() { return this.$store.state.tiles },
-    selectedFamily(): TFamily | 'none' { return this.$store.getters['selectedFamily'] },
+    selectedFamily(): TFamily | 'none' {
+      this.$store.dispatch('dungeon/runSelectedFamilyCheck')
+      return this.$store.getters['selectedFamily']
+    },
     dungeon(): Array<Tile | Skull> { return this.$store.state.dungeon.tiles },
     isMouseDown(): boolean { return this.$store.state.isMouseDown },
     state() { return this.$store.state.run },
@@ -129,98 +132,6 @@ export default Vue.extend({
         result.align = 'right'
       }
       return result
-    },
-
-    /**
-     * Format tile to Konva Image config object based on tile type and name
-     */
-    getTileConfig(tile: Tile): IKonvaTile {
-      let x: number = 1;
-      let y: number = 928;
-
-      // @ts-ignore, comment: dunno how to type check this but should be good
-      const tilesetPos = C.TILESET_COORDS[tile.family][tile.type];
-
-      if (!isNaN(tilesetPos)) {
-        // generic type
-        x = (52) * (tile.id % 8) + 1 + (tile.id % 8)
-        y = tilesetPos;
-      } else if(tilesetPos.hasOwnProperty('x')) {
-        x = tilesetPos.x;
-        y = tilesetPos.y;
-      } else if(tilesetPos.hasOwnProperty('base')) {
-        // boss
-        x = (52) * (tilesetPos.order.indexOf(tile.type) % 8) + 1 + (tilesetPos.indexOf(tile.type) % 8)
-        y = tilesetPos.base + (52) * Math.floor(tilesetPos.indexOf(tile.type)/8)
-      }
-
-      let result = {
-        x: this.getTileCoords(tile.key, 'x') as number,
-        y: this.getTileCoords(tile.key, 'y') as number,
-        image: this.tileset,
-        width: 62,
-        height: 62,
-        crop: {
-          x: x,
-          y: y,
-          width: 52,
-          height: 52
-        },
-        offset: {
-          x: 31,
-          y: 31
-        },
-        family: tile.family,
-        type: tile.type,
-        opacity: 1
-      }
-
-      if (this.selectedFamily !== 'none') {
-        if (result.family === 'skull' || result.family === 'sword') {
-          if (!(this.selectedFamily === 'skull' || this.selectedFamily === 'sword')) {
-            result.opacity = .5;
-          }
-        } else {
-          if (this.selectedFamily !== result.family) {
-            result.opacity = .5;
-          }
-        }
-      }
-
-      return result;
-    },
-
-    /**
-     * Get array of tile effects if any as IKonvaTile objects for rendering
-     */
-    getEffectsConfig(tile: Tile): IKonvaTile[] {
-      let effects = [] as IKonvaTile[];
-
-      tile.effects.forEach(entry => {
-        effects.push({
-          x: this.getTileCoords(tile.key, 'x') as number,
-          y: this.getTileCoords(tile.key, 'y') as number,
-          image: this.tileset,
-          width: 62,
-          height: 62,
-          crop: {
-            x: C.TILESET_COORDS.effect[entry].x,
-            y: C.TILESET_COORDS.effect[entry].y,
-            width: 52,
-            height: 52
-          },
-          offset: {
-            x: 31,
-            y: 31
-          },
-          family: tile.family,
-          type: tile.type,
-          opacity: 1,
-          listening: false
-        })
-      })
-
-      return effects
     },
 
     /**
