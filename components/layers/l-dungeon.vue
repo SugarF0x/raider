@@ -3,6 +3,7 @@
 
     <v-group v-for="entry in dungeon"
              :key="entry.id"
+             :config="{ clip: { ...dungeonClip } }"
     ><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
       <v-image :config="entry.konva"
                @mousedown="printArrow(entry.key)"
@@ -51,6 +52,16 @@ export default Vue.extend({
   name: "l-dungeon",
   components: {
     'u-text': uText
+  },
+  data() {
+    return {
+      dungeonClip: {
+        x: C.dungeonMD.dungeon.x,
+        y: C.dungeonMD.dungeon.y,
+        width: C.dungeonMD.dungeon.width,
+        height: C.dungeonMD.dungeon.height
+      }
+    }
   },
   computed: {
     tileset() { return this.$store.state.tiles },
