@@ -1,16 +1,16 @@
 <template>
-  <v-layer><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
+  <v-layer :config="{ clip: { ...dungeonClip } }"><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
 
     <v-group v-for="entry in dungeon"
              :key="entry.id"
-             :config="{ clip: { ...dungeonClip } }"
+             :id="entry.id"
+             ref="dungeonTile"
     ><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
       <v-image :config="entry.konva"
                @mousedown="printArrow(entry.key)"
                @mouseenter="dragArrow(entry.key)"
                @touchstart="printArrow(entry.key)"
                @touchmove="dragArrow(entry.key)"
-               :key="(selectedFamily === 'sword' || selectedFamily === 'none' || !selectedFamily) + entry.id"
       /><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
       <v-group v-if="entry.family === 'skull'" :config="{ opacity: entry.konva.opactiy }"><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
         <u-text :config="{text: entry.state.attack, x: getTileCoords(entry.key, 'x')+7, y: getTileCoords(entry.key, 'y')-25, width: 25, fill: 'lightgray', fontSize: 14, align: 'right'}"/><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
@@ -46,7 +46,9 @@ import Vue from 'vue'
 import uText from '../utils/u-text.vue'
 import * as C from "~/assets/consts"
 import { Skull, TFamily, Tile } from "~/assets/Tiles"
-import { IKonvaTile } from "~/components/types"
+import Konva from 'konva'
+
+// TODO: fix damage tooltip display clip on top dungeon border
 
 export default Vue.extend({
   name: "l-dungeon",
@@ -111,6 +113,16 @@ export default Vue.extend({
     }
   },
   methods: {
+    tweenTiles() {
+      this.$nextTick(() => {
+        let tilesToMove = this.dungeon.filter(entry => entry.konva.y < this.getTileCoords(entry.key, 'y'))
+        let dungeonTile = this.$refs.dungeonTile as any
+
+        this.$store.dispatch('dungeon/tweenTiles', { nodes: dungeonTile, tiles: tilesToMove })
+      })
+    },
+
+    // TODO: refactor to return only both x and y in an object instead of relying on toGet prop
     /**
      * Get just tile coords
      * Can specify which axis to get
@@ -196,6 +208,8 @@ export default Vue.extend({
         this.$store.dispatch('run/handleCollection')
 
         this.$store.dispatch('dungeon/repopulate')
+
+        this.tweenTiles()
 
         // enemy turn before next turn
         this.enemyTurn();
@@ -352,12 +366,14 @@ export default Vue.extend({
     }
   },
   mounted() {
-    if (this.dungeon.length === 0) this.$store.dispatch('dungeon/populate')
-
     /**
      * User input events
      */
-    this.bindEvents();
+    this.bindEvents()
+
+    if (this.dungeon.length === 0) {
+      this.$store.dispatch('dungeon/populate')
+    }
   },
   beforeDestroy() {
     this.unbindEvents();

@@ -156,32 +156,44 @@ export class Tile {
   id: number;
   key: string;
   konva: IKonvaTile;
+  queue: number;
 
-  constructor(image: HTMLImageElement, key: string, family: TFamily, type: TType = 'common') {
+  constructor(image: HTMLImageElement, queue: number, key: string, family: TFamily, type: TType = 'common') {
     this.key = key
     this.family = family
     this.type = type
     this.id = Math.floor(Math.random() * 1000000)
+    this.queue = queue
     this.konva = this.getTileKonva(image)
   }
 
-  moveTile(newKey: string) {
+  setKey(newKey: string) {
     this.key = newKey
-    Object.assign(this.konva, { ...this.getInDungeonCoords() })
-    // TODO: add animation here
+  }
+
+  animationRows() {
+    return (this.getInDungeonCoords(0).y - this.konva.y)/72
+  }
+
+  updateKey() {
+    Object.assign(this.konva, { ...this.getInDungeonCoords(0) })
+  }
+
+  updateQueue() {
+    this.queue = 0
   }
 
   setOpacity(opacity: number) {
     this.konva.opacity = opacity
   }
 
-  getInDungeonCoords(): { x: number; y: number; } {
+  getInDungeonCoords(queue = this.queue): { x: number; y: number; } {
     let x = parseInt(this.key[1])
     let y = parseInt(this.key[3])
 
     return {
       x: 46 + 72*x,
-      y: 186 + 72*(y * (this.key[4] === '-' ? -1 : 1))
+      y: 186 + (queue > 0 ? -(72*queue) : 72*y)
     }
   }
 
@@ -251,8 +263,8 @@ export class Skull extends Tile {
   base: TileState;
   isFresh = true;
 
-  constructor(image: HTMLImageElement, key: string, power: number) {
-    super(image, key, 'skull');
+  constructor(image: HTMLImageElement, queue: number, key: string, power: number) {
+    super(image, queue, key, 'skull');
     const rng = new seedRandom(this.id)
 
     // generate base stats

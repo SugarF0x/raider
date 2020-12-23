@@ -1,6 +1,7 @@
 import { ActionTree, GetterTree, MutationTree } from 'vuex'
 import { CombinedStates, RootState } from './index'
 import { Skull, TFamily, Tile } from "~/assets/Tiles"
+import Konva from "konva"
 
 const defaultState = () => {
   return {
@@ -55,13 +56,24 @@ export const mutations: MutationTree<DungeonState> = {
           for (let row=y-1; row >=0; row--) {
             let nextTopTile = state.tiles.find(entry => entry.key === `X${x}Y${row}`)
             if (nextTopTile) {
-              nextTopTile.moveTile(currentKey)
+              nextTopTile.setKey(currentKey)
               break
             }
           }
         }
       }
     }
+  },
+  TWEEN_TILES(state, payload: Konva.Tween[]) {
+    payload.forEach(entry => {
+      entry.play()
+    })
+  },
+  UPDATE_QUEUE(state, tileID: number) {
+    state.tiles.find(entry => entry.id === tileID)?.updateQueue()
+  },
+  UPDATE_KEY(state, tileID: number) {
+    state.tiles.find(entry => entry.id === tileID)?.updateKey()
   },
   // TODO: unite SET_VULNERABILITY and APPLY_DAMAGE code into a singe function
   SET_VULNERABILITY(state, payload: ISetVulnerabilityPayload | ISetVulnerabilityPayload[]) {
@@ -113,7 +125,7 @@ export const actions: ActionTree<DungeonState, RootState> = {
     for (let y = 0; y < 6; y++) {
       for (let x = 0; x < 6; x++) {
         let key = `X${ x }Y${ y }`
-        tiles.push(getRandomTile(rootState.tiles, key, rootGetters['run/enemyPower'], spawnWeight.initial))
+        tiles.push(getRandomTile(rootState.tiles, 0, key, rootGetters['run/enemyPower'], spawnWeight.initial))
       }
     }
     commit('SET_TILES', tiles)
@@ -142,14 +154,36 @@ export const actions: ActionTree<DungeonState, RootState> = {
 
     let newTiles = [] as Tile[]
     for (let x = 0; x < 6; x++) {
-      for (let y = 0; y < 6; y++) {
+      let queue = 1
+      for (let y = 5; y >= 0; y--) {
         let currentKey = `X${ x }Y${ y }`
         if (!state.tiles.find(entry => entry.key === currentKey)) {
-          newTiles.push(getRandomTile(rootState.tiles, currentKey, rootGetters['run/enemyPower']))
+          newTiles.push(getRandomTile(rootState.tiles, queue, currentKey, rootGetters['run/enemyPower']))
+          queue++
         }
       }
     }
     commit('SET_TILES', newTiles)
+  },
+
+  tweenTiles({ commit },{ tiles, nodes }) {
+    let tweens = [] as Konva.Tween[]
+    tiles.forEach((tile: any) => {
+      let node = nodes.find((entry: any) => entry.$attrs.id === tile.id).getNode()
+      let animRows = tile.animationRows()
+      commit('UPDATE_KEY', tile.id)
+      node.setY((-72)*animRows)
+      let tween = new Konva.Tween({
+        node: node,
+        duration: .5,
+        easing: Konva.Easings.EaseInOut,
+        onFinish() { commit('UPDATE_QUEUE', tile.id) },
+
+        y: 0
+      });
+      tweens.push(tween);
+    })
+    commit('TWEEN_TILES', tweens)
   },
 
   calculateVulnerability({ commit, state, rootState, rootGetters }, damage: number = rootGetters.currentDamage) {
@@ -205,7 +239,7 @@ const spawnWeight: TSpawnWeights = {
   }
 }
 
-function getRandomTile(image: HTMLImageElement, key: string, power: number, weights?: TWeights): Tile {
+function getRandomTile(image: HTMLImageElement, queue: number, key: string, power: number, weights?: TWeights): Tile {
   if (!weights) weights = spawnWeight.normal
 
   let poll = [] as TFamily[]
@@ -216,6 +250,6 @@ function getRandomTile(image: HTMLImageElement, key: string, power: number, weig
   })
 
   let family = poll[Math.floor(Math.random() * poll.length)];
-  if (family === 'skull') return new Skull(image, key, power);
-  else return new Tile(image, key, family);
+  if (family === 'skull') return new Skull(image, queue, key, power);
+  else return new Tile(image, queue, key, family);
 }
