@@ -15,10 +15,7 @@ The application can be interacted with on PC as well as on any smartphone.
 Here is a snapshot of what the current build looks like.
 You can fiddle around with it yourself [here](http://raid.sugarfox.ru).
 
-![snapshot-1](https://raw.githubusercontent.com/SugarF0x/raider/master/git/snapshot-1.jpg)
-![snapshot-2](https://raw.githubusercontent.com/SugarF0x/raider/master/git/snapshot-2.jpg)
-![snapshot-3](https://raw.githubusercontent.com/SugarF0x/raider/master/git/snapshot-3.jpg)
-![snapshot-4](https://raw.githubusercontent.com/SugarF0x/raider/master/git/snapshot-4.jpg)
+![snippet.gif](https://raw.githubusercontent.com/SugarF0x/raider/master/git/snippet.gif)
 
 ## Roadmap
 
