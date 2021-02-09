@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "nuxt-ts",
     "build": "nuxt-ts build",
-    "start": "nuxt-ts start",
+    "start": "title Raid Legacy && nuxt-ts start",
     "generate": "nuxt-ts generate",
     "test": "jest"
   },
