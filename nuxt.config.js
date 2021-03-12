@@ -36,7 +36,8 @@ export default {
   ** https://nuxtjs.org/guide/plugins
   */
   plugins: [
-    '@/plugins/vue-konva.ts'
+    '@/plugins/vue-konva.ts',
+    '@/plugins/pwa-update.ts'
   ],
 
   googleAnalytics: {
