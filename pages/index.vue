@@ -1,16 +1,12 @@
-<template>
-  <gamespace v-if="isTilesetLoaded" />
+<template lang="pug">
+  gamespace(v-if="isTilesetLoaded")
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import gamespace from '~/components/gamespace.vue';
 
 export default Vue.extend({
   name: 'home',
-  components: {
-    gamespace
-  },
   computed: {
     isTilesetLoaded() {
       return this.$store.getters.isTilesetLoaded
@@ -22,6 +18,6 @@ export default Vue.extend({
 })
 </script>
 
-<style lang="less" scoped>
+<style lang="sass" scoped>
 
 </style>

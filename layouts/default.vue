@@ -1,11 +1,8 @@
-<template>
-  <v-app dark>
-    <v-main>
-      <v-container>
-        <nuxt />
-      </v-container>
-    </v-main>
-  </v-app>
+<template lang="pug">
+  v-app(dark)
+    v-main
+      v-container
+        nuxt
 </template>
 
 <script lang="ts">
@@ -17,8 +14,7 @@ export default Vue.extend({
 
 </script>
 
-<style lang="less" scoped>
-  .container {
-    height: 100vh;
-  }
+<style lang="sass" scoped>
+.container
+  height: 100vh
 </style>

@@ -1,9 +1,11 @@
-<template>
-  <v-layer>
-    <v-rect :config="config"/>
-    <!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
-    <v-rect v-for="(entry,key) in background" :key="key" :config="entry"/>
-  </v-layer>
+<template lang="pug">
+  v-layer
+    v-rect(:config="config")
+    v-rect(
+      v-for="(entry,key) in background"
+      :key="key"
+      :config="entry"
+    )
 </template>
 
 <script lang="ts">
@@ -12,7 +14,7 @@ import * as C from '~/assets/consts'
 import { dungeonMD } from "~/assets/consts"
 
 export default Vue.extend({
-  name: "l-background",
+  name: "layer-background",
   data() {
     return {
       config: {

@@ -1,73 +1,61 @@
-<template>
-  <v-layer><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
+<template lang="pug">
+  v-layer
+    v-image(:config="hud")
 
-    <v-image :config="hud"></v-image>
+    v-group#score
+      u-text(:config="{text: `Score: ${game.score}`, x: 25, y: 20, align: 'left', width: 200, fontSize: 24}")
+      u-text(:config="{text: `Turn: ${game.turn}`, x: 225, y: 20, align: 'right', width: 200, fontSize: 24}")
 
-    <v-group id="score">
-      <u-text :config="{text: `Score: ${game.score}`, x: 25, y: 20, align: 'left', width: 200, fontSize: 24}" />
-      <u-text :config="{text: `Turn: ${game.turn}`, x: 225, y: 20, align: 'right', width: 200, fontSize: 24}" />
-    </v-group>
+    v-group#health
+      v-image(
+        :key="'health-'+fill.health"
+        :config="getHudConfig('health')"
+      )
+      util-text(:config="{text: `${state.character.state.health}/${totalHealth}`, x: 330, y: 700, width: 100, fill: 'yellow', fontSize: 20}")
 
-    <v-group id="health">
-      <v-image :key="'health-'+fill.health"
-               :config="getHudConfig('health')"
-      />
-      <u-text :config="{text: `${state.character.state.health}/${totalHealth}`, x: 330, y: 700, width: 100, fill: 'yellow', fontSize: 20}"/>
-    </v-group>
+    v-group#upgrade
+      v-image(
+        :key="'upgrade-'+fill.upgrade"
+        :config="getHudConfig('upgrade')"
+      )
+      util-text(:config="{text: `${state.collectibles.current.upgrade}/${state.collectibles.max}`, x: 125, y: 677, width: 200, fill: 'cyan'}")
 
-    <v-group id="upgrade">
-      <v-image :key="'upgrade-'+fill.upgrade"
-               :config="getHudConfig('upgrade')"
-      />
-      <u-text :config="{text: `${state.collectibles.current.upgrade}/${state.collectibles.max}`, x: 125, y: 677, width: 200, fill: 'cyan'}"/>
-    </v-group>
+    v-group#experience
+      v-image(
+        :key="'experience-'+fill.experience"
+        :config="getHudConfig('experience')"
+      )
+      util-text(:config="{text: `${state.collectibles.current.experience}/${state.collectibles.max}`, x: 125, y: 711, width: 200, fill: 'lightgreen'}")
 
-    <v-group id="experience">
-      <v-image :key="'experience-'+fill.experience"
-               :config="getHudConfig('experience')"
-      />
-      <u-text :config="{text: `${state.collectibles.current.experience}/${state.collectibles.max}`, x: 125, y: 711, width: 200, fill: 'lightgreen'}"/>
-    </v-group>
+    v-group#stats
+      util-text(:config="{text: '+'+$store.getters['run/enemyPower'], x: 130, y: 597, width: 50}")
+      util-text(:config="{text: `${state.character.state.shields}/${totalArmor}`, x: 197, y: 597, width: 50, fill: 'lightblue'}")
+      util-text(:config="{text: '+'+totalAttack, x: 270, y: 597, width: 50, fill: 'lightgray'}")
 
-    <v-group id="stats">
-      <u-text :config="{text: '+'+$store.getters['run/enemyPower'], x: 130, y: 597, width: 50}"/>
-      <u-text :config="{text: `${state.character.state.shields}/${totalArmor}`, x: 197, y: 597, width: 50, fill: 'lightblue'}"/>
-      <u-text :config="{text: '+'+totalAttack, x: 270, y: 597, width: 50, fill: 'lightgray'}"/>
-    </v-group>
+    v-group#coins
+      v-image(
+        v-for="(col,i) in getHudConfig('coins')"
+        :key="'coins-'+fill.coins+'-'+i"
+        :config="col"
+      )
+      util-text(:config="{text: `${state.collectibles.current.coins}/${state.collectibles.max}`, x: 20, y: 597, width: 100, fill: 'yellow'}")
 
-    <v-group id="coins"><!--suppress JSUnresolvedVariable, JSUnusedLocalSymbols -->
-      <v-image v-for="(col,i) in getHudConfig('coins')"
-               :key="'coins-'+fill.coins+'-'+i"
-               :config="col"
-      />
-      <u-text :config="{text: `${state.collectibles.current.coins}/${state.collectibles.max}`, x: 20, y: 597, width: 100, fill: 'yellow'}"/>
-    </v-group>
-
-    <v-group id="debug"
-             v-if="$route.query.debug"
-    >
-      <u-text :config="{text: 'Reset Store', x: 15, y: 762, width: 120, fontSize: 20}"/>
-      <v-rect :config="{x: 15, y: 758, width: 120, height: 24}"
-              @mousedown="resetStore"
-              @touchstart="resetStore"
-      />
-    </v-group>
-
-  </v-layer>
+    v-group#debug(v-if="$route.query.debug")
+      util-text(:config="{text: 'Reset Store', x: 15, y: 762, width: 120, fontSize: 20}")
+      v-rect(
+        :config="{x: 15, y: 758, width: 120, height: 24}"
+        @mousedown="resetStore"
+        @touchstart="resetStore"
+      )
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import { THud } from "~/assets/Tiles"
-
-import uText from '../utils/u-text.vue'
 import { IKonvaHUD } from "~/components/types"
 
 export default Vue.extend({
-  name: "l-hud",
-  components: {
-    'u-text': uText
-  },
+  name: "layer-hud",
   computed: {
     hud() {
       return {
@@ -163,7 +151,3 @@ export default Vue.extend({
   }
 })
 </script>
-
-<style scoped>
-
-</style>

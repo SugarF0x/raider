@@ -1,5 +1,7 @@
 import { THud } from '~/assets/Tiles'
 
+// TODO: move these to assets
+
 type TGetOptionals<T> = {
   [k in keyof T]-?: undefined extends T[k] ? never : k
 }[keyof T]

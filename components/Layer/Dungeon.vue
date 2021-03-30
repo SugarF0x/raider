@@ -1,57 +1,66 @@
-<template>
-  <v-layer><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
-    <v-group :config="{ clip: { ...dungeonClip } }">
-      <v-group v-for="entry in dungeon"
-               :key="entry.id"
-               :id="entry.id"
-               ref="dungeonTile"
-      ><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
-        <v-image :config="entry.konva"
-                 @mousedown="printArrow(entry.key)"
-                 @mouseenter="dragArrow(entry.key)"
-                 @touchstart="printArrow(entry.key)"
-                 @touchmove="dragArrow(entry.key)"
-        /><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
-        <v-group v-if="entry.family === 'skull'" :config="{ opacity: entry.konva.opactiy }"><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
-          <u-text :config="{text: entry.state.attack, x: getTileCoords(entry.key, 'x')+7, y: getTileCoords(entry.key, 'y')-25, width: 25, fill: 'lightgray', fontSize: 14, align: 'right'}"/><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
-          <u-text :config="{text: entry.state.armor, x: getTileCoords(entry.key, 'x')+7, y: getTileCoords(entry.key, 'y')-5, width: 25, fill: 'lightblue', fontSize: 14, align: 'right'}"/><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
-          <u-text :config="{text: entry.state.health, x: getTileCoords(entry.key, 'x')+7, y: getTileCoords(entry.key, 'y')+15, width: 25, fill: 'red', fontSize: 14, align: 'right'}"/>
-        </v-group><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
-        <v-group id="effects" v-if="entry.effects.length"><!--suppress JSUnusedLocalSymbols, JSUnresolvedVariable -->
-          <v-image v-for="effect in entry.getEffectsKonva()"
-                   :config="effect"
-                   :key="entry.effects.length + entry.id + effect.type"
-          />
-        </v-group>
-      </v-group>
+<template lang="pug">
+  v-layer
+    v-group(:config="{ clip: { ...dungeonClip } }")
+      v-group(
+        v-for="entry in dungeon"
+        :key="entry.id"
+        :id="entry.id"
+        ref="dungeonTile"
+      )
+        v-image(
+          :config="entry.konva"
+          @mousedown="printArrow(entry.key)"
+          @mouseenter="dragArrow(entry.key)"
+          @touchstart="printArrow(entry.key)"
+          @touchmove="dragArrow(entry.key)"
+        )
 
-      <v-group ref="arrow" :config="$store.state.arrow.keys.length ? {opacity: .8} : {opacity: 0}">
-        <v-arrow :key="arrowKey+'outline'" :config="arrowOutline"></v-arrow>
-        <v-arrow :key="arrowKey" :config="arrow"></v-arrow>
-      </v-group>
-    </v-group>
+        v-group(
+          v-if="entry.family === 'skull'"
+          :config="{ opacity: entry.konva.opactiy }"
+        )
+          util-text(:config="{text: entry.state.attack, x: getTileCoords(entry.key, 'x')+7, y: getTileCoords(entry.key, 'y')-25, width: 25, fill: 'lightgray', fontSize: 14, align: 'right'}")
+          util-text(:config="{text: entry.state.armor, x: getTileCoords(entry.key, 'x')+7, y: getTileCoords(entry.key, 'y')-5, width: 25, fill: 'lightblue', fontSize: 14, align: 'right'}")
+          util-text(:config="{text: entry.state.health, x: getTileCoords(entry.key, 'x')+7, y: getTileCoords(entry.key, 'y')+15, width: 25, fill: 'red', fontSize: 14, align: 'right'}")
 
-    <v-group id="tooltips">
-      <u-text v-if="selectedFamily === 'sword'" :config="{
-      text: currentDamage + ' damage', ...containText(getTileCoords(lastKey, 'x')-50),
-      y: getTileCoords(lastKey, 'y')-50, fontSize: 24, fill: 'red',
-      stroke: 'black', strokeWidth: 5
-    }"/>
-    </v-group>
-  </v-layer>
+        v-group#effects(v-if="entry.effects.length")
+          v-image(
+            v-for="effect in entry.getEffectsKonva()"
+            :config="effect"
+            :key="entry.effects.length + entry.id + effect.type"
+          )
+
+      v-group(
+        ref="arrow"
+        :config="$store.state.arrow.keys.length ? {opacity: .8} : {opacity: 0}"
+      )
+        v-arrow(
+          :key="arrowKey+'outline'"
+          :config="arrowOutline"
+        )
+        v-arrow(
+          :key="arrowKey"
+          :config="arrow"
+        )
+
+    v-group#tooltips
+      util-text(
+        v-if="selectedFamily === 'sword'"
+        :config=`{
+          text: currentDamage + ' damage', ...containText(getTileCoords(lastKey, 'x')-50),
+          y: getTileCoords(lastKey, 'y')-50, fontSize: 24, fill: 'red',
+          stroke: 'black', strokeWidth: 5
+        }`
+      )
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import uText from '../utils/u-text.vue'
 import * as C from "~/assets/consts"
 import { Skull, TFamily, Tile } from "~/assets/Tiles"
 
 export default Vue.extend({
-  name: "l-dungeon",
-  components: {
-    'u-text': uText
-  },
+  name: "layer-dungeon",
   data() {
     return {
       dungeonClip: {
@@ -378,6 +387,6 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped>
+<style lang="sass" scoped>
 
 </style>

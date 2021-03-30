@@ -1,5 +1,8 @@
-<template>
-  <v-text :key="key" :config="getTextConfig(config)"/>
+<template lang="pug">
+  v-text(
+    :key="key"
+    :config="getTextConfig(config)"
+  )
 </template>
 
 <script lang="ts">
@@ -7,7 +10,7 @@ import Vue from 'vue'
 import { ITextConfigOptions, ITextNonOptionals } from "~/components/types"
 
 export default Vue.extend({
-  name: "u-text",
+  name: "util-text",
   props: {
     config: Object as () => ITextConfigOptions
   },
@@ -47,6 +50,6 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped>
+<style lang="sass" scoped>
 
 </style>

@@ -1,13 +1,19 @@
-<template>
-  <v-row justify="center" align="center" ref="row">
-    <v-stage :config="konva" id="konva" :key="konva.resizeKey">
-      <l-background />
-      <l-dungeon />
-      <l-hud />
-      <l-gameover />
-      <l-shop />
-    </v-stage>
-  </v-row>
+<template lang="pug">
+  v-row(
+    justify="center"
+    align="center"
+    ref="row"
+  )
+    v-stage(
+      :config="konva"
+      id="konva"
+      :key="konva.resizeKey"
+    )
+      layer-background
+      layer-dungeon
+      layer-hud
+      layer-gameover
+      layer-shop
 </template>
 
 <script lang="ts">
@@ -15,23 +21,9 @@ import Vue from 'vue'
 
 import * as C from '~/assets/consts'
 
-import lBackground from './layers/l-background.vue'
-import lHud from './layers/l-hud.vue'
-import lDungeon from './layers/l-dungeon.vue'
-import lGameover from './layers/l-gameover.vue'
-import lShop from './layers/l-shop.vue'
-
 // noinspection JSUnusedGlobalSymbols
 export default Vue.extend({
   name: "gamespace",
-
-  components: {
-    'l-background': lBackground,
-    'l-hud': lHud,
-    'l-dungeon': lDungeon,
-    'l-gameover': lGameover,
-    'l-shop': lShop
-  },
 
   data() {
     return {
@@ -117,33 +109,30 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="less" scoped>
-.row {
-  height: 100%;
-}
+<style lang="sass" scoped>
+.row
+  height: 100%
 </style>
-<style lang="less">
-#konva {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 
-  .konvajs-content {
-    position: relative;
-    user-select: none;
-  }
+<style lang="sass">
+#konva
+  width: 100%
+  height: 100%
+  display: flex
+  align-items: center
+  justify-content: center
 
-  canvas {
-    padding: 0;
-    margin: 0;
-    border: 0;
-    background-color: transparent;
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: block;
-  }
-}
+  .konvajs-content
+    position: relative
+    user-select: none
+
+  canvas
+    padding: 0
+    margin: 0
+    border: 0
+    background-color: transparent
+    position: absolute
+    top: 0
+    left: 0
+    display: block
 </style>
