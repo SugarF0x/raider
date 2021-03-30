@@ -3,8 +3,8 @@
     v-image(:config="hud")
 
     v-group#score
-      u-text(:config="{text: `Score: ${game.score}`, x: 25, y: 20, align: 'left', width: 200, fontSize: 24}")
-      u-text(:config="{text: `Turn: ${game.turn}`, x: 225, y: 20, align: 'right', width: 200, fontSize: 24}")
+      util-text(:config="{text: `Score: ${game.score}`, x: 25, y: 20, align: 'left', width: 200, fontSize: 24}")
+      util-text(:config="{text: `Turn: ${game.turn}`, x: 225, y: 20, align: 'right', width: 200, fontSize: 24}")
 
     v-group#health
       v-image(
