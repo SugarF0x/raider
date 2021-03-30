@@ -1,20 +1,8 @@
 import colors from 'vuetify/es5/util/colors';
 
 export default {
-  /*
-  ** Nuxt rendering mode
-  ** See https://nuxtjs.org/api/configuration-mode
-  */
   ssr: false,
-  /*
-  ** Nuxt target
-  ** See https://nuxtjs.org/api/configuration-target
-  */
   target: 'static',
-  /*
-  ** Headers of the page
-  ** See https://nuxtjs.org/api/configuration-head
-  */
   head: {
     title: 'Raid Legacy',
     meta: [
@@ -39,7 +27,6 @@ export default {
     '@/plugins/vue-konva.ts',
     '@/plugins/pwa-update.ts'
   ],
-
   googleAnalytics: {
     id: process.env.GA_ID,
     dev: !process.env.GA_ID
@@ -59,11 +46,7 @@ export default {
     '@nuxtjs/google-analytics',
     '@nuxtjs/dotenv'
   ],
-  /*
-  ** Nuxt.js modules
-  */
   modules: [
-    // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
   ],
@@ -78,10 +61,6 @@ export default {
       description: 'A passion replica of Dungeon Raid'
     }
   },
-  /*
-  ** vuetify module configuration
-  ** https://github.com/nuxt-community/vuetify-module
-  */
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
@@ -99,10 +78,5 @@ export default {
       }
     }
   },
-  /*
-  ** Build configuration
-  ** See https://nuxtjs.org/api/configuration-build/
-  */
-  build: {
-  }
+  build: { }
 }
