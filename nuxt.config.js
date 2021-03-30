@@ -14,15 +14,7 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: '/icon.png' }
     ]
   },
-  /*
-  ** Global CSS
-  */
-  css: [
-  ],
-  /*
-  ** Plugins to load before mounting the App
-  ** https://nuxtjs.org/guide/plugins
-  */
+  css: [ '~/assets/global.sass' ],
   plugins: [
     '@/plugins/vue-konva.ts',
     '@/plugins/pwa-update.ts'
@@ -31,15 +23,7 @@ export default {
     id: process.env.GA_ID,
     dev: !process.env.GA_ID
   },
-
-  /*
-  ** Auto import components
-  ** See https://nuxtjs.org/api/configuration-components
-  */
-  components: false,
-  /*
-  ** Nuxt.js dev-modules
-  */
+  components: true,
   buildModules: [
     '@nuxt/typescript-build',
     '@nuxtjs/vuetify',
@@ -62,7 +46,6 @@ export default {
     }
   },
   vuetify: {
-    customVariables: ['~/assets/variables.scss'],
     theme: {
       dark: true,
       themes: {
