@@ -1,19 +1,13 @@
 <template lang="pug">
-  v-row(
-    justify="center"
-    align="center"
-    ref="row"
+  v-stage#konva(
+    :config="konva"
+    :key="konva.resizeKey"
   )
-    v-stage(
-      :config="konva"
-      id="konva"
-      :key="konva.resizeKey"
-    )
-      layer-background
-      layer-dungeon
-      layer-hud
-      layer-gameover
-      layer-shop
+    layer-background
+    layer-dungeon
+    layer-hud
+    layer-gameover
+    layer-shop
 </template>
 
 <script lang="ts">
@@ -47,7 +41,6 @@ export default Vue.extend({
     resize(): boolean {
       let konva   = document.getElementById("konva");
       let konvajs = document.querySelector('.konvajs-content');
-      let canvas  = document.querySelectorAll('canvas');
 
       let style, height, width;
 
@@ -59,7 +52,7 @@ export default Vue.extend({
         width       = parseInt(sWidth.slice(0, sWidth.length - 2));
       }
 
-      if (konvajs && canvas.length && height && width) {
+      if (konvajs && height && width) {
         let x = C.KONVA_WIDTH;
         let y = C.KONVA_HEIGHT;
 
@@ -82,11 +75,6 @@ export default Vue.extend({
 
         let style = `width: ${ x }px; height: ${ y }px`;
         konvajs.setAttribute('style', style);
-        canvas.forEach(e => {
-          e.setAttribute('style', style);
-          e.setAttribute('width', `${ x }px`);
-          e.setAttribute('height', `${ y }px`);
-        });
 
         this.konva.resizeKey++;
         return true
@@ -100,7 +88,7 @@ export default Vue.extend({
     /**
      * The initial resize as well as an event to handle any future resizes
      */
-    this.resize();
+    this.$nextTick(() => this.resize())
     window.addEventListener('resize', this.resize);
   },
   beforeDestroy() {
@@ -125,14 +113,4 @@ export default Vue.extend({
   .konvajs-content
     position: relative
     user-select: none
-
-  canvas
-    padding: 0
-    margin: 0
-    border: 0
-    background-color: transparent
-    position: absolute
-    top: 0
-    left: 0
-    display: block
 </style>
