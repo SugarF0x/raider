@@ -1,6 +1,6 @@
 import { ActionTree, GetterTree, MutationTree } from 'vuex'
 import { CombinedStates, RootState } from './index'
-import { Item, Buff, TShop } from '~/assets/Tiles.ts'
+import { Item, Buff, TShop } from '~/assets/Tiles'
 import { BUFF_EQUIPMENT, TILESET_COORDS, TAttributes, TSpells, TBuffs } from '~/assets/consts'
 import { shuffle } from '~/assets/utils'
 

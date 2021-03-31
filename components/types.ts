@@ -50,3 +50,6 @@ export interface ITextConfigOptions {
   fillAfterStrokeEnabled?: boolean
 }
 export type ITextNonOptionals = Required<Omit<ITextConfigOptions, TGetOptionals<ITextConfigOptions>>>
+
+// this here is so as not to spam warning in console until i move this whole file into assets
+export default ''
