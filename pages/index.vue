@@ -1,5 +1,11 @@
 <template lang="pug">
   gamespace(v-if="isTilesetLoaded")
+  v-row(v-else).fill-height
+    v-col.fill-height.d-flex.justify-center.align-center
+      v-progress-circular(
+        indeterminate
+        size="100"
+      )
 </template>
 
 <script lang="ts">
