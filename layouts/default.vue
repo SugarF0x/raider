@@ -1,7 +1,7 @@
 <template lang="pug">
   v-app(dark)
     v-main
-      v-container
+      v-container.px-0
         nuxt
 </template>
 
