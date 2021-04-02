@@ -27,8 +27,7 @@ export default {
   buildModules: [
     '@nuxt/typescript-build',
     '@nuxtjs/vuetify',
-    '@nuxtjs/google-analytics',
-    '@nuxtjs/dotenv'
+    '@nuxtjs/google-analytics'
   ],
   modules: [
     '@nuxtjs/axios',
