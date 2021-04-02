@@ -10,6 +10,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import markdown from "~/assets/Old/ui-markdowns/shop/markdown"
 
 export default Vue.extend({
   name: 'home',

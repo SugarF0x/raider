@@ -1,5 +1,6 @@
-import { TILESET_COORDS, BUFF_TEXT, TBuffs } from './consts'
-import { IKonvaTile } from "~/components/types"
+import { TILESET_COORDS, BUFF_TEXT } from './consts'
+import { TBuffs } from "~/assets/Old/types"
+import { IKonvaTile } from "~/assets/Old/types"
 const seedRandom = require('seedrandom');
 
 // items related

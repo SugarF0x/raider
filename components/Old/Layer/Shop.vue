@@ -37,7 +37,7 @@
 <script lang="ts">
 import Vue from 'vue';
 
-import { shopMD, titleBase, shopTiles } from '~/assets/consts'
+import { shopMD, titleBase, shopTiles } from '~/assets/Old/consts'
 
 export default Vue.extend({
   name: "layer-shop",

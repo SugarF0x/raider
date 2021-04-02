@@ -99,9 +99,9 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { shopTiles } from '@/assets/consts'
+import { shopTiles } from '~/assets/Old/consts'
 
-import { Buff, Item } from "~/assets/Tiles";
+import { Buff, Item } from "~/assets/Old/Tiles";
 
 export default Vue.extend({
   name: "layer-shop-upgrade",

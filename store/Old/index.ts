@@ -1,5 +1,5 @@
 import { MutationTree, GetterTree, ActionTree } from 'vuex'
-import { TFamily } from "~/assets/Tiles"
+import { TFamily } from "~/assets/Old/Tiles"
 
 import { RunState } from './run'
 import { DungeonState } from './dungeon'

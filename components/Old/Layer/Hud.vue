@@ -51,8 +51,8 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { THud } from "~/assets/Tiles"
-import { IKonvaHUD } from "~/components/types"
+import { THud } from "~/assets/Old/Tiles"
+import { IKonvaHUD } from "~/assets/Old/types"
 
 export default Vue.extend({
   name: "layer-hud",

@@ -13,7 +13,7 @@
 <script lang="ts">
 import Vue from 'vue'
 
-import * as C from '~/assets/consts'
+import * as C from '~/assets/Old/consts'
 
 // noinspection JSUnusedGlobalSymbols
 export default Vue.extend({

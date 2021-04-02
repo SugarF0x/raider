@@ -56,7 +56,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { shopTiles, TILESET_COORDS, BUFF_TEXT } from "~/assets/consts"
+import { shopTiles, TILESET_COORDS, BUFF_TEXT } from "~/assets/Old/consts"
 
 export default Vue.extend({
   name: "layer-shop-levelup",

@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { ITextConfigOptions, ITextNonOptionals } from "~/components/types"
+import { ITextConfigOptions, ITextNonOptionals } from "~/assets/Old/types"
 
 export default Vue.extend({
   name: "util-text",

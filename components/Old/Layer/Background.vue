@@ -10,8 +10,8 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import * as C from '~/assets/consts'
-import { dungeonMD } from "~/assets/consts"
+import * as C from '~/assets/Old/consts'
+import { dungeonMD } from "~/assets/Old/consts"
 
 export default Vue.extend({
   name: "layer-background",

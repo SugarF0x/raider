@@ -1,10 +1,13 @@
-import { THud } from '~/assets/Tiles'
-
-// TODO: move these to assets
+import { TILESET_COORDS } from "~/assets/Old/consts"
+import { THud } from '~/assets/Old/Tiles'
 
 type TGetOptionals<T> = {
   [k in keyof T]-?: undefined extends T[k] ? never : k
 }[keyof T]
+
+export type TAttributes = typeof TILESET_COORDS.attribute.order[number]
+export type TSpells = typeof TILESET_COORDS.spell.order[number]
+export type TBuffs = typeof TILESET_COORDS.buff.order[number]
 
 export interface IKonvaConfig {
   x: number,
@@ -50,6 +53,3 @@ export interface ITextConfigOptions {
   fillAfterStrokeEnabled?: boolean
 }
 export type ITextNonOptionals = Required<Omit<ITextConfigOptions, TGetOptionals<ITextConfigOptions>>>
-
-// this here is so as not to spam warning in console until i move this whole file into assets
-export default ''

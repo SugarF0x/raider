@@ -1,8 +1,8 @@
 import { ActionTree, GetterTree, MutationTree } from 'vuex'
 import { CombinedStates, RootState } from './index'
-import { Item, Buff, TShop } from '~/assets/Tiles'
-import { BUFF_EQUIPMENT, TILESET_COORDS, TAttributes, TSpells, TBuffs } from '~/assets/consts'
-import { shuffle } from '~/assets/utils'
+import { Item, Buff, TShop } from '~/assets/Old/Tiles'
+import { BUFF_EQUIPMENT, TILESET_COORDS, TAttributes, TSpells, TBuffs } from '~/assets/Old/consts'
+import { shuffle } from '~/assets/Old/utils/shuffle'
 
 type TShopItem = { type: 'item', item: Item }
 type TShopBuff = { type: 'upgrade', item: Buff }

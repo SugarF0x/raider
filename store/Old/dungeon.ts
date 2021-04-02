@@ -1,6 +1,6 @@
 import { ActionTree, GetterTree, MutationTree } from 'vuex'
 import { CombinedStates, RootState } from './index'
-import { Skull, TFamily, Tile } from "~/assets/Tiles"
+import { Skull, TFamily, Tile } from "~/assets/Old/Tiles"
 import Konva from "konva"
 
 const defaultState = () => {

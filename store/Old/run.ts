@@ -1,8 +1,8 @@
 import { GetterTree, MutationTree, ActionTree } from 'vuex'
 import { CombinedStates, RootState } from './index'
-import { IFill } from "~/components/types"
-import { Item } from "~/assets/Tiles"
-import { TShopEntry } from "~/store/shop";
+import { IFill } from "~/assets/Old/types"
+import { Item } from "~/assets/Old/Tiles"
+import { TShopEntry } from "~/store/Old/shop";
 
 const defaultState = () => {
   return {

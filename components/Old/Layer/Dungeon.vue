@@ -56,8 +56,8 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import * as C from "~/assets/consts"
-import { Skull, TFamily, Tile } from "~/assets/Tiles"
+import * as C from "~/assets/Old/consts"
+import { Skull, TFamily, Tile } from "~/assets/Old/Tiles"
 
 export default Vue.extend({
   name: "layer-dungeon",

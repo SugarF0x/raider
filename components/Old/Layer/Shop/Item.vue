@@ -104,8 +104,8 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Item } from "~/assets/Tiles"
-import { shopTiles } from "~/assets/consts"
+import { Item } from "~/assets/Old/Tiles"
+import { shopTiles } from "~/assets/Old/consts"
 
 export default Vue.extend({
   name: "layer-shop-item",
