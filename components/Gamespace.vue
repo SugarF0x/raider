@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { WIDTH, HEIGHT } from "~/assets/consts/konva"
+import { KONVA } from "~/assets/consts"
 
 interface VueKonvaStage extends Vue { getNode: Function }
 function isVueKonvaStage(vue: Vue): vue is VueKonvaStage {
@@ -21,8 +21,8 @@ export default Vue.extend({
   data() {
     return {
       konva: {
-        width: WIDTH,
-        height: HEIGHT,
+        width: KONVA.WIDTH,
+        height: KONVA.HEIGHT,
         scaleX: 1,
         scaleY: 1
       },
@@ -47,8 +47,8 @@ export default Vue.extend({
       }
 
       if (konva && konvajs && height && width) {
-        let x = WIDTH
-        let y = HEIGHT
+        let x = KONVA.WIDTH
+        let y = KONVA.HEIGHT
 
         if (width / x > height / y) {
           this.konva.scaleY = height / y
