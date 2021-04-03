@@ -1,11 +1,12 @@
 <template lang="pug">
-  gamespace
-  //v-row(v-else).fill-height
-  //  v-col.fill-height.d-flex.justify-center.align-center
-  //    v-progress-circular(
-  //      indeterminate
-  //      size="100"
-  //    )
+  gamespace(v-if="isTilesetLoaded")
+  v-row(v-else).fill-height
+    v-col.fill-height.d-flex.flex-column.justify-center.align-center
+      v-progress-circular(
+        indeterminate
+        size="100"
+      )
+      div.mt-5 Loading game assets ({{ loadedAssets }}/{{ totalAssets }})...
 </template>
 
 <script lang="ts">
@@ -13,14 +14,14 @@ import Vue from 'vue';
 
 export default Vue.extend({
   name: 'home',
-  // computed: {
-  //   isTilesetLoaded() {
-  //     return this.$store.getters.isTilesetLoaded
-  //   }
-  // },
-  // mounted() {
-  //   this.$store.dispatch('initAssetsLoading')
-  // }
+  computed: {
+    isTilesetLoaded() { return this.$store.getters.isTilesetLoaded },
+    loadedAssets() { return this.$store.state.loadedAssets },
+    totalAssets() { return this.$store.getters.totalAssets }
+  },
+  mounted() {
+    this.$store.dispatch('initAssetsLoading')
+  }
 })
 </script>
 
