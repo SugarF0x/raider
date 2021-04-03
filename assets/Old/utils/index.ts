@@ -1,5 +1,1 @@
-import shuffle from './shuffle'
-
-export default {
-  shuffle
-}
+export { default as shuffle } from './shuffle'
