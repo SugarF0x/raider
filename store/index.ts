@@ -1,5 +1,5 @@
 import { MutationTree, GetterTree, ActionTree } from 'vuex'
-import { CharacterState } from "~/store/character"
+// import { CharacterState } from "~/store/character"
 
 export const state = () => ({
   assets: {
@@ -12,7 +12,7 @@ export const state = () => ({
 export type RootState = ReturnType<typeof state>
 
 export interface CombinedStates extends RootState {
-  character: CharacterState
+  // character: CharacterState
 }
 
 export const getters: GetterTree<RootState, RootState> = {
@@ -39,6 +39,6 @@ export const actions: ActionTree<RootState, RootState> = {
     commit('LOAD_ASSETS')
   },
   resetStore({ commit }) {
-    commit('character/RESET_STATE')
+    // commit('character/RESET_STATE')
   }
 }

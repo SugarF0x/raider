@@ -3,8 +3,8 @@
     ref="konva"
     :config="konva"
   )
-    v-layer
-      v-rect(:config="{ x:0, y:0, width: 1000, height: 1000, fill: '#1D214E' }")
+    layer-background
+    layer-markdown
 </template>
 
 <script lang="ts">
@@ -24,7 +24,7 @@ export default Vue.extend({
         width: KONVA.WIDTH,
         height: KONVA.HEIGHT,
         scaleX: 1,
-        scaleY: 1
+        scaleY: 1,
       },
     }
   },
