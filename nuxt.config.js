@@ -14,7 +14,7 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: '/icon.png' }
     ]
   },
-  css: [ '~/assets/global.sass' ],
+  css: ['~/assets/global.sass'],
   plugins: [
     '@/plugins/vue-konva.ts',
     '@/plugins/pwa-update.ts'
@@ -23,12 +23,12 @@ export default {
     id: process.env.GA_ID,
     dev: !process.env.GA_ID
   },
-  // components: true,
   components: true,
   buildModules: [
     '@nuxt/typescript-build',
     '@nuxtjs/vuetify',
-    '@nuxtjs/google-analytics'
+    '@nuxtjs/google-analytics',
+    '@nuxtjs/composition-api/module'
   ],
   modules: [
     '@nuxtjs/axios',
@@ -61,5 +61,5 @@ export default {
       }
     }
   },
-  build: { }
+  build: {}
 }
