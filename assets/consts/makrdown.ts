@@ -1,5 +1,5 @@
 // Format: x-y/width-height
-export const background = [
+export const BACKGROUND = [
   // header
   '10/430-40',
   // 4 spells

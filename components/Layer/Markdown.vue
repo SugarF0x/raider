@@ -9,14 +9,14 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { background } from '~/assets/consts/makrdown'
+import { BACKGROUND } from '~/assets/consts/makrdown'
 import { parseMarkdown } from "~/assets/utils"
 
 export default Vue.extend({
   name: "Markdown",
   data() {
     return {
-      shapes: background.map(entry => parseMarkdown(entry))
+      shapes: BACKGROUND.map(entry => parseMarkdown(entry, true))
     }
   }
 })

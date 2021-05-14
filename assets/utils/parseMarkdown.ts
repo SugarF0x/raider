@@ -1,6 +1,6 @@
-import { STROKE_COLOR } from '../consts/konva'
+import { STROKE_COLOR, BACKGROUND_COLOR } from '../consts/konva'
 
-export function parseMarkdown(data: string) {
+export function parseMarkdown(data: string, stroke = false, fill = false) {
   const [position, size] = data.split('/')
   const [x, y] = position.split('-')
   const [width, height] = size.split('-')
@@ -10,6 +10,7 @@ export function parseMarkdown(data: string) {
     y: parseInt(y) || parseInt(x),
     width: parseInt(width),
     height: parseInt(height) || parseInt(width),
-    stroke: STROKE_COLOR
+    stroke: stroke && STROKE_COLOR || undefined,
+    fill: fill && BACKGROUND_COLOR || undefined
   }
 }
