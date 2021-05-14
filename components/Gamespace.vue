@@ -5,6 +5,7 @@
   )
     layer-background
     layer-markdown
+    layer-hud
 </template>
 
 <script lang="ts">

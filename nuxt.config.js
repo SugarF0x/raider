@@ -24,9 +24,7 @@ export default {
     dev: !process.env.GA_ID
   },
   // components: true,
-  components: [
-    { path: '~/components', ignore: ['**/Old/**'] }
-  ],
+  components: true,
   buildModules: [
     '@nuxt/typescript-build',
     '@nuxtjs/vuetify',
