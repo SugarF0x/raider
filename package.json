@@ -15,6 +15,7 @@
     "@nuxtjs/pwa": "^3.3.5",
     "konva": "^7.2.5",
     "nuxt": "^2.15.3",
+    "nuxt-typed-vuex": "^0.2.0",
     "pug": "^3.0.2",
     "pug-plain-loader": "^1.1.0",
     "seedrandom": "^3.0.5",

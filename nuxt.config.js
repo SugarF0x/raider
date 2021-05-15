@@ -28,7 +28,8 @@ export default {
     '@nuxt/typescript-build',
     '@nuxtjs/vuetify',
     '@nuxtjs/google-analytics',
-    '@nuxtjs/composition-api/module'
+    '@nuxtjs/composition-api/module',
+    'nuxt-typed-vuex',
   ],
   modules: [
     '@nuxtjs/axios',
