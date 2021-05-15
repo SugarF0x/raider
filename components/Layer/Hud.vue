@@ -1,6 +1,6 @@
 <template lang="pug">
   v-layer
-    hud-coins
+    hud-gold
     hud-enemy-power
     hud-armor
     hud-player-power
@@ -16,7 +16,3 @@ export default Vue.extend({
   name: "Hud"
 })
 </script>
-
-<style lang="sass" scoped>
-
-</style>

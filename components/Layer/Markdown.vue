@@ -21,7 +21,3 @@ export default Vue.extend({
   }
 })
 </script>
-
-<style lang="sass" scoped>
-
-</style>
