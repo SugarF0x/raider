@@ -11,9 +11,17 @@ interface ParsedMarkdown extends Dimensions {
   stroke?: string
   fill?: string
   crop?: Dimensions
+  image?: HTMLImageElement
 }
 
-export function parseMarkdown(data: string, stroke = false, fill = false): ParsedMarkdown {
+interface Props {
+  data: string
+  stroke?: boolean
+  fill?: boolean
+  image?: 'I' | 'M' | 'T'
+}
+
+export function parseMarkdown({ data, stroke = false, fill = false, image}: Props): ParsedMarkdown {
   const [position, crop] = data.split(':')
 
   let result: ParsedMarkdown = parseDimensions(position)
@@ -30,9 +38,13 @@ function parseDimensions(data: string): Dimensions {
   const [width, height] = size.split('-')
 
   return {
-    x: parseInt(x),
-    y: parseInt(y) || parseInt(x),
-    width: parseInt(width),
-    height: parseInt(height) || parseInt(width),
+    x: parseFloat(x),
+    y: parseFloat(y) || parseFloat(x),
+    width: parseFloat(width),
+    height: parseFloat(height) || parseFloat(width),
   }
 }
+
+// function parseImage(data: string): HTMLImageElement {
+//   if ()
+// }

@@ -16,7 +16,7 @@ export default Vue.extend({
   name: "Markdown",
   data() {
     return {
-      shapes: BACKGROUND.map(entry => parseMarkdown(entry, true))
+      shapes: BACKGROUND.map(entry => parseMarkdown({ data: entry, stroke: true }))
     }
   }
 })
