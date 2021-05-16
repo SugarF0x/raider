@@ -30,6 +30,9 @@
       "@nuxt/types",
       "@nuxtjs/google-analytics",
       "@types/jest"
+    ],
+    "plugins": [
+      {"name":  "typescript-tslint-plugin"}
     ]
   },
   "exclude": [
@@ -37,5 +40,5 @@
     ".nuxt",
     "dist",
     "./*/Old"
-  ]
+  ],
 }
