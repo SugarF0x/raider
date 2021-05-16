@@ -1,4 +1,5 @@
 import { STROKE_COLOR, BACKGROUND_COLOR } from '../consts/konva'
+import { useAccessor } from "~/assets/hooks"
 
 interface Dimensions {
   x: number
@@ -14,20 +15,30 @@ interface ParsedMarkdown extends Dimensions {
   image?: HTMLImageElement
 }
 
-interface Props {
-  data: string
+interface Options {
+  tiles?: boolean
+  icons?: boolean
   stroke?: boolean
   fill?: boolean
-  image?: 'I' | 'M' | 'T'
 }
 
-export function parseMarkdown({ data, stroke = false, fill = false, image}: Props): ParsedMarkdown {
-  const [position, crop] = data.split(':')
+export function parseMarkdown(data: string): ParsedMarkdown {
+  const [dimensions, options] = parseOptions(data)
+  const [position, crop] = dimensions.split(':')
+
+  if (crop && !(options.tiles || options.icons) || (options.tiles || options.icons) && !crop)
+    throw new Error(`Neither crop, nor image can exist without one another`)
 
   let result: ParsedMarkdown = parseDimensions(position)
   if (crop) result.crop = parseDimensions(crop)
-  if (stroke) result.stroke = STROKE_COLOR
-  if (fill) result.fill = BACKGROUND_COLOR
+  if (options.stroke) result.stroke = STROKE_COLOR
+  if (options.fill) result.fill = BACKGROUND_COLOR
+
+  if (options.tiles || options.icons) {
+    const { assets } = useAccessor()
+    if (options.tiles) result.image = assets.tiles
+    if (options.icons) result.image = assets.icons
+  }
 
   return result
 }
@@ -45,6 +56,21 @@ function parseDimensions(data: string): Dimensions {
   }
 }
 
-// function parseImage(data: string): HTMLImageElement {
-//   if ()
-// }
+function parseOptions(data: string): [string, Options] {
+  const [dimensions, options] = data.split(';')
+
+  const parsed: Options = {}
+  if (options) {
+    if (options.includes('T')) parsed.tiles = true
+    if (options.includes('I')) parsed.icons = true
+    if (options.includes('S')) parsed.stroke = true
+    if (options.includes('F')) parsed.fill = true
+  }
+
+  if (parsed.icons && parsed.tiles) throw new Error(
+    `Markdown can not have both Tileset and Icons options
+    Data passed: ${data}`,
+  )
+
+  return [dimensions, parsed]
+}
