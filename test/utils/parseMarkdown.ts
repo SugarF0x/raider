@@ -1,35 +1,40 @@
 import { parseMarkdown } from '~/assets/utils'
 import { BACKGROUND_COLOR, STROKE_COLOR } from "~/assets/consts/konva"
+import { defineComponent, h } from '@nuxtjs/composition-api'
+import Vuex from 'vuex'
+import { shallowMount, createLocalVue } from "@vue/test-utils"
+import { useAccessor } from "typed-vuex"
+import Vue from 'vue'
 
 export function parseMarkdownTest() {
   describe('parseMarkdown', () => {
     test('Outline markdown', () => {
       const outlineMock = '10-590/430-150'
       const expectedOutcome = {
-        x: 10.0,
-        y: 590.0,
-        width: 430.0,
-        height: 150.0,
+        x: 10,
+        y: 590,
+        width: 430,
+        height: 150,
       }
       expect(parseMarkdown(outlineMock)).toEqual(expectedOutcome)
     })
     test('Outline markdown with matching fields', () => {
       const outlineMock = '10/430'
       const expectedOutcome = {
-        x: 10.0,
-        y: 10.0,
-        width: 430.0,
-        height: 430.0,
+        x: 10,
+        y: 10,
+        width: 430,
+        height: 430,
       }
       expect(parseMarkdown(outlineMock)).toEqual(expectedOutcome)
     })
     test('Outline markdown with stroke', () => {
       const outlineMock = '10-590/430-150;S'
       const expectedOutcome = {
-        x: 10.0,
-        y: 590.0,
-        width: 430.0,
-        height: 150.0,
+        x: 10,
+        y: 590,
+        width: 430,
+        height: 150,
         stroke: STROKE_COLOR,
       }
       expect(parseMarkdown(outlineMock)).toEqual(expectedOutcome)
@@ -37,10 +42,10 @@ export function parseMarkdownTest() {
     test('Outline markdown with fill', () => {
       const outlineMock = '10-590/430-150;F'
       const expectedOutcome = {
-        x: 10.0,
-        y: 590.0,
-        width: 430.0,
-        height: 150.0,
+        x: 10,
+        y: 590,
+        width: 430,
+        height: 150,
         fill: BACKGROUND_COLOR,
       }
       expect(parseMarkdown(outlineMock)).toEqual(expectedOutcome)
@@ -48,15 +53,87 @@ export function parseMarkdownTest() {
     test('Outline markdown with stroke & fill', () => {
       const outlineMock = '10-590/430-150;FS'
       const expectedOutcome = {
-        x: 10.0,
-        y: 590.0,
-        width: 430.0,
-        height: 150.0,
+        x: 10,
+        y: 590,
+        width: 430,
+        height: 150,
         fill: BACKGROUND_COLOR,
         stroke: STROKE_COLOR,
       }
       expect(parseMarkdown(outlineMock)).toEqual(expectedOutcome)
     })
-    // Image variants can not be tested since they rely on setup()
+    test('Image crop from tiles', () => {
+      const outlineMock = '158-708.5/134-18.5:397-501/100-10;T'
+      const expectedOutcome = {
+        x: 158,
+        y: 708.5,
+        width: 134,
+        height: 18.5,
+        crop: {
+          x: 397,
+          y: 501,
+          width: 100,
+          height: 10
+        },
+        image: image
+      }
+      const wrapper = shallowMount(MockComponent, { store, localVue, propsData: { data: outlineMock } })
+      const div = wrapper.find('h6')
+      expect(div.text()).toContain(`${JSON.stringify(expectedOutcome)}`)
+    })
+    // test('Image crop from icons', () => {
+    //   const outlineMock = '158-708.5/134-18.5:397-501/100-10;I'
+    //   const expectedOutcome = {
+    //     x: 158,
+    //     y: 708,
+    //     width: 134,
+    //     height: 18,
+    //     crop: {
+    //       x: 397,
+    //       y: 501,
+    //       width: 100,
+    //       height: 10
+    //     },
+    //     image: image
+    //   }
+    //   expect(parseMarkdown(outlineMock)).toEqual(expectedOutcome)
+    // })
+    // test('Image crop from both tiles and icons throws error', () => {
+    //   const outlineMock = '158-708.5/134-18.5:397-501/100-10;IT'
+    //   const t = () => {
+    //     parseMarkdown(outlineMock)
+    //   }
+    //   expect(t).toThrowError()
+    // })
   })
 }
+
+const localVue = createLocalVue()
+localVue.use(Vuex)
+const image = new Image()
+const storePattern = {
+  state: {
+    assets: {
+      tiles: image,
+      icons: image
+    }
+  }
+}
+const store = new Vuex.Store(storePattern)
+const accessor = useAccessor(store, storePattern)
+// @ts-ignore
+Vue.prototype.$accessor = accessor
+
+const MockComponent = defineComponent({
+  props: {
+    data: {
+      type: String,
+      required: true
+    },
+  },
+  setup(props) {
+    const result = parseMarkdown(props.data)
+
+    return () => h('h6', `${JSON.stringify(result)}`)
+  }
+})
