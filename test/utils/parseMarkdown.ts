@@ -81,32 +81,37 @@ export function parseMarkdownTest() {
       const div = wrapper.find('h6')
       expect(div.text()).toContain(`${JSON.stringify(expectedOutcome)}`)
     })
-    // test('Image crop from icons', () => {
-    //   const outlineMock = '158-708.5/134-18.5:397-501/100-10;I'
-    //   const expectedOutcome = {
-    //     x: 158,
-    //     y: 708,
-    //     width: 134,
-    //     height: 18,
-    //     crop: {
-    //       x: 397,
-    //       y: 501,
-    //       width: 100,
-    //       height: 10
-    //     },
-    //     image: image
-    //   }
-    //   expect(parseMarkdown(outlineMock)).toEqual(expectedOutcome)
-    // })
-    // test('Image crop from both tiles and icons throws error', () => {
-    //   const outlineMock = '158-708.5/134-18.5:397-501/100-10;IT'
-    //   const t = () => {
-    //     parseMarkdown(outlineMock)
-    //   }
-    //   expect(t).toThrowError()
-    // })
+    // should this even be here? it's like identical to the former test
+    test('Image crop from icons', () => {
+      const outlineMock = '158-708.5/134-18.5:397-501/100-10;I'
+      const expectedOutcome = {
+        x: 158,
+        y: 708.5,
+        width: 134,
+        height: 18.5,
+        crop: {
+          x: 397,
+          y: 501,
+          width: 100,
+          height: 10
+        },
+        image: image
+      }
+      const wrapper = shallowMount(MockComponent, { store, localVue, propsData: { data: outlineMock } })
+      const div = wrapper.find('h6')
+      expect(div.text()).toContain(`${JSON.stringify(expectedOutcome)}`)
+    })
+    test('Image crop from both tiles and icons throws error', () => {
+      const outlineMock = '158-708.5/134-18.5:397-501/100-10;IT'
+      const t = () => {
+        parseMarkdown(outlineMock)
+      }
+      expect(t).toThrowError()
+    })
   })
 }
+
+// Mock Store & Component
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
