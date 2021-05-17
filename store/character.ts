@@ -2,7 +2,7 @@ import { MutationTree, GetterTree, ActionTree } from 'vuex'
 import { RootState } from "~/store/index"
 
 const defaultState = () => ({
-  gold: 0,
+  gold: 20,
 })
 
 export const state = () => (defaultState())

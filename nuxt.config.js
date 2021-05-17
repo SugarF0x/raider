@@ -23,7 +23,9 @@ export default {
     id: process.env.GA_ID,
     dev: !process.env.GA_ID
   },
-  components: true,
+  components: [
+    { path: '~/components', extensions: ['vue'] }
+  ],
   buildModules: [
     '@nuxt/typescript-build',
     '@nuxtjs/vuetify',
