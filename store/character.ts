@@ -1,5 +1,4 @@
-import { MutationTree, GetterTree, ActionTree } from 'vuex'
-import { RootState } from "~/store/index"
+import { getterTree, mutationTree, actionTree } from 'typed-vuex'
 
 const defaultState = () => ({
   gold: 20,
@@ -7,13 +6,11 @@ const defaultState = () => ({
 
 export const state = () => (defaultState())
 
-export type CharacterState = ReturnType<typeof state>
+export const getters = getterTree(state, {})
 
-export const getters: GetterTree<CharacterState, RootState> = {}
-
-export const mutations: MutationTree<CharacterState> = {
-  RESET_STATE: state => state = defaultState(),
+export const mutations = mutationTree(state, {
+  RESET_STATE: state => Object.assign(state, defaultState()),
   SET_GOLD: (state, payload: number) => state.gold = payload,
-}
+})
 
-export const actions: ActionTree<CharacterState, RootState> = {}
+export const actions = actionTree({ state, getters, mutations }, {})

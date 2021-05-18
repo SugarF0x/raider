@@ -48,12 +48,11 @@ export default defineComponent({
     }
 
     let interval: NodeJS.Timeout
-
     onMounted(() => {
       interval = setInterval(() => {
-        // TODO: fix mutations typing
         let newValue = gold.value + 1
-        character.SET_GOLD(gold.value + 1 <= 100 ? gold.value + 1 : 0)
+        if (newValue >= 100) newValue = 0
+        character.SET_GOLD(newValue)
       }, 100)
     })
 
