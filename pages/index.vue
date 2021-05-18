@@ -10,17 +10,24 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent, computed, onMounted, onUnmounted } from "@nuxtjs/composition-api"
+import { useAccessor } from "~/assets/hooks"
 
-export default Vue.extend({
-  name: 'home',
-  computed: {
-    isTilesetLoaded() { return this.$store.getters.isTilesetLoaded },
-    loadedAssets() { return this.$store.state.loadedAssets },
-    totalAssets() { return this.$store.getters.totalAssets }
-  },
-  mounted() {
-    this.$store.dispatch('initAssetsLoading')
+export default defineComponent({
+  setup() {
+    const accessor = useAccessor()
+    const isTilesetLoaded = computed(() => accessor.isTilesetLoaded)
+    const loadedAssets = computed(() => accessor.loadedAssets)
+    const totalAssets = computed(() => accessor.totalAssets)
+
+    onMounted(() => accessor.initAssetsLoading())
+    onUnmounted(accessor.resetStore)
+
+    return {
+      isTilesetLoaded,
+      loadedAssets,
+      totalAssets,
+    }
   }
 })
 </script>
