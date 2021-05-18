@@ -1,6 +1,6 @@
 <template lang="pug">
   gamespace(v-if="isTilesetLoaded")
-  v-row(v-else).fill-height
+  v-row.fill-height.mx-0(v-else)
     v-col.fill-height.d-flex.flex-column.justify-center.align-center
       v-progress-circular(
         indeterminate
