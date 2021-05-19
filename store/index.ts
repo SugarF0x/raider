@@ -1,7 +1,10 @@
 import { getAccessorType, getterTree, mutationTree, actionTree } from 'typed-vuex'
 
-// @ts-ignore, used to highlight used functions when they are only used within same module actions
-export const useStoreAccessor = (thisProp): typeof accessorType => thisProp.app.$accessor
+export const useStoreAccessor = (thisProp: any): typeof accessorType => {
+  if (!thisProp.hasOwnProperty('app')) throw new Error(`Argument is to be 'this' instance containing properties 'app.$accessor'`)
+
+  return thisProp.app.$accessor
+}
 
 import * as character from '~/store/character'
 
