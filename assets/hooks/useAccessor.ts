@@ -1,3 +1,4 @@
 import { wrapProperty } from "@nuxtjs/composition-api"
+import { accessorType } from "~/store"
 
-export const useAccessor = wrapProperty('$accessor', false)
+export const useAccessor = (): typeof accessorType => (wrapProperty('$accessor', false))()

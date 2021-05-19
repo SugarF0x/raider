@@ -9,8 +9,8 @@ export const state = () => (defaultState())
 export const getters = getterTree(state, {})
 
 export const mutations = mutationTree(state, {
-  RESET_STATE: state => Object.assign(state, defaultState()),
-  SET_GOLD: (state, payload: number) => state.gold = payload,
+  RESET_STATE: state => { Object.assign(state, defaultState()) },
+  SET_GOLD: (state, value: number) => { state.gold = value },
 })
 
 export const actions = actionTree({ state, getters, mutations }, {})
