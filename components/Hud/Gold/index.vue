@@ -1,6 +1,6 @@
 <template lang="pug">
   v-group
-    v-text(:config="{ ...textConfig, text: `${gold}/100` }")
+    util-text(:config="{ x: 20, y: 597, fill: 'yellow', text: `${gold}/100` }")
 
     v-image(
       v-for="(column, index) in getGoldColumns()"
@@ -33,20 +33,6 @@ export default defineComponent({
       return cropped
     }
 
-    // TODO: prettify this or even export into util text
-    const textConfig = {
-      fontSize: 16,
-      align: 'center',
-      listening: false,
-      fillAfterStrokeEnabled: true,
-      wrap: 'none',
-      fontFamily: 'Comic Sans MS',
-      x: 20,
-      y: 597,
-      width: 100,
-      fill: 'yellow'
-    }
-
     let interval: NodeJS.Timeout
     onMounted(() => {
       interval = setInterval(() => {
@@ -63,7 +49,6 @@ export default defineComponent({
     return {
       getGoldColumns,
       gold,
-      textConfig
     }
   },
 })
