@@ -4,12 +4,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import { defineComponent } from "@nuxtjs/composition-api"
 import { KONVA } from '~/assets/consts'
 
-export default Vue.extend({
-  name: "layer-background",
-  data() {
+export default defineComponent({
+  setup() {
     return {
       config: {
         height: KONVA.HEIGHT,

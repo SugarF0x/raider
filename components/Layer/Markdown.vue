@@ -8,13 +8,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import { defineComponent } from "@nuxtjs/composition-api"
 import { BACKGROUND } from '~/assets/consts/markdowns/borders'
 import { parseMarkdown } from "~/assets/utils"
 
-export default Vue.extend({
-  name: "Markdown",
-  data() {
+export default defineComponent({
+  setup() {
     return {
       shapes: BACKGROUND.map(entry => parseMarkdown(entry))
     }
