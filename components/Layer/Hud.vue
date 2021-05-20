@@ -3,9 +3,7 @@
     v-image(:config="hud")
 
     hud-gold
-    hud-enemy-power
-    hud-armor
-    hud-player-power
+    hud-state
     hud-upgrade
     hud-experience
     hud-health

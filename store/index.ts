@@ -1,12 +1,13 @@
 import { getAccessorType, getterTree, mutationTree, actionTree } from 'typed-vuex'
 
+import * as character from '~/store/character'
+import * as instance from '~/store/instance'
+
 export const useStoreAccessor = (thisProp: any): typeof accessorType => {
   if (!thisProp.hasOwnProperty('app')) throw new Error(`Argument is to be 'this' instance containing properties 'app.$accessor'`)
 
   return thisProp.app.$accessor
 }
-
-import * as character from '~/store/character'
 
 const defaultState = () => ({
   assets: {
@@ -53,5 +54,6 @@ export const accessorType = getAccessorType({
   actions,
   modules: {
     character,
+    instance
   },
 })
