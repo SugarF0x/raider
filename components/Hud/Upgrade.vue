@@ -1,6 +1,6 @@
 <template lang="pug">
   v-group
-    v-image(:config="upgradeRow")
+    v-image(:config="upgradeConfig")
     util-text(:config="{ x: 125, y: 677.5, width: 200, fill: 'cyan', text: `${upgrade}/${UPGRADE_THRESHOLD}` }")
 </template>
 
@@ -16,20 +16,8 @@ export default defineComponent({
     const { character } = useAccessor()
     const upgrade = computed(() => character.upgrade)
     const fill = computed(() => upgrade.value/UPGRADE_THRESHOLD)
-    const config = parseMarkdown(UPGRADE)
 
-    const upgradeRow = computed(() => {
-      if (!config.crop) throw new Error('Gold column markdown is to contain tileset option')
-
-      return {
-        ...config,
-        width: config.width - config.width * (1 - fill.value),
-        crop: {
-          ...config.crop,
-          width: config.crop.width - config.crop.width * (1 - fill.value)
-        }
-      }
-    })
+    const upgradeConfig = computed(() => getConfig(fill.value))
 
     let interval: NodeJS.Timeout
     onMounted(() => {
@@ -46,13 +34,21 @@ export default defineComponent({
 
     return {
       upgrade,
-      upgradeRow,
+      upgradeConfig,
       UPGRADE_THRESHOLD
     }
   }
 })
 
+function getConfig(fill: number) {
+  const upgrade = parseMarkdown(UPGRADE)
+  if (!upgrade.crop) throw new Error('Upgrade markdown is to contain tileset option')
 
+  upgrade.width -= upgrade.width * (1 - fill)
+  upgrade.crop.width -= upgrade.crop.width * (1 - fill)
+
+  return upgrade
+}
 </script>
 
 <style lang="sass" scoped>

@@ -1,13 +1,13 @@
 <template lang="pug">
   v-group
-    v-image(:config="experienceRow")
+    v-image(:config="experienceConfig")
     util-text(:config="{ x: 125, y: 712, width: 200, fill: 'lightgreen', text: `${experience}/${EXPERIENCE_THRESHOLD}` }")
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, onMounted, onUnmounted } from "@nuxtjs/composition-api"
 import { parseMarkdown } from "~/assets/utils"
-import { EXPERIENCE } from "~/assets/consts/markdowns/hud"
+import { EXPERIENCE, HEALTH } from "~/assets/consts/markdowns/hud"
 import { EXPERIENCE_THRESHOLD } from "~/assets/consts/balance"
 import { useAccessor } from "~/assets/hooks"
 
@@ -16,20 +16,8 @@ export default defineComponent({
     const { character } = useAccessor()
     const experience = computed(() => character.experience)
     const fill = computed(() => experience.value/EXPERIENCE_THRESHOLD)
-    const config = parseMarkdown(EXPERIENCE)
 
-    const experienceRow = computed(() => {
-      if (!config.crop) throw new Error('Gold column markdown is to contain tileset option')
-
-      return {
-        ...config,
-        width: config.width - config.width * (1 - fill.value),
-        crop: {
-          ...config.crop,
-          width: config.crop.width - config.crop.width * (1 - fill.value)
-        }
-      }
-    })
+    const experienceConfig = computed(() => getConfig(fill.value))
 
     let interval: NodeJS.Timeout
     onMounted(() => {
@@ -46,13 +34,21 @@ export default defineComponent({
 
     return {
       experience,
-      experienceRow,
+      experienceConfig,
       EXPERIENCE_THRESHOLD
     }
   }
 })
 
+function getConfig(fill: number) {
+  const experience = parseMarkdown(EXPERIENCE)
+  if (!experience.crop) throw new Error('Experience markdown is to contain tileset option')
 
+  experience.width -= experience.width * (1 - fill)
+  experience.crop.width -= experience.crop.width * (1 - fill)
+
+  return experience
+}
 </script>
 
 <style lang="sass" scoped>

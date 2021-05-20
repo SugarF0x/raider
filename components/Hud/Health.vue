@@ -9,7 +9,6 @@ import { computed, defineComponent, onMounted, onUnmounted } from "@nuxtjs/compo
 import { parseMarkdown } from "~/assets/utils"
 import { HEALTH } from "~/assets/consts/markdowns/hud"
 import { useAccessor } from "~/assets/hooks"
-import { EXPERIENCE_THRESHOLD } from "~/assets/consts/balance"
 
 export default defineComponent({
   setup() {
