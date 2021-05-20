@@ -25,7 +25,7 @@ export const getters = getterTree(state, {
 })
 
 export const mutations = mutationTree(state, {
-  RESET_STATE: state => { Object.assign(state, defaultState()) },
+  // RESET_STATE: state => { Object.assign(state, defaultState()) },
   LOAD_ASSETS: state => {
     state.assets.tiles.src = require('~/assets/tileset/tiles-custom.png')
     state.assets.icons.src = require('~/assets/tileset/icons.png')
@@ -41,7 +41,8 @@ export const actions = actionTree({ state, getters, mutations }, {
     accessor.LOAD_ASSETS()
   },
   async resetStore({ commit }): Promise<void> {
-    commit('RESET_STATE')
+    // commit('RESET_STATE')
+    // await accessor.initAssetsLoading()
     const accessor = useStoreAccessor(this)
     accessor.character.RESET_STATE()
   },

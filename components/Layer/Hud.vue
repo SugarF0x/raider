@@ -8,6 +8,7 @@
     hud-upgrade
     hud-experience
     hud-health
+    hud-footer
 </template>
 
 <script lang="ts">
