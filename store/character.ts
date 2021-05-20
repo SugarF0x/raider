@@ -4,6 +4,7 @@ const defaultState = () => ({
   gold: 0,
   armor: 3,
   upgrade: 0,
+  experience: 0
 })
 
 export const state = () => (defaultState())
@@ -18,7 +19,8 @@ export const mutations = mutationTree(state, {
   RESET_STATE: state => { Object.assign(state, defaultState()) },
   SET_GOLD: (state, value: number) => { state.gold = value },
   SET_ARMOR: (state, value: number) => { state.armor = value },
-  SET_UPGRADE: (state, value: number) => { state.upgrade = value }
+  SET_UPGRADE: (state, value: number) => { state.upgrade = value },
+  SET_EXPERIENCE: (state, value: number) => { state.experience = value }
 })
 
 export const actions = actionTree({ state, getters, mutations }, {})

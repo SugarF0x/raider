@@ -35,7 +35,7 @@ export default defineComponent({
     onMounted(() => {
       interval = setInterval(() => {
         let newValue = upgrade.value + 1
-        if (newValue >= 100) newValue = 0
+        if (newValue >= UPGRADE_THRESHOLD) newValue = 0
         character.SET_UPGRADE(newValue)
       }, 100)
     })
