@@ -17,19 +17,6 @@ export default defineComponent({
     const totalAttack = computed(() => character.totalAttack)
     const enemyPower = computed(() => instance.enemyPower)
 
-    let interval: NodeJS.Timeout
-    onMounted(() => {
-      interval = setInterval(() => {
-        let newValue = armor.value + 1
-        if (newValue > totalArmor.value) newValue = 0
-        character.SET_ARMOR(newValue)
-      }, 500)
-    })
-
-    onUnmounted(() => {
-      clearInterval(interval)
-    })
-
     return {
       armor,
       totalArmor,

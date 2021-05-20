@@ -19,19 +19,6 @@ export default defineComponent({
 
     const healthConfig = computed(() => getConfig(fill.value))
 
-    let interval: NodeJS.Timeout
-    onMounted(() => {
-      interval = setInterval(() => {
-        let newValue = health.value - 1
-        if (newValue <= 0) newValue = totalHealth.value
-        character.SET_HEALTH(newValue)
-      }, 100)
-    })
-
-    onUnmounted(() => {
-      clearInterval(interval)
-    })
-
     return {
       health,
       totalHealth,

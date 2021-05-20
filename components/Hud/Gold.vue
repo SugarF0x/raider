@@ -34,19 +34,6 @@ export default defineComponent({
       return cropped
     }
 
-    let interval: NodeJS.Timeout
-    onMounted(() => {
-      interval = setInterval(() => {
-        let newValue = gold.value + 1
-        if (newValue >= 100) newValue = 0
-        character.SET_GOLD(newValue)
-      }, 100)
-    })
-
-    onUnmounted(() => {
-      clearInterval(interval)
-    })
-
     return {
       getGoldColumns,
       gold,

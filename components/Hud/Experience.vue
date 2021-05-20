@@ -19,19 +19,6 @@ export default defineComponent({
 
     const experienceConfig = computed(() => getConfig(fill.value))
 
-    let interval: NodeJS.Timeout
-    onMounted(() => {
-      interval = setInterval(() => {
-        let newValue = experience.value + 1
-        if (newValue >= EXPERIENCE_THRESHOLD) newValue = 0
-        character.SET_EXPERIENCE(newValue)
-      }, 100)
-    })
-
-    onUnmounted(() => {
-      clearInterval(interval)
-    })
-
     return {
       experience,
       experienceConfig,

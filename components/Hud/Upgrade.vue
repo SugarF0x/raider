@@ -19,19 +19,6 @@ export default defineComponent({
 
     const upgradeConfig = computed(() => getConfig(fill.value))
 
-    let interval: NodeJS.Timeout
-    onMounted(() => {
-      interval = setInterval(() => {
-        let newValue = upgrade.value + 1
-        if (newValue >= UPGRADE_THRESHOLD) newValue = 0
-        character.SET_UPGRADE(newValue)
-      }, 100)
-    })
-
-    onUnmounted(() => {
-      clearInterval(interval)
-    })
-
     return {
       upgrade,
       upgradeConfig,
