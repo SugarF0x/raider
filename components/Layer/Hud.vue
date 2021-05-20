@@ -2,6 +2,7 @@
   v-layer
     v-image(:config="hud")
 
+    hud-header
     hud-gold
     hud-state
     hud-upgrade
