@@ -27,6 +27,7 @@
     "babel-core": "^6.26.3",
     "babel-jest": "^26.6.3",
     "jest": "^26.6.3",
+    "nuxt-storm": "^1.0.8",
     "nuxt-typed-vuex": "^0.2.0",
     "pug": "^3.0.2",
     "pug-plain-loader": "^1.1.0",

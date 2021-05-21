@@ -32,6 +32,7 @@ export default {
     '@nuxtjs/google-analytics',
     '@nuxtjs/composition-api/module',
     'nuxt-typed-vuex',
+    ['nuxt-storm', { nested: true }],
   ],
   modules: [
     '@nuxtjs/axios',
