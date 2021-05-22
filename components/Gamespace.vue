@@ -3,6 +3,7 @@
     layer-background
     layer-markdown
     layer-hud
+    layer-dungeon
 </template>
 
 <script lang="ts">

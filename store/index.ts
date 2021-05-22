@@ -2,6 +2,7 @@ import { getAccessorType, getterTree, mutationTree, actionTree } from 'typed-vue
 
 import * as character from '~/store/character'
 import * as instance from '~/store/instance'
+import * as dungeon from '~/store/dungeon'
 
 export const useStoreAccessor = (thisProp: any): typeof accessorType => {
   if (!thisProp.hasOwnProperty('app')) throw new Error(`Argument is to be 'this' instance containing properties 'app.$accessor'`)
@@ -45,6 +46,9 @@ export const actions = actionTree({ state, getters, mutations }, {
     // await accessor.initAssetsLoading()
     const accessor = useStoreAccessor(this)
     accessor.character.RESET_STATE()
+    accessor.instance.RESET_STATE()
+    accessor.dungeon.RESET_STATE()
+    accessor.dungeon.populate()
   },
 })
 
@@ -55,6 +59,7 @@ export const accessorType = getAccessorType({
   actions,
   modules: {
     character,
-    instance
+    instance,
+    dungeon
   },
 })
