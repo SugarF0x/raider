@@ -1,11 +1,10 @@
-import Konva from "konva"
-import { generateHash } from "~/assets/utils"
 import { XY } from "~/assets/types"
-import { getCanvasCoords } from "~/assets/utils/getCanvasCoords"
 
 export class Tile {
   // Tile unique identifier
   id: number
+  // Tile Type to be overridden by an actual Tile Type
+  type = 'default'
   // Current Tile dungeon position
   position: XY
   // Dungeon position to move Tile to

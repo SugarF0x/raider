@@ -9,12 +9,12 @@
         :tile="tile"
       )
 
-    // dungeon-arrow
+    dungeon-arrow
     // dungeon-tooltip
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted } from '@nuxtjs/composition-api'
+import { computed, defineComponent, onMounted, onUnmounted } from '@nuxtjs/composition-api'
 import { useAccessor } from "~/assets/hooks"
 import { useMarkdownEnhancer } from "~/assets/hooks/useMarkdownEnhancer"
 
@@ -23,14 +23,39 @@ export default defineComponent({
     const border = useMarkdownEnhancer('10-150/430;S')
     border.fill = 'black'
 
-    const { dungeon } = useAccessor()
+    const accessor = useAccessor()
+    const { dungeon } = accessor
     const tiles = computed(() => dungeon.tiles)
+
+    const startDrag = () => { accessor.SET_MOUSE_DOWN() }
+    const dropDrag = () => {
+      accessor.SET_MOUSE_UP()
+      // TODO: collection method
+      dungeon.CLEAR_SELECTION()
+    }
+
+    const bindEvents = () => {
+      document.addEventListener('mousedown', startDrag);
+      document.addEventListener('mouseup', dropDrag);
+      document.addEventListener("touchstart", startDrag);
+      document.addEventListener("touchend", dropDrag);
+    }
+
+    const unbindEvents = () => {
+      document.removeEventListener('mousedown', startDrag);
+      document.removeEventListener('mouseup', dropDrag);
+      document.removeEventListener('touchstart', startDrag);
+      document.removeEventListener('touchend', dropDrag);
+    }
 
     onMounted(() => {
       if (tiles.value.length === 0) {
         dungeon.populate()
       }
+      bindEvents()
     })
+
+    onUnmounted(() => unbindEvents)
 
     return {
       border,

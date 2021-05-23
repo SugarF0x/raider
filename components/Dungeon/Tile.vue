@@ -1,6 +1,12 @@
 <template lang="pug">
-  v-group(ref="tileNode")
-    v-image(:config="imageConfig")
+  v-group(ref="tileElement")
+    v-image(
+      :config="imageConfig"
+      @mousedown="selectTile"
+      @mouseenter="selectTile"
+      @touchstart="selectTile"
+      @touchmove="selectTile"
+    )
 
     v-group(v-if="isSkullType")
       util-text(:config="skullStateConfig.attack")
@@ -16,6 +22,7 @@ import { isSkull, Tile } from "~/assets/entities/tiles"
 import Konva from "konva"
 import { getCanvasCoords } from "~/assets/utils/getCanvasCoords"
 import { useAccessor } from "~/assets/hooks"
+import { XY } from "~/assets/types"
 
 export default defineComponent({
   props: {
@@ -27,10 +34,18 @@ export default defineComponent({
   setup(props) {
     const { tile } = toRefs(props)
     const accessor = useAccessor()
-    const tileset = computed(() => accessor.assets.tiles)
-    const tileNode = ref(null) as unknown as Konva.Node | undefined
-    const isSkullType = isSkull(tile.value)
+    const { dungeon } = accessor
 
+    const tileElement = ref(null)
+    const tileNode = computed(() => (tileElement as any).value.getNode() as Konva.Node | undefined)
+
+    const tileset = computed(() => accessor.assets.tiles)
+    const isMouseDown = computed(() => accessor.isMouseDown)
+    const selected = computed(() => dungeon.selected)
+    const selectedType = computed(() => dungeon.selectedType)
+    const selectedLast = computed(() => dungeon.tiles.find(tile => tile.id === selected.value[selected.value.length-1]))
+
+    const isSkullType = isSkull(tile.value)
     const skullStateConfig = getSkullStateConfig(tile.value)
 
     const imageConfig = computed(() => {
@@ -53,11 +68,11 @@ export default defineComponent({
     })
 
     const shiftTile = () => {
-      if (!tileNode) throw new Error(`Tile ${tile.value.id} node is not defined`)
+      if (!tileNode.value) throw new Error(`Tile ${tile.value.id} node is not defined`)
       if (tile.value.destination.x !== tile.value.position.x || tile.value.destination.y !== tile.value.position.y) return false
 
       let tween = new Konva.Tween({
-        node: tileNode,
+        node: tileNode.value,
         duration: .5,
         easing: Konva.Easings.EaseInOut,
         onFinish: () => tile.value.setPosition(tile.value.destination),
@@ -69,10 +84,40 @@ export default defineComponent({
       return true
     }
 
+    // timeout is to ensure MOUSE_DOWN event fires first
+    const selectTile = () => setTimeout(() => {
+      // If mouse is not down then return
+      if (!isMouseDown.value) return
+
+      // If selectable tile is the first tile - just add it
+      if (!selectedLast.value) {
+        dungeon.SELECT_TILE(tile.value.id)
+        return
+      }
+
+      // If selectable tile is also the last selected tile - return
+      if (selectedLast.value.id === tile.value.id) return
+
+      // If selectable tile is the last of already selected - pop it
+      if (selected.value[selected.value.length-2] === tile.value.id) {
+        if (isSkull(tile.value)) { /* TODO: reset vulnerability */ }
+        dungeon.POP_SELECTION()
+        return
+      }
+
+      // If selectable tile is of same type and is near - add it
+      if (isNear(tile.value.position, selectedLast.value.position) && tile.value.type === selectedType.value) {
+        dungeon.SELECT_TILE(tile.value.id)
+        return
+      }
+    })
+
     return {
+      tileElement,
       skullStateConfig,
       isSkullType,
-      imageConfig
+      imageConfig,
+      selectTile,
     }
   },
 })
@@ -93,6 +138,15 @@ function getSkullStateConfig(tile: Tile) {
     armor: Object.assign({ text: tile.currentState.armor, y: canvasCoords.y-5, fill: 'lightblue' }, skullStateConfigBase),
     health: Object.assign({ text: tile.currentState.health, y: canvasCoords.y+15, fill: 'red' }, skullStateConfigBase),
   }
+}
+
+function isNear(base: XY, target: XY) {
+  const { x: x1, y: y1 } = base
+  const { x: x2, y: y2 } = target
+  return x2 >= x1 - 1
+      && x2 <= x1 + 1
+      && y2 >= y1 - 1
+      && y2 <= y1 + 1
 }
 </script>
 

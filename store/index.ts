@@ -16,6 +16,7 @@ const defaultState = () => ({
     icons: new Image(),
   },
   loadedAssets: 0,
+  isMouseDown: false,
 })
 
 export const state = () => (defaultState())
@@ -32,6 +33,8 @@ export const mutations = mutationTree(state, {
     state.assets.icons.src = require('~/assets/tileset/icons.png')
   },
   SET_ASSET_LOADED_STATE: state => { state.loadedAssets++ },
+  SET_MOUSE_DOWN: state => { state.isMouseDown = true },
+  SET_MOUSE_UP: state => { state.isMouseDown = false },
 })
 
 export const actions = actionTree({ state, getters, mutations }, {

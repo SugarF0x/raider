@@ -3,12 +3,15 @@ import { useStoreAccessor } from "~/store/index"
 import { Tiles } from "~/assets/entities"
 
 const defaultState = () => ({
-  tiles: [] as Tiles.Tile[]
+  tiles: [] as Tiles.Tile[],
+  selected: [] as number[]
 })
 
 export const state = () => (defaultState())
 
-export const getters = getterTree(state, {})
+export const getters = getterTree(state, {
+  selectedType: state => state.tiles.find(tile => tile.id === state.selected[0])?.type || null
+})
 
 export const mutations = mutationTree(state, {
   RESET_STATE: state => { Object.assign(state, defaultState()) },
@@ -21,7 +24,10 @@ export const mutations = mutationTree(state, {
     )
     const index = state.tiles.indexOf(tile)
     state.tiles.splice(index, 1)
-  }
+  },
+  SELECT_TILE: (state, id: number) => { if (!state.selected.includes(id)) state.selected.push(id) },
+  POP_SELECTION: state => { state.selected.pop() },
+  CLEAR_SELECTION: state => { state.selected = [] }
 })
 
 export const actions = actionTree({ state, getters, mutations }, {
