@@ -2,7 +2,7 @@
   v-layer
     v-rect(:config="border")
 
-    v-group#chamber
+    v-group#chamber(:config="{ clip: { ...border } }")
       dungeon-tile(
         v-for="tile in tiles"
         :key="tile.id"
