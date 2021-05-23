@@ -1,11 +1,11 @@
 <template lang="pug">
-  v-group(v-if="displayArrow" ref="arrowElement")
+  v-group(v-if="displayArrow" ref="arrowElement" :config="{ opacity: .8 }")
     v-arrow(:config="arrowOutlineConfig")
     v-arrow(:config="arrowConfig")
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, nextTick, ref, watch } from '@nuxtjs/composition-api'
+import { computed, defineComponent, nextTick, ref } from '@nuxtjs/composition-api'
 import { useAccessor } from "~/assets/hooks"
 import { getCanvasCoords } from "~/assets/utils/getCanvasCoords"
 import Konva from "konva"
@@ -27,22 +27,18 @@ export default defineComponent({
         const canvasCoords = getCanvasCoords(tile.position)
         return [canvasCoords.x, canvasCoords.y]
       })
-      // @ts-ignore // i dont know why but [].concat.apply as arg types of never
-      return [].concat.apply([], mappedCoords)
-    })
 
-    // next tick is to ensure it renders before cache is fired
-    watch([arrowPoints], () => nextTick(() => {
-      // TODO: fix caching not working properly
-      if (arrowNode.value) {
-        arrowNode.value.cache({ offset: 5 })
-      }
-    }))
+      nextTick(() => {
+        if (arrowNode.value) arrowNode.value.cache({ offset: 5 })
+      })
+
+      // @ts-ignore // i dont know why but [].concat.apply as arg types of never
+      return [].concat.apply([], mappedCoords) as number[]
+    })
 
     const arrowConfig = computed(() => ({
       points: arrowPoints.value,
       tension: .1,
-      opacity: .8,
       stroke: "green",
       strokeWidth: 10,
       lineCap: 'round',
