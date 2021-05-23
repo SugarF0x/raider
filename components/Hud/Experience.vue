@@ -6,7 +6,6 @@
 
 <script lang="ts">
 import { computed, defineComponent } from "@nuxtjs/composition-api"
-import { EXPERIENCE, HEALTH } from "~/assets/consts/markdowns/hud"
 import { EXPERIENCE_THRESHOLD } from "~/assets/consts/balance"
 import { useAccessor } from "~/assets/hooks"
 import { useMarkdownEnhancer } from "~/assets/hooks/useMarkdownEnhancer"
@@ -28,7 +27,7 @@ export default defineComponent({
 })
 
 function getConfig(fill: number) {
-  const experience = useMarkdownEnhancer(EXPERIENCE)
+  const experience = useMarkdownEnhancer('158-708.5/134-18.5:397-501/100-10;T')
   if (!experience.crop) throw new Error('Experience markdown is to contain tileset option')
 
   experience.width -= experience.width * (1 - fill)

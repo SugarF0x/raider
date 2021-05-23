@@ -12,7 +12,6 @@
 <script lang="ts">
 import { defineComponent, computed } from "@nuxtjs/composition-api"
 import { useAccessor } from "~/assets/hooks"
-import { GOLD } from "~/assets/consts/markdowns/hud"
 import { useMarkdownEnhancer } from "~/assets/hooks/useMarkdownEnhancer"
 
 export default defineComponent({
@@ -42,13 +41,15 @@ export default defineComponent({
 })
 
 function getColumn(column: number, fill: number) {
-  const gold = useMarkdownEnhancer(GOLD[column])
+  const gold = useMarkdownEnhancer('16-617/21-117:397-428/15.5-61;T')
   if (!gold.crop) throw new Error('Gold column markdown is to contain tileset option')
 
-  gold.y = gold.y + (gold.height * (1 - fill))
-  gold.height = gold.height * fill
-  gold.crop.y = gold.crop.y + (20 - 20 * fill) * 3
-  gold.crop.height = gold.crop.height - (20 - 20 * fill) * 3
+  gold.x += 21.5 * column
+  gold.y += gold.height * (1 - fill)
+  gold.height *= fill
+  gold.crop.x += 16 * column
+  gold.crop.y += (20 - 20 * fill) * 3
+  gold.crop.height -= (20 - 20 * fill) * 3
 
   return gold
 }

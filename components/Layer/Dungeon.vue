@@ -1,5 +1,7 @@
 <template lang="pug">
   v-layer
+    v-rect(:config="border")
+
     v-group#chamber
       dungeon-tile(
         v-for="tile in tiles"
@@ -14,9 +16,13 @@
 <script lang="ts">
 import { computed, defineComponent, onMounted } from '@nuxtjs/composition-api'
 import { useAccessor } from "~/assets/hooks"
+import { useMarkdownEnhancer } from "~/assets/hooks/useMarkdownEnhancer"
 
 export default defineComponent({
   setup() {
+    const border = useMarkdownEnhancer('10-150/430;S')
+    border.fill = 'black'
+
     const { dungeon } = useAccessor()
     const tiles = computed(() => dungeon.tiles)
 
@@ -27,6 +33,7 @@ export default defineComponent({
     })
 
     return {
+      border,
       tiles
     }
   },

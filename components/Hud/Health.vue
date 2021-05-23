@@ -6,7 +6,6 @@
 
 <script lang="ts">
 import { computed, defineComponent } from "@nuxtjs/composition-api"
-import { HEALTH } from "~/assets/consts/markdowns/hud"
 import { useAccessor } from "~/assets/hooks"
 import { useMarkdownEnhancer } from "~/assets/hooks/useMarkdownEnhancer"
 
@@ -28,7 +27,7 @@ export default defineComponent({
 })
 
 function getConfig(fill: number) {
-  const health = useMarkdownEnhancer(HEALTH)
+  const health = useMarkdownEnhancer('331.5-599/95-123:325-447/71-64;T')
   if (!health.crop) throw new Error('Health markdown is to contain tileset option')
 
   health.y += health.height * (1 - fill)

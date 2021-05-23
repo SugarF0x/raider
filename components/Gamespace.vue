@@ -1,7 +1,6 @@
 <template lang="pug">
   v-stage#konva(:config="konva")
     layer-background
-    layer-markdown
     layer-hud
     layer-dungeon
 </template>
