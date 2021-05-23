@@ -75,11 +75,9 @@ export function parseMarkdownTest() {
           width: 100,
           height: 10
         },
-        image: image
+        image: 'tiles'
       }
-      const wrapper = shallowMount(MockComponent, { store, localVue, propsData: { data: outlineMock } })
-      const div = wrapper.find('h6')
-      expect(div.text()).toContain(`${JSON.stringify(expectedOutcome)}`)
+      expect(parseMarkdown(outlineMock)).toEqual(expectedOutcome)
     })
     // should this even be here? it's like identical to the former test
     test('Image crop from icons', () => {
@@ -95,11 +93,9 @@ export function parseMarkdownTest() {
           width: 100,
           height: 10
         },
-        image: image
+        image: 'icons'
       }
-      const wrapper = shallowMount(MockComponent, { store, localVue, propsData: { data: outlineMock } })
-      const div = wrapper.find('h6')
-      expect(div.text()).toContain(`${JSON.stringify(expectedOutcome)}`)
+      expect(parseMarkdown(outlineMock)).toEqual(expectedOutcome)
     })
     test('Image crop from both tiles and icons throws error', () => {
       const outlineMock = '158-708.5/134-18.5:397-501/100-10;IT'
@@ -110,35 +106,3 @@ export function parseMarkdownTest() {
     })
   })
 }
-
-// Mock Store & Component
-
-const localVue = createLocalVue()
-localVue.use(Vuex)
-const image = new Image()
-const storePattern = {
-  state: {
-    assets: {
-      tiles: image,
-      icons: image
-    }
-  }
-}
-const store = new Vuex.Store(storePattern)
-const accessor = useAccessor(store, storePattern)
-// @ts-ignore
-Vue.prototype.$accessor = accessor
-
-const MockComponent = defineComponent({
-  props: {
-    data: {
-      type: String,
-      required: true
-    },
-  },
-  setup(props) {
-    const result = parseMarkdown(props.data)
-
-    return () => h('h6', `${JSON.stringify(result)}`)
-  }
-})

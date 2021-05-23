@@ -14,11 +14,11 @@
 <script lang="ts">
 import { defineComponent } from "@nuxtjs/composition-api"
 import { BACKGROUND } from "~/assets/consts/markdowns/hud"
-import { parseMarkdown } from "~/assets/utils"
+import { useMarkdownEnhancer } from "~/assets/hooks/useMarkdownEnhancer"
 
 export default defineComponent({
   setup() {
-    const hud = parseMarkdown(BACKGROUND)
+    const hud = useMarkdownEnhancer(BACKGROUND)
 
     return {
       hud

@@ -5,11 +5,11 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, onUnmounted } from "@nuxtjs/composition-api"
-import { parseMarkdown } from "~/assets/utils"
+import { computed, defineComponent } from "@nuxtjs/composition-api"
 import { UPGRADE } from "~/assets/consts/markdowns/hud"
 import { UPGRADE_THRESHOLD } from "~/assets/consts/balance"
 import { useAccessor } from "~/assets/hooks"
+import { useMarkdownEnhancer } from "~/assets/hooks/useMarkdownEnhancer"
 
 export default defineComponent({
   setup() {
@@ -28,7 +28,7 @@ export default defineComponent({
 })
 
 function getConfig(fill: number) {
-  const upgrade = parseMarkdown(UPGRADE)
+  const upgrade = useMarkdownEnhancer(UPGRADE)
   if (!upgrade.crop) throw new Error('Upgrade markdown is to contain tileset option')
 
   upgrade.width -= upgrade.width * (1 - fill)

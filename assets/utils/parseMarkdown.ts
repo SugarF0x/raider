@@ -1,26 +1,5 @@
 import { STROKE_COLOR, BACKGROUND_COLOR } from '../consts/konva'
-import { useAccessor } from "~/assets/hooks"
-
-interface Dimensions {
-  x: number
-  y: number
-  width: number
-  height: number
-}
-
-interface ParsedMarkdown extends Dimensions {
-  stroke?: string
-  fill?: string
-  crop?: Dimensions
-  image?: HTMLImageElement
-}
-
-interface Options {
-  tiles?: boolean
-  icons?: boolean
-  stroke?: boolean
-  fill?: boolean
-}
+import { Dimensions } from '../types'
 
 export function parseMarkdown(data: string): ParsedMarkdown {
   const [dimensions, options] = parseOptions(data)
@@ -34,11 +13,8 @@ export function parseMarkdown(data: string): ParsedMarkdown {
   if (options.stroke) result.stroke = STROKE_COLOR
   if (options.fill) result.fill = BACKGROUND_COLOR
 
-  if (options.tiles || options.icons) {
-    const { assets } = useAccessor()
-    if (options.tiles) result.image = assets.tiles
-    if (options.icons) result.image = assets.icons
-  }
+  if (options.tiles) result.image = 'tiles'
+  if (options.icons) result.image = 'icons'
 
   return result
 }
@@ -74,3 +50,19 @@ function parseOptions(data: string): [string, Options] {
 
   return [dimensions, parsed]
 }
+
+export interface ParsedMarkdown extends Dimensions {
+  stroke?: string
+  fill?: string
+  crop?: Dimensions
+  image?: imageSources
+}
+
+interface Options {
+  tiles?: boolean
+  icons?: boolean
+  stroke?: boolean
+  fill?: boolean
+}
+
+type imageSources = 'tiles' | 'icons'

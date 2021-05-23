@@ -10,10 +10,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, onMounted, onUnmounted } from "@nuxtjs/composition-api"
+import { defineComponent, computed } from "@nuxtjs/composition-api"
 import { useAccessor } from "~/assets/hooks"
-import { parseMarkdown } from "~/assets/utils"
 import { GOLD } from "~/assets/consts/markdowns/hud"
+import { useMarkdownEnhancer } from "~/assets/hooks/useMarkdownEnhancer"
 
 export default defineComponent({
   setup() {
@@ -42,7 +42,7 @@ export default defineComponent({
 })
 
 function getColumn(column: number, fill: number) {
-  const gold = parseMarkdown(GOLD[column])
+  const gold = useMarkdownEnhancer(GOLD[column])
   if (!gold.crop) throw new Error('Gold column markdown is to contain tileset option')
 
   gold.y = gold.y + (gold.height * (1 - fill))

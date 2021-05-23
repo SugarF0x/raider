@@ -10,12 +10,12 @@
 <script lang="ts">
 import { defineComponent } from "@nuxtjs/composition-api"
 import { BACKGROUND } from '~/assets/consts/markdowns/borders'
-import { parseMarkdown } from "~/assets/utils"
+import { useMarkdownEnhancer } from "~/assets/hooks/useMarkdownEnhancer"
 
 export default defineComponent({
   setup() {
     return {
-      shapes: BACKGROUND.map(entry => parseMarkdown(entry))
+      shapes: BACKGROUND.map(entry => useMarkdownEnhancer(entry))
     }
   }
 })
