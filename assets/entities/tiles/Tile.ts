@@ -1,10 +1,10 @@
-import { XY } from "~/assets/types"
+import { TileType, XY } from "~/assets/types"
 
 export class Tile {
   // Tile unique identifier
   id: number
   // Tile Type to be overridden by an actual Tile Type
-  type = 'default'
+  type: TileType = 'default'
   // Current Tile dungeon position
   position: XY
   // Dungeon position to move Tile to

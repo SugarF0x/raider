@@ -44,6 +44,7 @@ export default defineComponent({
     const selected = computed(() => dungeon.selected)
     const selectedType = computed(() => dungeon.selectedType)
     const selectedLast = computed(() => dungeon.tiles.find(tile => tile.id === selected.value[selected.value.length-1]))
+    const isSelectable = computed(() => selectedType.value === tile.value.type || selectedType.value === null)
 
     const isSkullType = isSkull(tile.value)
     const skullStateConfig = getSkullStateConfig(tile.value)
@@ -63,7 +64,7 @@ export default defineComponent({
           x: 31,
           y: 31
         },
-        opacity: 1
+        opacity: isSelectable.value ? 1 : .5
       }
     })
 

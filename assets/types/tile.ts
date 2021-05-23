@@ -4,3 +4,4 @@ export type TileType =
   | 'shield'
   | 'sword'
   | 'skull'
+  | 'default'

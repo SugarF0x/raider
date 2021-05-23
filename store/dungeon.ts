@@ -1,6 +1,7 @@
 import { getterTree, mutationTree, actionTree } from 'typed-vuex'
 import { useStoreAccessor } from "~/store/index"
 import { Tiles } from "~/assets/entities"
+import { TileType } from "~/assets/types"
 
 const defaultState = () => ({
   tiles: [] as Tiles.Tile[],
@@ -10,7 +11,7 @@ const defaultState = () => ({
 export const state = () => (defaultState())
 
 export const getters = getterTree(state, {
-  selectedType: state => state.tiles.find(tile => tile.id === state.selected[0])?.type || null
+  selectedType: (state): TileType | null => state.tiles.find(tile => tile.id === state.selected[0])?.type || null
 })
 
 export const mutations = mutationTree(state, {
