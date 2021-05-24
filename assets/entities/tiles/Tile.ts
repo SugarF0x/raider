@@ -1,4 +1,4 @@
-import { TileType, XY } from "~/assets/types"
+import { TileState, TileType, XY } from "~/assets/types"
 
 export class Tile {
   // Tile unique identifier
@@ -9,11 +9,14 @@ export class Tile {
   position: XY
   // Dungeon position to move Tile to
   destination: XY
+  // Current tile state
+  state: TileState
 
   constructor(options: TileOptions) {
     this.id = Math.floor(Math.random()*1000000)
     this.position = options.position
     this.destination = options.destination || this.position
+    this.state = options.state || 'idle'
   }
 
   getCropPosition(): XY {
@@ -31,10 +34,15 @@ export class Tile {
   setDestination(position: XY) {
     this.destination = position
   }
+
+  setState(state: TileState) {
+    this.state = state
+  }
 }
 
 export interface TileOptions {
   image: HTMLImageElement
   position: XY
   destination?: XY
+  state?: TileState
 }

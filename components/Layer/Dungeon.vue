@@ -26,11 +26,12 @@ export default defineComponent({
     const accessor = useAccessor()
     const { dungeon } = accessor
     const tiles = computed(() => dungeon.tiles)
+    const selectedAmount = computed(() => dungeon.selected.length)
 
     const startDrag = () => { accessor.SET_MOUSE_DOWN() }
     const dropDrag = () => {
       accessor.SET_MOUSE_UP()
-      // TODO: collection method
+      if (selectedAmount.value >= 3) dungeon.collect()
       dungeon.CLEAR_SELECTION()
     }
 

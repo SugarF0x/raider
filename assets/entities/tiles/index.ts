@@ -7,7 +7,7 @@ export * from './Skull'
 
 import * as Tiles from '.'
 import { SPAWN_WEIGHT } from "~/assets/consts/balance"
-import { TileType, XY } from "~/assets/types"
+import { TileState, TileType, XY } from "~/assets/types"
 
 export function getRandomTile({ weights, ...options }: randomTileProps): Tiles.Tile {
   const mergedWeights: typeof SPAWN_WEIGHT = { ...SPAWN_WEIGHT, ...weights }
@@ -31,6 +31,8 @@ export function getRandomTile({ weights, ...options }: randomTileProps): Tiles.T
 
 export interface randomTileProps {
   weights?: Partial<typeof SPAWN_WEIGHT>
+  destination?: XY
+  state?: TileState
   position: XY
   power: number
   image: HTMLImageElement

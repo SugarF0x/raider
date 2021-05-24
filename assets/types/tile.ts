@@ -5,3 +5,8 @@ export type TileType =
   | 'sword'
   | 'skull'
   | 'default'
+
+export type TileState =
+  | 'idle'
+  | 'moving'
+  | 'collecting'

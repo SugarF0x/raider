@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, ref, toRefs } from '@nuxtjs/composition-api'
+import { computed, defineComponent, PropType, ref, toRefs, watchEffect } from '@nuxtjs/composition-api'
 import { isSkull, Tile } from "~/assets/entities/tiles"
 import Konva from "konva"
 import { getCanvasCoords } from "~/assets/utils/getCanvasCoords"
@@ -49,6 +49,20 @@ export default defineComponent({
     const isSkullType = isSkull(tile.value)
     const skullStateConfig = getSkullStateConfig(tile.value)
 
+    const state = computed(() => tile.value.state)
+    watchEffect(() => {
+      switch(state.value) {
+        case "collecting": {
+          console.log('INIT COLLECTION')
+          break
+        }
+        case "moving": {
+          shiftTile()
+          break
+        }
+      }
+    })
+
     const imageConfig = computed(() => {
       return {
         ...getCanvasCoords(tile.value.position),
@@ -70,15 +84,19 @@ export default defineComponent({
 
     const shiftTile = () => {
       if (!tileNode.value) throw new Error(`Tile ${tile.value.id} node is not defined`)
-      if (tile.value.destination.x !== tile.value.position.x || tile.value.destination.y !== tile.value.position.y) return false
+      if (tile.value.destination.y === tile.value.position.y) throw new Error(`Tile ${tile.value.id} destination matches position`)
 
       let tween = new Konva.Tween({
         node: tileNode.value,
         duration: .5,
         easing: Konva.Easings.EaseInOut,
-        onFinish: () => tile.value.setPosition(tile.value.destination),
+        onFinish: async () => {
+          await dungeon.SET_TILE_STATE({ id: tile.value.id, state: 'idle' })
+          await dungeon.SET_TILE_POSITION({ id: tile.value.id, position: tile.value.destination })
+          tween.reset()
+        },
 
-        y: getCanvasCoords(tile.value.destination).y
+        y: getCanvasCoords(tile.value.destination).y - getCanvasCoords(tile.value.position).y
       });
       tween.play()
 
