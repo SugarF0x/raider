@@ -18,37 +18,21 @@ export const mutations = mutationTree(state, {
   RESET_STATE: state => { Object.assign(state, defaultState()) },
   ADD_TILE: (state, tile: Tiles.Tile) => { state.tiles.push(tile) },
   REMOVE_TILE: (state, id: number) => {
-    const tile = state.tiles.find(tile => tile.id === id)
-    if (!tile) throw new Error(
-      `No tile found
-      ID passed: ${id}`
-    )
+    const tile = findTile(state, id)
     const index = state.tiles.indexOf(tile)
     state.tiles.splice(index, 1)
   },
   SELECT_TILE: (state, id: number) => { if (!state.selected.includes(id)) state.selected.push(id) },
   SET_TILE_DESTINATION: (state, payload: { id: number, destination: XY }) => {
-    const tile = state.tiles.find(tile => tile.id === payload.id)
-    if (!tile) throw new Error(
-      `No tile found
-      ID passed: ${payload.id}`
-    )
+    const tile = findTile(state, payload.id)
     tile.setDestination(payload.destination)
   },
   SET_TILE_STATE: (state, payload: { id: number, state: TileState }) => {
-    const tile = state.tiles.find(tile => tile.id === payload.id)
-    if (!tile) throw new Error(
-      `No tile found
-      ID passed: ${payload.id}`
-    )
+    const tile = findTile(state, payload.id)
     tile.setState(payload.state)
   },
   SET_TILE_POSITION: (state, payload: { id: number, position: XY }) => {
-    const tile = state.tiles.find(tile => tile.id === payload.id)
-    if (!tile) throw new Error(
-      `No tile found
-      ID passed: ${payload.id}`
-    )
+    const tile = findTile(state, payload.id)
     tile.setPosition(payload.position)
   },
   POP_SELECTION: state => { state.selected.pop() },
@@ -117,3 +101,12 @@ export const actions = actionTree({ state, getters, mutations }, {
     // }
   }
 })
+
+function findTile(state: ReturnType<typeof defaultState>, id: number): Tiles.Tile {
+  const tile = state.tiles.find(tile => tile.id === id)
+  if (!tile) throw new Error(
+    `No tile found
+      ID passed: ${id}`
+  )
+  return tile
+}
