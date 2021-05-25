@@ -91,8 +91,10 @@ export default defineComponent({
         duration: .5,
         easing: Konva.Easings.EaseInOut,
         onFinish: async () => {
-          await dungeon.SET_TILE_STATE({ id: tile.value.id, state: 'idle' })
-          await dungeon.SET_TILE_POSITION({ id: tile.value.id, position: tile.value.destination })
+          await dungeon.MUTATE_TILE(() => {
+            tile.value.setPosition(tile.value.destination)
+            tile.value.setState('idle')
+          })
           tween.reset()
         },
 

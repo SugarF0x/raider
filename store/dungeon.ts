@@ -1,17 +1,17 @@
 import { getterTree, mutationTree, actionTree } from 'typed-vuex'
 import { useStoreAccessor } from "~/store/index"
 import { Tiles } from "~/assets/entities"
-import { TileState, TileType, XY } from "~/assets/types"
+import { TileType } from "~/assets/types"
 
 const defaultState = () => ({
   tiles: [] as Tiles.Tile[],
-  selected: [] as number[]
+  selected: [] as number[],
 })
 
 export const state = () => (defaultState())
 
 export const getters = getterTree(state, {
-  selectedType: (state): TileType | null => state.tiles.find(tile => tile.id === state.selected[0])?.type || null
+  selectedType: (state): TileType | null => state.tiles.find(tile => tile.id === state.selected[0])?.type || null,
 })
 
 export const mutations = mutationTree(state, {
@@ -23,20 +23,12 @@ export const mutations = mutationTree(state, {
     state.tiles.splice(index, 1)
   },
   SELECT_TILE: (state, id: number) => { if (!state.selected.includes(id)) state.selected.push(id) },
-  SET_TILE_DESTINATION: (state, payload: { id: number, destination: XY }) => {
-    const tile = findTile(state, payload.id)
-    tile.setDestination(payload.destination)
-  },
-  SET_TILE_STATE: (state, payload: { id: number, state: TileState }) => {
-    const tile = findTile(state, payload.id)
-    tile.setState(payload.state)
-  },
-  SET_TILE_POSITION: (state, payload: { id: number, position: XY }) => {
-    const tile = findTile(state, payload.id)
-    tile.setPosition(payload.position)
+  // mutation wrapper for when tile is to be mutated from within itself
+  MUTATE_TILE: (state, mutation: () => void) => {
+    mutation()
   },
   POP_SELECTION: state => { state.selected.pop() },
-  CLEAR_SELECTION: state => { state.selected = [] }
+  CLEAR_SELECTION: state => { state.selected = [] },
 })
 
 export const actions = actionTree({ state, getters, mutations }, {
@@ -52,7 +44,7 @@ export const actions = actionTree({ state, getters, mutations }, {
           weights: { skull: 0 },
           position: { x, y },
           power,
-          image
+          image,
         })
 
         accessor.dungeon.ADD_TILE(tile)
@@ -75,10 +67,12 @@ export const actions = actionTree({ state, getters, mutations }, {
         // if tile is empty - find next top tile and move to this position
         if (!state.tiles.find(tile => tile.destination.x === x && tile.destination.y === y)) {
           for (let row = y - 1; row >= 0; row--) {
-            let nextTopTile = state.tiles.find(tile => tile.destination.x === x && tile.destination.y === row )
+            let nextTopTile = state.tiles.find(tile => tile.destination.x === x && tile.destination.y === row)
             if (nextTopTile) {
-              commit("SET_TILE_DESTINATION", { id: nextTopTile.id, destination: { x, y } })
-              commit("SET_TILE_STATE", { id: nextTopTile.id, state: "moving" })
+              commit("MUTATE_TILE", () => {
+                nextTopTile?.setDestination({ x, y })
+                nextTopTile?.setState("moving")
+              })
               break
             }
           }
@@ -99,14 +93,14 @@ export const actions = actionTree({ state, getters, mutations }, {
     //     }))
     //   }
     // }
-  }
+  },
 })
 
 function findTile(state: ReturnType<typeof defaultState>, id: number): Tiles.Tile {
   const tile = state.tiles.find(tile => tile.id === id)
   if (!tile) throw new Error(
     `No tile found
-      ID passed: ${id}`
+      ID passed: ${id}`,
   )
   return tile
 }
