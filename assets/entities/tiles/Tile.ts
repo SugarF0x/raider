@@ -1,4 +1,5 @@
 import { TileState, TileType, XY } from "~/assets/types"
+import { getCanvasCoords } from "~/assets/utils/getCanvasCoords"
 
 export class Tile {
   // Tile unique identifier
@@ -13,7 +14,7 @@ export class Tile {
   state: TileState
 
   constructor(options: TileOptions) {
-    this.id = Math.floor(Math.random()*1000000)
+    this.id = Math.floor(Math.random() * 1000000)
     this.position = options.position
     this.destination = options.destination || this.position
     this.state = options.state || 'idle'
@@ -23,22 +24,19 @@ export class Tile {
     console.error(`Tile ${this.id} has not been assigned a type`)
     return {
       x: 1,
-      y: 928
+      y: 928,
     }
   }
 
-  setPosition(position: XY) {
-    this.position = position
-  }
+  setPosition(position: XY) { this.position = position }
 
-  setDestination(position: XY) {
-    this.destination = position
-  }
+  setDestination(position: XY) { this.destination = position }
 
-  setState(state: TileState) {
-    this.state = state
-  }
+  setState(state: TileState) { this.state = state }
+
+  isDestinationMatch(position: XY) { return this.destination.x === position.x && this.destination.y === position.y }
 }
+
 
 export interface TileOptions {
   image: HTMLImageElement

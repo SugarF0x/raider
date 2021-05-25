@@ -65,9 +65,9 @@ export const actions = actionTree({ state, getters, mutations }, {
     for (let x = 5; x >= 0; x--) {
       for (let y = 5; y >= 0; y--) {
         // if tile is empty - find next top tile and move to this position
-        if (!state.tiles.find(tile => tile.destination.x === x && tile.destination.y === y)) {
+        if (!state.tiles.find(tile => tile.isDestinationMatch({ x, y }))) {
           for (let row = y - 1; row >= 0; row--) {
-            let nextTopTile = state.tiles.find(tile => tile.destination.x === x && tile.destination.y === row)
+            let nextTopTile = state.tiles.find(tile => tile.isDestinationMatch({ x, y: row }))
             if (nextTopTile) {
               commit("MUTATE_TILE", () => {
                 nextTopTile?.setDestination({ x, y })
