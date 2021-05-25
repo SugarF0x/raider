@@ -81,18 +81,18 @@ export const actions = actionTree({ state, getters, mutations }, {
     }
 
     // generate new tiles
-    // for (let x = 0; x < 6; x++) {
-    //   const newTilesRequired = state.tiles.filter(tile => tile.position.x === x).length
-    //   for (let y = -1; y >= newTilesRequired * (-1); y--) {
-    //     commit('ADD_TILE', Tiles.getRandomTile({
-    //       position: { x, y },
-    //       destination: { x, y: newTilesRequired - y },
-    //       state: "moving",
-    //       power,
-    //       image,
-    //     }))
-    //   }
-    // }
+    for (let x = 0; x < 6; x++) {
+      const newTilesRequired = 6 - state.tiles.filter(tile => tile.position.x === x).length
+      for (let y = -1; y >= newTilesRequired * (-1); y--) {
+        commit('ADD_TILE', Tiles.getRandomTile({
+          position: { x, y },
+          destination: { x, y: newTilesRequired + y },
+          state: "moving",
+          power,
+          image,
+        }))
+      }
+    }
   },
 })
 

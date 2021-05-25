@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, ref, toRefs, watchEffect } from '@nuxtjs/composition-api'
+import { computed, defineComponent, nextTick, onMounted, PropType, ref, toRefs, watchEffect } from '@nuxtjs/composition-api'
 import { isSkull, Tile } from "~/assets/entities/tiles"
 import Konva from "konva"
 import { getCanvasCoords } from "~/assets/utils/getCanvasCoords"
@@ -48,20 +48,6 @@ export default defineComponent({
 
     const isSkullType = isSkull(tile.value)
     const skullStateConfig = getSkullStateConfig(tile.value)
-
-    const state = computed(() => tile.value.state)
-    watchEffect(() => {
-      switch(state.value) {
-        case "collecting": {
-          console.log('INIT COLLECTION')
-          break
-        }
-        case "moving": {
-          shiftTile()
-          break
-        }
-      }
-    })
 
     const imageConfig = computed(() => {
       return {
@@ -131,6 +117,22 @@ export default defineComponent({
         dungeon.SELECT_TILE(tile.value.id)
         return
       }
+    })
+
+    onMounted(() => {
+      const state = computed(() => tile.value.state)
+      watchEffect(() => {
+        switch(state.value) {
+          case "collecting": {
+            console.log('INIT COLLECTION')
+            break
+          }
+          case "moving": {
+            shiftTile()
+            break
+          }
+        }
+      })
     })
 
     return {
