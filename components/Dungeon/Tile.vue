@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-group(ref="tileElement")
+  v-group(ref="tileElement", :config="groupConfig")
     v-image(
       :config="imageConfig"
       @mousedown="selectTile"
@@ -47,8 +47,9 @@ export default defineComponent({
     const isSelectable = computed(() => selectedType.value === tile.value.type || selectedType.value === null)
 
     const isSkullType = isSkull(tile.value)
-    const skullStateConfig = getSkullStateConfig(tile.value)
+    const skullStateConfig = computed(() => getSkullStateConfig(tile.value))
 
+    const groupConfig = computed(() => ({ opacity: isSelectable.value ? 1 : .5 }))
     const imageConfig = computed(() => {
       return {
         ...getCanvasCoords(tile.value.position),
@@ -64,7 +65,6 @@ export default defineComponent({
           x: 31,
           y: 31
         },
-        opacity: isSelectable.value ? 1 : .5
       }
     })
 
@@ -141,6 +141,7 @@ export default defineComponent({
       isSkullType,
       imageConfig,
       selectTile,
+      groupConfig,
     }
   },
 })
