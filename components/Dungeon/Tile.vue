@@ -22,7 +22,7 @@ import { isSkull, Tile } from "~/assets/entities/tiles"
 import Konva from "konva"
 import { getCanvasCoords } from "~/assets/utils/getCanvasCoords"
 import { useAccessor } from "~/assets/hooks"
-import { XY } from "~/assets/types"
+import { TileType, XY } from "~/assets/types"
 
 export default defineComponent({
   props: {
@@ -44,7 +44,7 @@ export default defineComponent({
     const selected = computed(() => dungeon.selected)
     const selectedType = computed(() => dungeon.selectedType)
     const selectedLast = computed(() => dungeon.tiles.find(tile => tile.id === selected.value[selected.value.length-1]))
-    const isSelectable = computed(() => selectedType.value === tile.value.type || selectedType.value === null)
+    const isSelectable = computed(() => isSelectableCheck(selectedType.value, tile.value.type))
 
     const isSkullType = isSkull(tile.value)
     const skullStateConfig = computed(() => getSkullStateConfig(tile.value))
@@ -105,15 +105,15 @@ export default defineComponent({
       // If selectable tile is also the last selected tile - return
       if (selectedLast.value.id === tile.value.id) return
 
-      // If selectable tile is the last of already selected - pop it
+      // If selectable tile is the second last added - pop the last one
       if (selected.value[selected.value.length-2] === tile.value.id) {
         if (isSkull(tile.value)) { /* TODO: reset vulnerability */ }
         dungeon.POP_SELECTION()
         return
       }
 
-      // If selectable tile is of same type and is near - add it
-      if (isNear(tile.value.position, selectedLast.value.position) && tile.value.type === selectedType.value) {
+      // If selectable tile is near and passes selection check - select it
+      if (isNear(tile.value.position, selectedLast.value.position) && isSelectable.value) {
         dungeon.SELECT_TILE(tile.value.id)
         return
       }
@@ -171,6 +171,13 @@ function isNear(base: XY, target: XY) {
       && x2 <= x1 + 1
       && y2 >= y1 - 1
       && y2 <= y1 + 1
+}
+
+function isSelectableCheck(selectedType: TileType | null, tileType: TileType) {
+  return !selectedType
+      || selectedType === tileType
+      || selectedType === "sword" && tileType === "skull"
+      || selectedType === "skull" && tileType === "sword"
 }
 </script>
 
