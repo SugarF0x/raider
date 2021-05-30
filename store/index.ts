@@ -1,59 +1,24 @@
-import { getAccessorType, getterTree, mutationTree, actionTree } from 'typed-vuex'
+import { getAccessorType } from 'typed-vuex'
 
-import * as character from '~/store/character'
-import * as instance from '~/store/instance'
-import * as dungeon from '~/store/dungeon'
+export * from './state'
+export * from './getters'
+export * from './mutations'
+export * from './actions'
+
+import { state } from './state'
+import { getters } from './getters'
+import { mutations } from './mutations'
+import { actions } from './actions'
+
+import * as character from './character'
+import * as instance from './instance'
+import * as dungeon from './dungeon'
 
 export const useStoreAccessor = (thisProp: any): typeof accessorType => {
   if (!thisProp.hasOwnProperty('app')) throw new Error(`Argument is to be 'this' instance containing properties 'app.$accessor'`)
 
   return thisProp.app.$accessor
 }
-
-const defaultState = () => ({
-  assets: {
-    tiles: new Image(),
-    icons: new Image(),
-  },
-  loadedAssets: 0,
-  isMouseDown: false,
-})
-
-export const state = () => (defaultState())
-
-export const getters = getterTree(state, {
-  totalAssets: state => { return Object.keys(state.assets).length },
-  isTilesetLoaded: (state, getters) => { return state.loadedAssets === getters.totalAssets },
-})
-
-export const mutations = mutationTree(state, {
-  // RESET_STATE: state => { Object.assign(state, defaultState()) },
-  LOAD_ASSETS: state => {
-    state.assets.tiles.src = require('~/assets/tileset/tiles-custom.png')
-    state.assets.icons.src = require('~/assets/tileset/icons.png')
-  },
-  SET_ASSET_LOADED_STATE: state => { state.loadedAssets++ },
-  SET_MOUSE_DOWN: state => { state.isMouseDown = true },
-  SET_MOUSE_UP: state => { state.isMouseDown = false },
-})
-
-export const actions = actionTree({ state, getters, mutations }, {
-  async initAssetsLoading({ state }): Promise<void> {
-    const accessor = useStoreAccessor(this)
-    state.assets.tiles.onload = () => accessor.SET_ASSET_LOADED_STATE()
-    state.assets.icons.onload = () => accessor.SET_ASSET_LOADED_STATE()
-    accessor.LOAD_ASSETS()
-  },
-  async resetStore({ commit }): Promise<void> {
-    // commit('RESET_STATE')
-    // await accessor.initAssetsLoading()
-    const accessor = useStoreAccessor(this)
-    accessor.character.RESET_STATE()
-    accessor.instance.RESET_STATE()
-    accessor.dungeon.RESET_STATE()
-    accessor.dungeon.populate()
-  },
-})
 
 export const accessorType = getAccessorType({
   state,
