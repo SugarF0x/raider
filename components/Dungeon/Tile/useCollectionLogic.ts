@@ -1,21 +1,19 @@
 import { useAccessor } from "~/assets/hooks"
-import { computed, Ref } from "@nuxtjs/composition-api"
+import { Ref } from "@nuxtjs/composition-api"
 import { Tile } from "~/assets/entities/tiles"
 
 export function useCollectionLogic(tile: Ref<Tile>) {
   const accessor = useAccessor()
   const { dungeon, character, instance } = accessor
 
-  const selectedType = computed(() => dungeon.selectedType)
-
-  // switch(selectedType.value) {
-  //   case "sword": return () => {}
-  //   case "skull": return () => {}
-  //   case "shield": return () => {}
-  //   case "potion": return () => {}
-  //   case "coin": return () => {}
-  //   default: return () => {}
-  // }
-
-  return () => { dungeon.REMOVE_TILE(tile.value.id) }
+  switch(tile.value.type) {
+    case "coin": return () => {
+      const newGoldAmount = character.gold + 1
+      if (newGoldAmount >= 100) character.SET_GOLD(newGoldAmount - 100)
+      else character.SET_GOLD(newGoldAmount)
+      instance.INC_SCORE(1)
+      dungeon.REMOVE_TILE(tile.value.id)
+    }
+    default: return () => { dungeon.REMOVE_TILE(tile.value.id) }
+  }
 }
