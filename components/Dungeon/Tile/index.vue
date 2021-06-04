@@ -8,12 +8,16 @@
       @touchmove="selectTile"
     )
 
+    v-image(
+      v-for="effect in effectConfigs"
+      :key="`${tile.id}-${effect.type}`"
+      :config="effect"
+    )
+
     v-group(v-if="isSkullType")
       util-text(:config="skullStateConfig.attack")
       util-text(:config="skullStateConfig.armor")
       util-text(:config="skullStateConfig.health")
-
-    // effects
 </template>
 
 <script lang="ts">
@@ -40,6 +44,7 @@ export default defineComponent({
       skullStateConfig,
       groupConfig,
       imageConfig,
+      effectConfigs
     } = useConfig(tile)
 
     const isSkullType = isSkull(tile.value)
@@ -49,6 +54,7 @@ export default defineComponent({
     } = useSelectionLogic(tile)
 
     return {
+      effectConfigs,
       groupConfig,
       imageConfig,
       isSkullType,

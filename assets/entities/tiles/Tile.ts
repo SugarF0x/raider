@@ -1,4 +1,5 @@
 import { TileState, TileType, XY } from "~/assets/types"
+import { Effect } from "~/assets/entities/effects/Effect"
 
 export class Tile {
   // Tile unique identifier
@@ -11,6 +12,8 @@ export class Tile {
   destination: XY
   // Current tile state
   state: TileState
+  // Current Tile effects
+  effects: Effect[] = []
 
   constructor(options: TileOptions) {
     this.id = Math.floor(Math.random() * 1000000)
