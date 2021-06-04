@@ -27,6 +27,5 @@ export interface ShieldOptions  extends TileOptions {
 }
 
 export function isShield(tile: Tile): tile is Shield {
-  // @ts-ignore
   return tile.type === 'shield'
 }

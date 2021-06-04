@@ -27,6 +27,5 @@ export interface SwordOptions  extends TileOptions {
 }
 
 export function isSword(tile: Tile): tile is Sword {
-  // @ts-ignore
   return tile.type === 'sword'
 }

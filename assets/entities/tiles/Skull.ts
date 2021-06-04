@@ -60,6 +60,5 @@ export interface SkullState {
 }
 
 export function isSkull(tile: Tile): tile is Skull {
-  // @ts-ignore
   return tile.type === 'skull'
 }

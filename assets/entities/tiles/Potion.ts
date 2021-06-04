@@ -21,6 +21,5 @@ export interface PotionOptions  extends TileOptions {
 }
 
 export function isPotion(tile: Tile): tile is Potion {
-  // @ts-ignore
   return tile.type === 'potion'
 }
