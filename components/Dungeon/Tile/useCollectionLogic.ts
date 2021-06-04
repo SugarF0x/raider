@@ -8,10 +8,10 @@ export function useCollectionLogic(tile: Ref<Tile>) {
 
   switch(tile.value.type) {
     case "coin": return () => {
-      const newGoldAmount = character.gold + 1
+      const newGoldValue = character.gold + 1
 
-      if (newGoldAmount >= 100) character.SET_GOLD(newGoldAmount - 100)
-      else character.SET_GOLD(newGoldAmount)
+      if (newGoldValue >= 100) character.SET_GOLD(newGoldValue - 100)
+      else character.SET_GOLD(newGoldValue)
 
       instance.INC_SCORE(1)
       dungeon.REMOVE_TILE(tile.value.id)
@@ -29,6 +29,15 @@ export function useCollectionLogic(tile: Ref<Tile>) {
         if (newUpgradeValue >= 100) character.SET_UPGRADE(newUpgradeValue - 100)
         else character.SET_UPGRADE(newUpgradeValue)
       }
+
+      instance.INC_SCORE(1)
+      dungeon.REMOVE_TILE(tile.value.id)
+    }
+    case "potion": return () => {
+      const newHealthValue = character.health + 1
+
+      if (newHealthValue >= character.totalHealth) character.SET_HEALTH(character.totalHealth)
+      else character.SET_HEALTH(newHealthValue)
 
       instance.INC_SCORE(1)
       dungeon.REMOVE_TILE(tile.value.id)
