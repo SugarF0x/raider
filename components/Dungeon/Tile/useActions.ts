@@ -1,5 +1,5 @@
 import Konva from "konva"
-import { getCanvasCoords } from "~/assets/utils/getCanvasCoords"
+import { getCanvasCoords } from "~/assets/utils"
 import { computed, ComputedRef, onMounted, Ref, watchEffect } from "@nuxtjs/composition-api"
 import { Tile } from "~/assets/entities/tiles"
 import { useAccessor } from "~/assets/hooks"
@@ -41,8 +41,7 @@ export function useActions(tile: ComputedRef<Tile>, tileElement: Ref<null>) {
     watchEffect(() => {
       switch(state.value) {
         case "collecting": {
-          console.log("Init collection")
-          // collectTile()
+          collectTile()
           break
         }
         case "moving": {

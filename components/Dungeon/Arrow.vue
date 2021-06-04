@@ -7,7 +7,7 @@
 <script lang="ts">
 import { computed, defineComponent, nextTick, ref } from '@nuxtjs/composition-api'
 import { useAccessor } from "~/assets/hooks"
-import { getCanvasCoords } from "~/assets/utils/getCanvasCoords"
+import { getCanvasCoords } from "~/assets/utils"
 import Konva from "konva"
 
 export default defineComponent({

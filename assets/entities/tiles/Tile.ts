@@ -1,5 +1,4 @@
 import { TileState, TileType, XY } from "~/assets/types"
-import { getCanvasCoords } from "~/assets/utils/getCanvasCoords"
 
 export class Tile {
   // Tile unique identifier

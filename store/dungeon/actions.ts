@@ -2,6 +2,7 @@ import { actionTree } from "typed-vuex"
 import { useStoreAccessor } from "~/store"
 import { Tiles } from "~/assets/entities"
 import { findTile, getters, mutations, state } from "./"
+import { sleep } from "~/assets/utils"
 
 export const actions = actionTree({ state, getters, mutations }, {
   populate({ state }) {
@@ -23,18 +24,20 @@ export const actions = actionTree({ state, getters, mutations }, {
       }
     }
   },
-  collect({ state, commit }) {
+  async collect({ state, commit }) {
     const accessor = useStoreAccessor(this)
     const power = accessor.instance.enemyPower
     const image = accessor.assets.tiles
 
     // TODO: add collection handling of sorts
 
-    // delete selected tiles
-    state.selected.forEach(id => commit("REMOVE_TILE", id))
-    // state.selected.forEach(id => commit("MUTATE_TILE", () => {
-    //   findTile(state, id).setState("collecting")
-    // }))
+    // set selected tiles for collection
+    state.selected.forEach(id => commit("MUTATE_TILE", () => {
+      findTile(state, id).setState("collecting")
+    }))
+
+    /** this is a hacky way of solving generating happening before collection finishes */
+    await sleep(0)
 
     // move hovering tiles down
     for (let x = 5; x >= 0; x--) {

@@ -1,5 +1,5 @@
 import { isSkull, Tile } from "~/assets/entities/tiles"
-import { getCanvasCoords } from "~/assets/utils/getCanvasCoords"
+import { getCanvasCoords } from "~/assets/utils"
 import { TileType, XY } from "~/assets/types"
 
 export function getSkullStateConfig(tile: Tile) {

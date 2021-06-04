@@ -1,6 +1,6 @@
 import { computed, ComputedRef, Ref } from "@nuxtjs/composition-api"
 import { getSkullStateConfig } from "./utils"
-import { getCanvasCoords } from "~/assets/utils/getCanvasCoords"
+import { getCanvasCoords } from "~/assets/utils"
 import { Tile } from "~/assets/entities/tiles"
 
 export function useConfig(tile: Ref<Tile>, isSelectable: ComputedRef<boolean>, tileset: ComputedRef<HTMLImageElement>) {
