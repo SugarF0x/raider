@@ -71,6 +71,8 @@ export const actions = actionTree({ state, getters, mutations }, {
         }))
       }
     }
+
+    accessor.instance.INC_TURN()
   },
 })
 
