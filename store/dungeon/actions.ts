@@ -1,7 +1,7 @@
 import { actionTree } from "typed-vuex"
 import { useStoreAccessor } from "~/store"
 import { Tiles } from "~/assets/entities"
-import { getters, mutations, state } from "./"
+import { findTile, getters, mutations, state } from "./"
 
 export const actions = actionTree({ state, getters, mutations }, {
   populate({ state }) {
@@ -32,6 +32,9 @@ export const actions = actionTree({ state, getters, mutations }, {
 
     // delete selected tiles
     state.selected.forEach(id => commit("REMOVE_TILE", id))
+    // state.selected.forEach(id => commit("MUTATE_TILE", () => {
+    //   findTile(state, id).setState("collecting")
+    // }))
 
     // move hovering tiles down
     for (let x = 5; x >= 0; x--) {

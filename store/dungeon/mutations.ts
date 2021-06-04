@@ -1,6 +1,6 @@
 import { mutationTree } from "typed-vuex"
 import { Tiles } from "~/assets/entities"
-import { state, defaultState } from "./"
+import { state, defaultState, findTile } from "./"
 
 export const mutations = mutationTree(state, {
   RESET_STATE: state => { Object.assign(state, defaultState()) },
@@ -20,12 +20,3 @@ export const mutations = mutationTree(state, {
 })
 
 export default mutations
-
-function findTile(state: ReturnType<typeof defaultState>, id: number): Tiles.Tile {
-  const tile = state.tiles.find(tile => tile.id === id)
-  if (!tile) throw new Error(
-    `No tile found
-      ID passed: ${id}`,
-  )
-  return tile
-}
