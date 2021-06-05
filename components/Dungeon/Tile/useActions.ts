@@ -41,7 +41,7 @@ export function useActions(tile: ComputedRef<Tile>, tileElement: Ref<null>) {
     watchEffect(() => {
       switch(state.value) {
         case "collecting": {
-          collectTile()
+          collectTile.value()
           break
         }
         case "moving": {

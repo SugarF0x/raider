@@ -49,9 +49,16 @@ export class Skull extends Tile {
   }
 
   applyDamage(value: number): void {
-    if (value > this.currentState.armor) this.currentState.health = value - this.currentState.armor
-    for (let i = 0; i < value - this.currentState.armor; i++) {
-      if (Math.random() < BASE_ARMOR_BREAK_CHANCE) this.currentState.armor--
+    let overkill = value - this.currentState.armor
+    if (overkill < 0) overkill = 0;
+
+    for (let i = 0; i < value - overkill; i++) {
+      if (Math.random() > BASE_ARMOR_BREAK_CHANCE) this.currentState.armor--
+    }
+
+    if (overkill > 0) this.currentState.health -= overkill;
+    if (this.currentState.health <= 0) {
+      this.currentState.health = 0;
     }
   }
 }

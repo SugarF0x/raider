@@ -4,13 +4,16 @@ import { useAccessor } from "~/assets/hooks"
 
 export function useOnDeselection(tile: Ref<Tile>) {
   const accessor = useAccessor()
-  const { dungeon } = accessor
+  const { dungeon, character } = accessor
+
+  const totalAttack = computed(() => character.totalAttack)
 
   return computed(() => {
     switch (tile.value.type) {
       case "skull": return () => {
         dungeon.MUTATE_TILE(() => {
-          (tile.value as Skull).checkFatality(0)
+          // TODO: this most likely has to be reconsidered
+          (tile.value as Skull).checkFatality(totalAttack.value)
         })
       }
       default: return () => {
