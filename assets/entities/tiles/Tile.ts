@@ -1,5 +1,6 @@
 import { TileState, TileType, XY } from "~/assets/types"
-import { Effect } from "~/assets/entities/effects/Effect"
+import { Effect, EffectType } from "~/assets/entities/effects/Effect"
+import { Vulnerable } from "~/assets/entities/effects"
 
 export class Tile {
   // Tile unique identifier
@@ -36,9 +37,30 @@ export class Tile {
 
   setState(state: TileState) { this.state = state }
 
+  addEffect(effect: EffectType) {
+    const currentEffect = this.effects.find(entry => entry.type === effect)
+
+    const newEffect = (() => {
+      switch(effect) {
+        case "vulnerable": return new Vulnerable()
+        default: throw new Error(`Effect type ${effect} is not recognized`)
+      }
+    })()
+
+    this.removeEffect(effect)
+    this.effects.push(newEffect)
+  }
+
+  removeEffect(effect: EffectType) {
+    const currentEffect = this.effects.find(entry => entry.type === effect)
+    if (currentEffect) {
+      const index = this.effects.indexOf(currentEffect)
+      this.effects.splice(index)
+    }
+  }
+
   isDestinationMatch(position: XY) { return this.destination.x === position.x && this.destination.y === position.y }
 }
-
 
 export interface TileOptions {
   image: HTMLImageElement

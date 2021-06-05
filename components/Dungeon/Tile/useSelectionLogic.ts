@@ -1,7 +1,9 @@
 import { Tile } from "~/assets/entities/tiles"
-import { isNear, isSelectableCheck } from "~/components/Dungeon/Tile/utils"
+import { isNear, isSelectableCheck } from "./utils"
 import { useAccessor } from "~/assets/hooks"
-import { computed, Ref } from "@nuxtjs/composition-api"
+import { computed, Ref, watch } from "@nuxtjs/composition-api"
+import { useOnSelection } from "./useOnSelection"
+import { useOnDeselection } from "./useOnDeselection"
 
 export function useSelectionLogic(tile: Ref<Tile>) {
   const accessor = useAccessor()
@@ -13,13 +15,15 @@ export function useSelectionLogic(tile: Ref<Tile>) {
   const selectedLast = computed(() => dungeon.tiles.find(tile => tile.id === selected.value[selected.value.length-1]))
   const isSelectable = computed(() => isSelectableCheck(selectedType.value, tile.value.type))
 
-  const onSelection = (() => {
-    switch(tile.value.type) {
-      default: return () => {
-        // TODO: add estimated gains calculation (e.g. transparent overlay of how much gold/exp/upgrade/health will have on collection)
-      }
-    }
-  })()
+  const onSelection = useOnSelection(tile)
+  const onDeselection = useOnDeselection(tile)
+
+  /** This section triggers (de)selection methods on selection change */
+  const isTileSelected = computed(() => selected.value.includes(tile.value.id))
+  watch(() => isTileSelected.value, () => {
+    if (isTileSelected.value) onSelection.value()
+    else onDeselection.value()
+  })
 
   // timeout is to ensure MOUSE_DOWN event fires first
   const selectTile = () => setTimeout(() => {
@@ -29,7 +33,7 @@ export function useSelectionLogic(tile: Ref<Tile>) {
     // If selectable tile is the first tile - just add it
     if (!selectedLast.value) {
       dungeon.SELECT_TILE(tile.value.id)
-      onSelection()
+      onSelection.value()
       return
     }
 
@@ -39,14 +43,14 @@ export function useSelectionLogic(tile: Ref<Tile>) {
     // If selectable tile is the second last added - pop the last one
     if (selected.value[selected.value.length-2] === tile.value.id) {
       dungeon.POP_SELECTION()
-      onSelection()
+      onSelection.value()
       return
     }
 
     // If selectable tile is near and passes selection check - select it
     if (isNear(tile.value.position, selectedLast.value.position) && isSelectable.value) {
       dungeon.SELECT_TILE(tile.value.id)
-      onSelection()
+      onSelection.value()
       return
     }
   })
