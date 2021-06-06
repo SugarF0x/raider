@@ -12,15 +12,18 @@ import Konva from "konva"
 
 export default defineComponent({
   setup() {
-    const { dungeon } = useAccessor()
+    const { dungeon, instance } = useAccessor()
     const tiles = computed(() => dungeon.tiles)
     const selected = computed(() => dungeon.selected)
+    const stage = computed(() => instance.stage)
     const displayArrow = computed(() => selected.value.length > 0)
 
     const arrowElement = ref(null)
     const arrowNode = computed(() => (arrowElement as any).value?.getNode() as Konva.Node | undefined)
 
     const arrowPoints = computed(() => {
+      if (stage.value !== "Player Turn") return []
+
       const mappedCoords = selected.value.map(id => {
         const tile = tiles.value.find(tile => tile.id === id)
         if (!tile) throw new Error('Tile ID mismatch')

@@ -29,7 +29,7 @@ export const actions = actionTree({ state, getters, mutations }, {
     const power = accessor.instance.enemyPower
     const image = accessor.assets.tiles
 
-    // TODO: add collection handling of sorts
+    await accessor.instance.SET_STAGE("Collection")
 
     // set selected tiles for collection
     state.selected.forEach(id => commit("MUTATE_TILE", () => {
@@ -58,6 +58,9 @@ export const actions = actionTree({ state, getters, mutations }, {
       }
     }
 
+    // clear selection
+    await accessor.dungeon.CLEAR_SELECTION()
+
     // generate new tiles
     for (let x = 0; x < 6; x++) {
       const newTilesRequired = 6 - state.tiles.filter(tile => tile.position.x === x).length
@@ -73,6 +76,8 @@ export const actions = actionTree({ state, getters, mutations }, {
     }
 
     accessor.instance.INC_TURN()
+    // accessor.instance.SET_STAGE("Enemy Turn")
+    accessor.instance.SET_STAGE("Player Turn")
   },
 })
 
