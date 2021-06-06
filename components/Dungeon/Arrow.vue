@@ -16,13 +16,13 @@ export default defineComponent({
     const tiles = computed(() => dungeon.tiles)
     const selected = computed(() => dungeon.selected)
     const stage = computed(() => instance.stage)
-    const displayArrow = computed(() => selected.value.length > 0)
+    const displayArrow = computed(() => selected.value.length > 0 && stage.value === "Player Turn")
 
     const arrowElement = ref(null)
     const arrowNode = computed(() => (arrowElement as any).value?.getNode() as Konva.Node | undefined)
 
     const arrowPoints = computed(() => {
-      if (stage.value !== "Player Turn") return []
+      if (!displayArrow.value) return []
 
       const mappedCoords = selected.value.map(id => {
         const tile = tiles.value.find(tile => tile.id === id)
