@@ -76,8 +76,9 @@ export const actions = actionTree({ state, getters, mutations }, {
     }
 
     accessor.instance.INC_TURN()
-    // accessor.instance.SET_STAGE("Enemy Turn")
-    accessor.instance.SET_STAGE("Player Turn")
+    accessor.instance.SET_STAGE("Enemy Turn")
+    // TODO: add enemy turn or something
+    setTimeout(() => { accessor.instance.SET_STAGE("Player Turn") }, 500)
   },
 })
 

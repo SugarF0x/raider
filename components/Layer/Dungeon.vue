@@ -24,11 +24,12 @@ export default defineComponent({
     border.fill = 'black'
 
     const accessor = useAccessor()
-    const { dungeon } = accessor
+    const { dungeon, instance } = accessor
     const tiles = computed(() => dungeon.tiles)
+    const stage = computed(() => instance.stage)
     const selectedAmount = computed(() => dungeon.selected.length)
 
-    const startDrag = () => { accessor.SET_MOUSE_DOWN() }
+    const startDrag = () => { if (stage.value === "Player Turn") accessor.SET_MOUSE_DOWN() }
     const dropDrag = () => {
       accessor.SET_MOUSE_UP()
       if (selectedAmount.value >= 3) dungeon.collect()
