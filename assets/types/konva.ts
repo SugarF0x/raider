@@ -6,3 +6,15 @@ export interface ImageConfig extends XY, WH {
   offset?: XY,
   listening?: boolean
 }
+
+export interface TextConfig extends XY {
+  text: string
+  width?: number
+  fill?: string
+  stroke?: string
+  strokeWidth?: number
+  fillAfterStrokeEnabled?: boolean
+  fontSize?: number
+  align?: string
+  listening?: boolean
+}

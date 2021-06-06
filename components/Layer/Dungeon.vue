@@ -10,7 +10,7 @@
       )
 
     dungeon-arrow
-    // dungeon-tooltip
+    dungeon-tooltip
 </template>
 
 <script lang="ts">

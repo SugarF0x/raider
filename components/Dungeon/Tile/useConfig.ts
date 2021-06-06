@@ -3,7 +3,7 @@ import { getSkullStateConfig, isSelectableCheck } from "./utils"
 import { getCanvasCoords } from "~/assets/utils"
 import { Tile } from "~/assets/entities/tiles"
 import { useAccessor } from "~/assets/hooks"
-import { ImageConfig } from "~/assets/types/konva"
+import { ImageConfig } from "~/assets/types"
 
 export function useConfig(tile: Ref<Tile>) {
   const accessor = useAccessor()

@@ -4,11 +4,12 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType, toRefs } from '@nuxtjs/composition-api'
+import { TextConfig } from "~/assets/types"
 
 export default defineComponent({
   props: {
     config: {
-      type: Object as PropType<Config>,
+      type: Object as PropType<TextConfig>,
       required: true,
     },
   },
@@ -29,19 +30,7 @@ export default defineComponent({
   },
 })
 
-interface Config {
-  x: number
-  y: number
-  text: string
-  width?: number
-  fill?: string
-  fontSize?: number
-  align?: string
-  listening?: boolean
-  fillAfterStrokeEnabled?: boolean
-}
-
-const defaultProps: Partial<Config> = {
+const defaultProps: Partial<TextConfig> = {
   width: 100,
   fill: 'white',
   fontSize: 16,
