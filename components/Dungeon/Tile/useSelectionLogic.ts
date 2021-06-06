@@ -26,7 +26,7 @@ export function useSelectionLogic(tile: Ref<Tile>) {
   })
 
   // timeout is to ensure MOUSE_DOWN event fires first
-  const selectTile = () => setTimeout(() => {
+  return () => setTimeout(() => {
     // If mouse is not down then return
     if (!isMouseDown.value) return
 
@@ -54,8 +54,4 @@ export function useSelectionLogic(tile: Ref<Tile>) {
       return
     }
   })
-
-  return {
-    selectTile
-  }
 }

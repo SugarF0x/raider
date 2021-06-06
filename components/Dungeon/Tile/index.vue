@@ -49,9 +49,7 @@ export default defineComponent({
 
     const isSkullType = isSkull(tile.value)
 
-    const {
-      selectTile
-    } = useSelectionLogic(tile)
+    const selectTile = useSelectionLogic(tile)
 
     return {
       effectConfigs,
