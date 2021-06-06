@@ -34,14 +34,14 @@ export function useActions(tile: ComputedRef<Tile>, tileElement: Ref<null>) {
     return true
   }
 
-  const collectTile = useCollectionLogic(tile)
+  const collect = useCollectionLogic(tile)
 
   onMounted(() => {
     const state = computed(() => tile.value.state)
     watchEffect(() => {
       switch(state.value) {
         case "collecting": {
-          collectTile.value()
+          collect()
           break
         }
         case "moving": {

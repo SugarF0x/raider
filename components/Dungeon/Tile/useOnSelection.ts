@@ -8,16 +8,16 @@ export function useOnSelection(tile: Ref<Tile>) {
 
   const totalAttack = computed(() => character.totalAttack)
 
-  return computed(() => {
+  return () => {
     switch(tile.value.type) {
-      case "skull": return () => {
+      case "skull": return (() => {
         dungeon.MUTATE_TILE(() => {
           (tile.value as Skull).checkFatality(totalAttack.value)
         })
-      }
-      default: return () => {
+      })()
+      default: return (() => {
         // TODO: add estimated gains calculation (e.g. transparent overlay of how much gold/exp/upgrade/health will have on collection)
-      }
+      })()
     }
-  })
+  }
 }

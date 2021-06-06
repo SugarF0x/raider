@@ -8,9 +8,9 @@ export function useCollectionLogic(tile: Ref<Tile>) {
 
   const totalAttack = computed(() => character.totalAttack)
 
-  return computed(() => {
+  return () => {
     switch(tile.value.type) {
-      case "coin": return () => {
+      case "coin": return (() => {
         const newGoldValue = character.gold + 1
 
         if (newGoldValue >= 100) character.SET_GOLD(newGoldValue - 100)
@@ -18,8 +18,8 @@ export function useCollectionLogic(tile: Ref<Tile>) {
 
         instance.INC_SCORE(1)
         dungeon.REMOVE_TILE(tile.value.id)
-      }
-      case "shield": return () => {
+      })()
+      case "shield": return (() => {
         const newArmorValue = character.armor + 1
         const excessArmorValue = newArmorValue - character.totalArmor
 
@@ -35,8 +35,8 @@ export function useCollectionLogic(tile: Ref<Tile>) {
 
         instance.INC_SCORE(1)
         dungeon.REMOVE_TILE(tile.value.id)
-      }
-      case "potion": return () => {
+      })()
+      case "potion": return (() => {
         const newHealthValue = character.health + 1
 
         if (newHealthValue >= character.totalHealth) character.SET_HEALTH(character.totalHealth)
@@ -44,8 +44,8 @@ export function useCollectionLogic(tile: Ref<Tile>) {
 
         instance.INC_SCORE(1)
         dungeon.REMOVE_TILE(tile.value.id)
-      }
-      case "skull": return () => {
+      })()
+      case "skull": return (() => {
         const skull = tile.value as Skull
         if (skull.effects.find(effect => effect.type === 'vulnerable')) {
           const newExperienceValue = character.experience + 1
@@ -61,8 +61,8 @@ export function useCollectionLogic(tile: Ref<Tile>) {
             skull.setState("idle")
           })
         }
-      }
-      default: return () => { dungeon.REMOVE_TILE(tile.value.id) }
+      })()
+      default: { dungeon.REMOVE_TILE(tile.value.id) }
     }
-  })
+  }
 }
