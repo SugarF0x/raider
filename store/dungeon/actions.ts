@@ -80,7 +80,8 @@ export const actions = actionTree({ state, getters, mutations }, {
     accessor.instance.SET_STAGE("Enemy Turn")
     // TODO: add enemy turn or something
 
-    await sleep(ANIMATION.ENEMY_TURN_SCREEN_TIME * 1000)
+    if (accessor.dungeon.pendingEnemyDamage > 0) await sleep(ANIMATION.ENEMY_TURN_SCREEN_TIME * 1000)
+    else await sleep(500)
 
     // effects action stage
     state.tiles.forEach(tile => {

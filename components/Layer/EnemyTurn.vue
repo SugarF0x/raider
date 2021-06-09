@@ -12,8 +12,9 @@ import { ANIMATION } from '~/assets/consts'
 
 export default defineComponent({
   setup() {
-    const { instance } = useAccessor()
+    const { instance, dungeon } = useAccessor()
     const stage = computed(() => instance.stage)
+    const enemyDamage = computed(() => dungeon.pendingEnemyDamage)
 
     const enemyTurnLayer = ref(null)
     const enemyTurnNode = computed(() => (enemyTurnLayer as any).value?.getNode() as Konva.Node | undefined)
@@ -32,16 +33,17 @@ export default defineComponent({
       opacity: .75
     }
 
-    const textConfig = { // TODO: bind actual damage value
-      text: `Enemy attacking for ${10}`,
+    const textConfig = computed( () => ({
+      text: `Enemy attacking for ${enemyDamage.value}`,
       x: 0,
       y: 250,
       fontSize: 36,
       width: 450
-    }
+    }))
 
     const displayEnemyTurn = () => {
       if (!enemyTurnNode.value) throw new Error('Enemy Turn Layer not defined')
+      if (enemyDamage.value <= 0) return
 
       const tween = new Konva.Tween({
         node: enemyTurnNode.value,
