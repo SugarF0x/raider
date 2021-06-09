@@ -1,1 +1,1 @@
-export const ENEMY_TURN_SCREEN_TIME = 2
+export const ENEMY_TURN_SCREEN_TIME = 1
