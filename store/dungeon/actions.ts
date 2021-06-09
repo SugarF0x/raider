@@ -78,7 +78,17 @@ export const actions = actionTree({ state, getters, mutations }, {
     accessor.instance.INC_TURN()
     accessor.instance.SET_STAGE("Enemy Turn")
     // TODO: add enemy turn or something
-    setTimeout(() => { accessor.instance.SET_STAGE("Player Turn") }, 500)
+
+    await sleep(500)
+
+    // effects action stage
+    state.tiles.forEach(tile => {
+      commit('MUTATE_TILE', () => {
+        tile.executeEffects()
+      })
+    })
+
+    accessor.instance.SET_STAGE("Player Turn")
   },
 })
 

@@ -59,6 +59,13 @@ export class Tile {
     }
   }
 
+  executeEffects() {
+    this.effects.forEach(effect => {
+      effect.action()
+      if (effect.duration <= 0) this.removeEffect(effect.type)
+    })
+  }
+
   isDestinationMatch(position: XY) { return this.destination.x === position.x && this.destination.y === position.y }
 }
 

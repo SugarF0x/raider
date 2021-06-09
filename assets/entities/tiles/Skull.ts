@@ -1,13 +1,14 @@
 import { Tile, TileOptions } from "~/assets/entities/tiles"
 import { TileType, XY } from "~/assets/types"
 import { BASE_ARMOR_BREAK_CHANCE } from "~/assets/consts/balance"
-import { Vulnerable } from "~/assets/entities/effects"
+import { Fresh } from "~/assets/entities/effects/Fresh"
 
 export class Skull extends Tile {
   type: TileType = 'skull'
   isVulnerable = false
   currentState: SkullState
   baseState: SkullState
+  effects = [new Fresh()]
 
   constructor(options: SkullOptions) {
     super(options)
