@@ -5,14 +5,15 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, watchEffect } from '@nuxtjs/composition-api'
+import { computed, defineComponent, ref, watch } from '@nuxtjs/composition-api'
 import { useAccessor } from "~/assets/hooks"
 import Konva from "konva"
 import { ANIMATION } from '~/assets/consts'
+import { sleep } from "~/assets/utils"
 
 export default defineComponent({
   setup() {
-    const { instance, dungeon } = useAccessor()
+    const { instance, dungeon, character } = useAccessor()
     const stage = computed(() => instance.stage)
     const enemyDamage = computed(() => dungeon.pendingEnemyDamage)
 
@@ -57,8 +58,21 @@ export default defineComponent({
       tween.play()
     }
 
-    watchEffect(() => {
-      if (stage.value === 'Enemy Turn') displayEnemyTurn()
+    const executeEnemyActions = () => {
+      // custom handlers for bosses go here? question mark?
+
+      if (enemyDamage.value <= 0) return
+      character.applyDamage(enemyDamage.value)
+    }
+
+    watch(
+      stage,
+      async () => {
+      if (stage.value === 'Enemy Turn') {
+        displayEnemyTurn()
+        await sleep(ANIMATION.ENEMY_TURN_SCREEN_TIME/4 * 1000)
+        executeEnemyActions()
+      }
     })
 
     return {
