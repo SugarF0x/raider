@@ -1,12 +1,11 @@
-import { TileState, TileType, XY } from "~/assets/types"
-import { Effect, EffectType } from "~/assets/entities/effects/Effect"
-import { Vulnerable } from "~/assets/entities/effects"
+import { XY } from "~/assets/types"
+import { Effect, EffectType, Vulnerable } from "~/assets/entities/effects"
 
 export class Tile {
   // Tile unique identifier
   id: number
   // Tile Type to be overridden by an actual Tile Type
-  type: TileType = 'default'
+  type = TileType.DEFAULT
   // Current Tile dungeon position
   position: XY
   // Dungeon position to move Tile to
@@ -20,7 +19,7 @@ export class Tile {
     this.id = Math.floor(Math.random() * 1000000)
     this.position = options.position
     this.destination = options.destination || this.position
-    this.state = options.state || 'idle'
+    this.state = options.state || TileState.IDLE
   }
 
   getCropPosition(): XY {
@@ -38,11 +37,9 @@ export class Tile {
   setState(state: TileState) { this.state = state }
 
   addEffect(effect: EffectType) {
-    const currentEffect = this.effects.find(entry => entry.type === effect)
-
     const newEffect = (() => {
       switch(effect) {
-        case "vulnerable": return new Vulnerable()
+        case EffectType.VULNERABLE: return new Vulnerable()
         default: throw new Error(`Effect type ${effect} is not recognized`)
       }
     })()
@@ -74,4 +71,19 @@ export interface TileOptions {
   position: XY
   destination?: XY
   state?: TileState
+}
+
+export enum TileType {
+  DEFAULT = 'default',
+  COIN = 'coin',
+  POTION = 'potion',
+  SHIELD = 'shield',
+  SWORD = "sword",
+  SKULL = 'skull',
+}
+
+export enum TileState {
+  IDLE = 'idle',
+  MOVING = 'moving',
+  COLLECTING = 'collecting'
 }

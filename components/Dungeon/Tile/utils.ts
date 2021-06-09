@@ -1,6 +1,6 @@
-import { isSkull, Tile } from "~/assets/entities/tiles"
+import { isSkull, Tile, TileType } from "~/assets/entities/tiles"
 import { getCanvasCoords } from "~/assets/utils"
-import { TileType, XY } from "~/assets/types"
+import { XY } from "~/assets/types"
 
 export function getSkullStateConfig(tile: Tile) {
   if (!isSkull(tile)) return undefined
@@ -32,6 +32,6 @@ export function isNear(base: XY, target: XY) {
 export function isSelectableCheck(selectedType: TileType | null, tileType: TileType) {
   return !selectedType
     || selectedType === tileType
-    || selectedType === "sword" && tileType === "skull"
-    || selectedType === "skull" && tileType === "sword"
+    || selectedType === TileType.SWORD && tileType === TileType.SKULL
+    || selectedType === TileType.SKULL && tileType === TileType.SWORD
 }

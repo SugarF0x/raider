@@ -1,8 +1,8 @@
-import { Tile, TileOptions } from "~/assets/entities/tiles"
-import { TileType, XY } from "~/assets/types"
+import { Tile, TileOptions, TileType } from "~/assets/entities/tiles"
+import { XY } from "~/assets/types"
 
 export class Sword extends Tile {
-  type: TileType = 'sword'
+  type = TileType.SWORD
   isBroken: boolean
 
   constructor(options: SwordOptions) {
@@ -27,5 +27,5 @@ export interface SwordOptions  extends TileOptions {
 }
 
 export function isSword(tile: Tile): tile is Sword {
-  return tile.type === 'sword'
+  return tile.type === TileType.SWORD
 }

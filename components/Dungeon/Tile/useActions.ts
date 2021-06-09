@@ -1,7 +1,7 @@
 import Konva from "konva"
 import { getCanvasCoords } from "~/assets/utils"
 import { computed, ComputedRef, onMounted, Ref, watchEffect } from "@nuxtjs/composition-api"
-import { Tile } from "~/assets/entities/tiles"
+import { Tile, TileState } from "~/assets/entities/tiles"
 import { useAccessor } from "~/assets/hooks"
 import { useCollectionLogic } from "./useCollectionLogic"
 
@@ -22,7 +22,7 @@ export function useActions(tile: ComputedRef<Tile>, tileElement: Ref<null>) {
       onFinish: async () => {
         await dungeon.MUTATE_TILE(() => {
           tile.value.setPosition(tile.value.destination)
-          tile.value.setState('idle')
+          tile.value.setState(TileState.IDLE)
         })
         tween.reset()
       },

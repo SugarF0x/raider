@@ -1,8 +1,8 @@
-import { Tile, TileOptions } from "~/assets/entities/tiles"
-import { TileType, XY } from "~/assets/types"
+import { Tile, TileOptions, TileType } from "~/assets/entities/tiles"
+import { XY } from "~/assets/types"
 
 export class Shield extends Tile {
-  type: TileType = 'shield'
+  type = TileType.SHIELD
   isBroken: boolean
 
   constructor(options: ShieldOptions) {
@@ -27,5 +27,5 @@ export interface ShieldOptions  extends TileOptions {
 }
 
 export function isShield(tile: Tile): tile is Shield {
-  return tile.type === 'shield'
+  return tile.type === TileType.SHIELD
 }

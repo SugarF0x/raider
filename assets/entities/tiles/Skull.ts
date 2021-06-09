@@ -1,11 +1,10 @@
-import { Tile, TileOptions } from "~/assets/entities/tiles"
-import { TileType, XY } from "~/assets/types"
+import { Tile, TileOptions, TileType } from "~/assets/entities/tiles"
+import { XY } from "~/assets/types"
 import { BASE_ARMOR_BREAK_CHANCE } from "~/assets/consts/balance"
-import { Fresh } from "~/assets/entities/effects/Fresh"
-import { Effect } from "~/assets/entities/effects"
+import { Effect, EffectType, Fresh } from "~/assets/entities/effects"
 
 export class Skull extends Tile {
-  type: TileType = 'skull'
+  type = TileType.SKULL
   isVulnerable = false
   currentState: SkullState
   baseState: SkullState
@@ -45,8 +44,8 @@ export class Skull extends Tile {
 
   checkFatality(value: number): boolean {
     const isFatal = this.currentState.health + this.currentState.armor <= value
-    if (isFatal) this.addEffect("vulnerable")
-    else this.removeEffect("vulnerable")
+    if (isFatal) this.addEffect(EffectType.VULNERABLE)
+    else this.removeEffect(EffectType.VULNERABLE)
     return isFatal
   }
 
@@ -76,5 +75,5 @@ export interface SkullState {
 }
 
 export function isSkull(tile: Tile): tile is Skull {
-  return tile.type === 'skull'
+  return tile.type === TileType.SKULL
 }

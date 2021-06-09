@@ -1,6 +1,6 @@
 import { actionTree } from "typed-vuex"
 import { useStoreAccessor } from "~/store"
-import { Tiles } from "~/assets/entities"
+import { getRandomTile, TileState } from "~/assets/entities/tiles"
 import { findTile, getters, mutations, state } from "./"
 import { sleep } from "~/assets/utils"
 import { ANIMATION } from "~/assets/consts"
@@ -14,7 +14,7 @@ export const actions = actionTree({ state, getters, mutations }, {
     const image = accessor.assets.tiles
     for (let y = 0; y < 6; y++) {
       for (let x = 0; x < 6; x++) {
-        const tile = Tiles.getRandomTile({
+        const tile = getRandomTile({
           weights: { skull: 0 },
           position: { x, y },
           power,
@@ -34,7 +34,7 @@ export const actions = actionTree({ state, getters, mutations }, {
 
     // set selected tiles for collection
     state.selected.forEach(id => commit("MUTATE_TILE", () => {
-      findTile(state, id).setState("collecting")
+      findTile(state, id).setState(TileState.COLLECTING)
     }))
 
     /** this is a hacky way of solving generating happening before collection finishes */
@@ -50,7 +50,7 @@ export const actions = actionTree({ state, getters, mutations }, {
             if (nextTopTile) {
               commit("MUTATE_TILE", () => {
                 nextTopTile?.setDestination({ x, y })
-                nextTopTile?.setState("moving")
+                nextTopTile?.setState(TileState.MOVING)
               })
               break
             }
@@ -66,10 +66,10 @@ export const actions = actionTree({ state, getters, mutations }, {
     for (let x = 0; x < 6; x++) {
       const newTilesRequired = 6 - state.tiles.filter(tile => tile.position.x === x).length
       for (let y = -1; y >= newTilesRequired * (-1); y--) {
-        commit('ADD_TILE', Tiles.getRandomTile({
+        commit('ADD_TILE', getRandomTile({
           position: { x, y },
           destination: { x, y: newTilesRequired + y },
-          state: "moving",
+          state: TileState.MOVING,
           power,
           image,
         }))

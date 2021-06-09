@@ -1,8 +1,8 @@
-import { Effect, EffectType } from "~/assets/entities/effects/Effect"
+import { Effect, EffectType } from "~/assets/entities/effects"
 import { XY } from "~/assets/types"
 
 export class Fresh extends Effect {
-  type: EffectType = "fresh"
+  type = EffectType.FRESH
 
   getCropPosition(): XY {
     return {
@@ -10,4 +10,8 @@ export class Fresh extends Effect {
       y: 353,
     }
   }
+}
+
+export function isFresh(effect: Effect): effect is Fresh {
+  return effect.type === EffectType.FRESH
 }

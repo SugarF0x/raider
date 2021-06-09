@@ -1,5 +1,5 @@
 import { computed, Ref } from "@nuxtjs/composition-api"
-import { isSkull, Skull, Tile } from "~/assets/entities/tiles"
+import { isSkull, Skull, Tile, TileType } from "~/assets/entities/tiles"
 import { useAccessor } from "~/assets/hooks"
 
 export function useOnDeselection(tile: Ref<Tile>) {
@@ -10,10 +10,10 @@ export function useOnDeselection(tile: Ref<Tile>) {
 
   return () => {
     switch (tile.value.type) {
-      case "sword": return (() => {
+      case TileType.SWORD: return (() => {
         dungeon.selectedTiles.forEach(tile => { if (isSkull(tile)) dungeon.MUTATE_TILE(() => { tile.checkFatality(totalAttack.value) }) })
       })()
-      case "skull": return (() => {
+      case TileType.SKULL: return (() => {
         dungeon.MUTATE_TILE(() => {
           (tile.value as Skull).checkFatality(0)
         })

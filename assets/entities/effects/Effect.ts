@@ -4,7 +4,7 @@ export class Effect {
   // Effect unique identifier
   id: number
   // Effect Type to be overridden by an actual Effect Type
-  type: EffectType = 'default'
+  type = EffectType.DEFAULT
   // Duration in moves
   duration: number
 
@@ -27,9 +27,10 @@ export class Effect {
   }
 }
 
-export type EffectType =
-  | "default"
-  | "vulnerable"
-  | "burning"
-  | "frozen"
-  | "fresh"
+export enum EffectType {
+  DEFAULT = 'default',
+  VULNERABLE = 'vulnerable',
+  FRESH = 'fresh',
+  FROZEN = 'frozen',
+  BURNING = 'burning'
+}

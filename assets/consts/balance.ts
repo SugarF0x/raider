@@ -1,4 +1,4 @@
-import { TileType } from "~/assets/types"
+import { TileType } from "~/assets/entities/tiles"
 
 export const UPGRADE_THRESHOLD = 100
 export const EXPERIENCE_THRESHOLD = 100
@@ -8,6 +8,6 @@ export const SPAWN_WEIGHT: Record<TileType, number> = {
   potion: 3,
   shield: 4,
   skull: 4,
-  sword: 3
+  sword: 3,
 }
 export const BASE_ARMOR_BREAK_CHANCE = .7

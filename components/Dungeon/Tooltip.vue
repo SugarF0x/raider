@@ -7,6 +7,7 @@
 import { computed, defineComponent } from '@nuxtjs/composition-api'
 import { useAccessor } from "~/assets/hooks"
 import { getCanvasCoords } from "~/assets/utils"
+import { TileType } from "~/assets/entities/tiles"
 
 export default defineComponent({
   setup() {
@@ -41,7 +42,7 @@ export default defineComponent({
     const textConfig = computed(() => {
       if (
         !lastSelectedTilePosition.value
-        || (selectedType.value !== "sword" && selectedType.value !== "skull")
+        || (selectedType.value !== TileType.SWORD && selectedType.value !== TileType.SKULL)
       ) return undefined
 
       return {

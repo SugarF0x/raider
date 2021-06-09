@@ -1,8 +1,8 @@
-import { Tile, TileOptions } from "~/assets/entities/tiles"
-import { TileType, XY } from "~/assets/types"
+import { Tile, TileOptions, TileType } from "~/assets/entities/tiles"
+import { XY } from "~/assets/types"
 
 export class Potion extends Tile {
-  type: TileType = 'potion'
+  type = TileType.POTION
 
   constructor(options: PotionOptions) {
     super(options)
@@ -21,5 +21,5 @@ export interface PotionOptions  extends TileOptions {
 }
 
 export function isPotion(tile: Tile): tile is Potion {
-  return tile.type === 'potion'
+  return tile.type === TileType.POTION
 }

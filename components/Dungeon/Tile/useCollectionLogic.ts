@@ -1,6 +1,7 @@
 import { useAccessor } from "~/assets/hooks"
 import { computed, Ref } from "@nuxtjs/composition-api"
-import { Skull, Tile } from "~/assets/entities/tiles"
+import { Skull, Tile, TileState, TileType } from "~/assets/entities/tiles"
+import { EffectType } from "~/assets/entities/effects"
 
 export function useCollectionLogic(tile: Ref<Tile>) {
   const accessor = useAccessor()
@@ -10,7 +11,7 @@ export function useCollectionLogic(tile: Ref<Tile>) {
 
   return () => {
     switch(tile.value.type) {
-      case "coin": return (() => {
+      case TileType.COIN: return (() => {
         const newGoldValue = character.gold + 1
 
         if (newGoldValue >= 100) character.SET_GOLD(newGoldValue - 100)
@@ -19,7 +20,7 @@ export function useCollectionLogic(tile: Ref<Tile>) {
         instance.INC_SCORE(1)
         dungeon.REMOVE_TILE(tile.value.id)
       })()
-      case "shield": return (() => {
+      case TileType.SHIELD: return (() => {
         const newArmorValue = character.armor + 1
         const excessArmorValue = newArmorValue - character.totalArmor
 
@@ -36,7 +37,7 @@ export function useCollectionLogic(tile: Ref<Tile>) {
         instance.INC_SCORE(1)
         dungeon.REMOVE_TILE(tile.value.id)
       })()
-      case "potion": return (() => {
+      case TileType.POTION: return (() => {
         const newHealthValue = character.health + 1
 
         if (newHealthValue >= character.totalHealth) character.SET_HEALTH(character.totalHealth)
@@ -45,9 +46,9 @@ export function useCollectionLogic(tile: Ref<Tile>) {
         instance.INC_SCORE(1)
         dungeon.REMOVE_TILE(tile.value.id)
       })()
-      case "skull": return (() => {
+      case TileType.SKULL: return (() => {
         const skull = tile.value as Skull
-        if (skull.effects.find(effect => effect.type === 'vulnerable')) {
+        if (skull.effects.find(effect => effect.type === EffectType.VULNERABLE)) {
           const newExperienceValue = character.experience + 1
 
           if (newExperienceValue >= 100) character.SET_EXPERIENCE(newExperienceValue - 100)
@@ -58,7 +59,7 @@ export function useCollectionLogic(tile: Ref<Tile>) {
         } else {
           dungeon.MUTATE_TILE(() => {
             skull.applyDamage(totalAttack.value)
-            skull.setState("idle")
+            skull.setState(TileState.IDLE)
           })
         }
       })()
