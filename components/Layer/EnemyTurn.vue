@@ -8,6 +8,7 @@
 import { computed, defineComponent, ref, watchEffect } from '@nuxtjs/composition-api'
 import { useAccessor } from "~/assets/hooks"
 import Konva from "konva"
+import { ANIMATION } from '~/assets/consts'
 
 export default defineComponent({
   setup() {
@@ -44,14 +45,12 @@ export default defineComponent({
 
       const tween = new Konva.Tween({
         node: enemyTurnNode.value,
-        duration: .5,
+        duration: ANIMATION.ENEMY_TURN_SCREEN_TIME/4,
         easing: Konva.Easings.EaseInOut,
-        onFinish: () => { setTimeout(() => tween.reverse(), 1000) },
+        onFinish: () => { setTimeout(() => tween.reverse(), ANIMATION.ENEMY_TURN_SCREEN_TIME/2 * 1000) },
 
         opacity: 1
       });
-
-      console.log('playing tween')
 
       tween.play()
     }

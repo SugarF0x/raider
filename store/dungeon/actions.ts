@@ -3,6 +3,7 @@ import { useStoreAccessor } from "~/store"
 import { Tiles } from "~/assets/entities"
 import { findTile, getters, mutations, state } from "./"
 import { sleep } from "~/assets/utils"
+import { ANIMATION } from "~/assets/consts"
 
 export const actions = actionTree({ state, getters, mutations }, {
   populate({ state }) {
@@ -79,7 +80,7 @@ export const actions = actionTree({ state, getters, mutations }, {
     accessor.instance.SET_STAGE("Enemy Turn")
     // TODO: add enemy turn or something
 
-    await sleep(500)
+    await sleep(ANIMATION.ENEMY_TURN_SCREEN_TIME * 1000)
 
     // effects action stage
     state.tiles.forEach(tile => {
