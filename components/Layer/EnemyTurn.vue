@@ -1,6 +1,11 @@
 <template lang="pug">
   v-layer(ref="enemyTurnLayer" :config="layerConfig")
     v-rect(:config="backgroundConfig")
+    v-image(
+      v-for="(config, index) in eyeGlowConfigs"
+      :key="`eyeGlow-${index}`"
+      :config="config"
+    )
     util-text(:config="textConfig")
 </template>
 
@@ -9,13 +14,18 @@ import { computed, defineComponent, ref, watch } from '@nuxtjs/composition-api'
 import { useAccessor } from "~/assets/hooks"
 import Konva from "konva"
 import { ANIMATION } from '~/assets/consts'
-import { sleep } from "~/assets/utils"
+import { getCanvasCoords, sleep } from "~/assets/utils"
+import { ImageConfig } from "~/assets/types"
+import { TileType } from "~/assets/entities/tiles"
+import { EffectType } from "~/assets/entities/effects"
 
 export default defineComponent({
   setup() {
-    const { instance, dungeon, character } = useAccessor()
+    const accessor = useAccessor()
+    const { instance, dungeon, character } = accessor
     const stage = computed(() => instance.stage)
     const enemyDamage = computed(() => dungeon.pendingEnemyDamage)
+    const tileset = computed(() => accessor.assets.tiles)
 
     const enemyTurnLayer = ref(null)
     const enemyTurnNode = computed(() => (enemyTurnLayer as any).value?.getNode() as Konva.Node | undefined)
@@ -42,6 +52,34 @@ export default defineComponent({
       width: 450
     }))
 
+    const eyeGlowConfigs = computed(() => {
+      const configs: ImageConfig[] = []
+
+      dungeon.tiles
+      .filter(tile => tile.type === TileType.SKULL)
+      .filter(tile => !tile.effects.find(effect => effect.type === EffectType.FRESH))
+      .forEach(tile => {
+        configs.push({
+          ...getCanvasCoords(tile.position),
+          width: 62,
+          height: 62,
+          image: tileset.value,
+          crop: {
+            x: 961,
+            y: 352,
+            width: 52,
+            height: 52,
+          },
+          offset: {
+            x: 31,
+            y: 31
+          },
+        })
+      })
+
+      return configs
+    })
+
     const displayEnemyTurn = () => {
       if (!enemyTurnNode.value) throw new Error('Enemy Turn Layer not defined')
       if (enemyDamage.value <= 0) return
@@ -65,6 +103,10 @@ export default defineComponent({
       character.applyDamage(enemyDamage.value)
     }
 
+    /**
+     * Handler directing screen display.
+     * Gets triggered every time instance stage changes.
+     */
     watch(
       stage,
       async () => {
@@ -78,6 +120,7 @@ export default defineComponent({
     return {
       layerConfig,
       backgroundConfig,
+      eyeGlowConfigs,
       textConfig,
       enemyTurnLayer
     }
