@@ -3,7 +3,8 @@ export const defaultState = () => ({
   armor: 3,
   health: 50,
   upgrade: 0,
-  experience: 0
+  experience: 0,
+  level: 1
 })
 
 export const state = () => (defaultState())
