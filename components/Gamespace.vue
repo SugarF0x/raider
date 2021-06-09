@@ -3,6 +3,7 @@
     layer-background
     layer-hud
     layer-dungeon
+    layer-enemy-turn
 </template>
 
 <script lang="ts">
