@@ -17,6 +17,9 @@
       v-else
       :config="itemFrameConfig"
     )
+
+    // hitbox
+    v-rect(:config="hitboxConfig" @click="click")
 </template>
 
 <script lang="ts">
@@ -32,10 +35,14 @@ export default defineComponent({
     position: {
       type: Number,
       required: true
+    },
+    click: {
+      type: Function,
+      default: () => {}
     }
   },
   setup(props) {
-    const { type, position } = toRefs(props)
+    const { position } = toRefs(props)
 
     const baseItemFrameConfig = useMarkdownEnhancer(`0/66:1-382/53;T`)
     const baseSelectedItemFrameConfig = useMarkdownEnhancer(`0/66:55-382/53;T`)
@@ -49,6 +56,8 @@ export default defineComponent({
       mid: useMarkdownEnhancer(`0/380-73:322-380/3-55;T`),
       end: useMarkdownEnhancer(`0/6-73:325-380/3-55;T`)
     }
+
+    const hitboxConfig = useMarkdownEnhancer(`51-${163 + 73 * position.value}/392-73`)
 
     const itemFrameConfig = computed(() => ({ ...baseItemFrameConfig, x: 55, y: 167 + 73 * position.value }))
     const selectedItemFrameConfig = computed(() => ({ ...baseSelectedItemFrameConfig, x: 55, y: 167 + 73 * position.value }))
@@ -68,6 +77,7 @@ export default defineComponent({
       selectedItemFrameConfig,
       selectedItemBackgroundConfig,
       currentItemBackgroundConfig,
+      hitboxConfig,
       FieldType
     }
   },
