@@ -33,11 +33,11 @@ export default defineComponent({
       required: true
     },
     position: {
-      type: Number,
+      type: Number as PropType<number>,
       required: true
     },
     click: {
-      type: Function,
+      type: Function as PropType<() => void>,
       default: () => {}
     }
   },
