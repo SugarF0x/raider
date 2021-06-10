@@ -4,6 +4,7 @@
     layer-hud
     layer-dungeon
     layer-enemy-turn
+    layer-shop
 </template>
 
 <script lang="ts">

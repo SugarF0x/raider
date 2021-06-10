@@ -11,3 +11,4 @@ export const SPAWN_WEIGHT: Record<TileType, number> = {
   sword: 3,
 }
 export const BASE_ARMOR_BREAK_CHANCE = .7
+export const BASE_HEALTH_VALUE = 50
