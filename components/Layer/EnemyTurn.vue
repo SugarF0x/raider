@@ -18,6 +18,7 @@ import { getCanvasCoords, sleep } from "~/assets/utils"
 import { ImageConfig } from "~/assets/types"
 import { TileType } from "~/assets/entities/tiles"
 import { EffectType } from "~/assets/entities/effects"
+import { StageType } from "~/store/instance"
 
 export default defineComponent({
   setup() {
@@ -110,7 +111,7 @@ export default defineComponent({
     watch(
       stage,
       async () => {
-      if (stage.value === 'Enemy Turn') {
+      if (stage.value === StageType.ENEMY_TURN) {
         displayEnemyTurn()
         await sleep(ANIMATION.ENEMY_TURN_SCREEN_TIME/4 * 1000)
         executeEnemyActions()

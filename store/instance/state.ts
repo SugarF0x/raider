@@ -1,15 +1,16 @@
 export const defaultState = () => ({
   turn: 0,
   score: 0,
-  stage: "Player Turn" as StageType
+  stage: StageType.PLAYER_TURN
 })
 
 export const state = () => (defaultState())
 
 export default state
 
-export type StageType =
-  | "Player Turn"
-  | "Enemy Turn"
-  | "Collection"
-  | "Shop"
+export enum StageType {
+  PLAYER_TURN = 'player turn',
+  ENEMY_TURN = 'enemy turn',
+  COLLECTION = 'collection',
+  SHOP = 'shop'
+}

@@ -1,9 +1,11 @@
+import { BASE_HEALTH_VALUE } from "~/assets/consts/balance"
+
 export const defaultState = () => ({
   gold: 0,
   armor: 3,
-  health: 50,
+  health: BASE_HEALTH_VALUE,
   upgrade: 0,
-  experience: 0,
+  experience: 99,
   level: 1
 })
 
