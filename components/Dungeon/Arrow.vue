@@ -9,6 +9,7 @@ import { computed, defineComponent, nextTick, ref } from '@nuxtjs/composition-ap
 import { useAccessor } from "~/assets/hooks"
 import { getCanvasCoords } from "~/assets/utils"
 import Konva from "konva"
+import { StageType } from "~/store/instance"
 
 export default defineComponent({
   setup() {
@@ -16,7 +17,7 @@ export default defineComponent({
     const tiles = computed(() => dungeon.tiles)
     const selected = computed(() => dungeon.selected)
     const stage = computed(() => instance.stage)
-    const displayArrow = computed(() => selected.value.length > 0 && stage.value === "Player Turn")
+    const displayArrow = computed(() => selected.value.length > 0 && stage.value === StageType.PLAYER_TURN)
 
     const arrowElement = ref(null)
     const arrowNode = computed(() => (arrowElement as any).value?.getNode() as Konva.Node | undefined)

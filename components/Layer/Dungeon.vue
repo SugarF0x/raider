@@ -17,6 +17,7 @@
 import { computed, defineComponent, onMounted, onUnmounted } from '@nuxtjs/composition-api'
 import { useAccessor } from "~/assets/hooks"
 import { useMarkdownEnhancer } from "~/assets/hooks/useMarkdownEnhancer"
+import { StageType } from "~/store/instance"
 
 export default defineComponent({
   setup() {
@@ -29,7 +30,7 @@ export default defineComponent({
     const stage = computed(() => instance.stage)
     const selectedAmount = computed(() => dungeon.selected.length)
 
-    const startDrag = () => { if (stage.value === "Player Turn") accessor.SET_MOUSE_DOWN() }
+    const startDrag = () => { if (stage.value === StageType.PLAYER_TURN) accessor.SET_MOUSE_DOWN() }
     const dropDrag = () => {
       accessor.SET_MOUSE_UP()
       if (selectedAmount.value >= 3) dungeon.collect()
