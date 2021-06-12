@@ -1,9 +1,8 @@
 import { XY } from "~/assets/types"
 import { Effect, EffectType, Vulnerable } from "~/assets/entities/effects"
+import { Entity, EntityOptions } from "~/assets/entities"
 
-export class Tile {
-  // Tile unique identifier
-  id: number
+export class Tile extends Entity {
   // Tile Type to be overridden by an actual Tile Type
   type = TileType.DEFAULT
   // Current Tile dungeon position
@@ -16,7 +15,7 @@ export class Tile {
   effects: Effect[] = []
 
   constructor(options: TileOptions) {
-    this.id = Math.floor(Math.random() * 1000000)
+    super(options)
     this.position = options.position
     this.destination = options.destination || this.position
     this.state = options.state || TileState.IDLE
@@ -66,8 +65,7 @@ export class Tile {
   isDestinationMatch(position: XY) { return this.destination.x === position.x && this.destination.y === position.y }
 }
 
-export interface TileOptions {
-  image: HTMLImageElement
+export interface TileOptions extends EntityOptions {
   position: XY
   destination?: XY
   state?: TileState

@@ -16,7 +16,7 @@ export class Potion extends Tile {
   }
 }
 
-export interface PotionOptions  extends TileOptions {
+export interface PotionOptions extends TileOptions {
 
 }
 

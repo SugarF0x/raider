@@ -12,14 +12,12 @@ export const actions = actionTree({ state, getters, mutations }, {
 
     const accessor = useStoreAccessor(this)
     const power = accessor.instance.enemyPower
-    const image = accessor.assets.tiles
     for (let y = 0; y < 6; y++) {
       for (let x = 0; x < 6; x++) {
         const tile = getRandomTile({
           weights: { skull: 0 },
           position: { x, y },
           power,
-          image,
         })
 
         accessor.dungeon.ADD_TILE(tile)
@@ -29,7 +27,6 @@ export const actions = actionTree({ state, getters, mutations }, {
   async collect({ state, commit }) {
     const accessor = useStoreAccessor(this)
     const power = accessor.instance.enemyPower
-    const image = accessor.assets.tiles
 
     await accessor.instance.SET_STAGE(StageType.COLLECTION)
 
@@ -72,7 +69,6 @@ export const actions = actionTree({ state, getters, mutations }, {
           destination: { x, y: newTilesRequired + y },
           state: TileState.MOVING,
           power,
-          image,
         }))
       }
     }

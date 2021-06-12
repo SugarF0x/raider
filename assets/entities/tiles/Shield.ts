@@ -22,7 +22,7 @@ export class Shield extends Tile {
   }
 }
 
-export interface ShieldOptions  extends TileOptions {
+export interface ShieldOptions extends TileOptions {
   isBroken?: boolean
 }
 

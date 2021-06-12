@@ -1,6 +1,7 @@
-export class Attribute {
+import { Entity, EntityOptions } from "~/assets/entities"
+
+export class Attribute extends Entity {
   type = AttributeType.DEFAULT
-  id: number
   level: number
 
   text = {
@@ -9,10 +10,14 @@ export class Attribute {
     short: 'DFT'
   }
 
-  constructor(level = 1) {
-    this.id = Math.floor(Math.random() * 1000000)
-    this.level = level
+  constructor(options: AttributeOptions = { level: 1 }) {
+    super(options)
+    this.level = options.level
   }
+}
+
+export interface AttributeOptions extends EntityOptions {
+  level: number
 }
 
 export enum AttributeType {

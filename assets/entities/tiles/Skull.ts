@@ -5,7 +5,6 @@ import { Effect, EffectType, Fresh } from "~/assets/entities/effects"
 
 export class Skull extends Tile {
   type = TileType.SKULL
-  isVulnerable = false
   currentState: SkullState
   baseState: SkullState
   effects: Effect[] = [new Fresh()]

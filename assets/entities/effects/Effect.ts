@@ -1,16 +1,15 @@
 import { XY } from "~/assets/types"
+import { Entity, EntityOptions } from "~/assets/entities"
 
-export class Effect {
-  // Effect unique identifier
-  id: number
+export class Effect extends Entity {
   // Effect Type to be overridden by an actual Effect Type
   type = EffectType.DEFAULT
   // Duration in moves
   duration: number
 
-  constructor(duration = 1) {
-    this.id = Math.floor(Math.random() * 1000000)
-    this.duration = duration
+  constructor(options: EffectOptions = { duration: 1 }) {
+    super(options)
+    this.duration = options.duration
   }
 
   // action to be executed on move end
@@ -25,6 +24,11 @@ export class Effect {
       y: 928,
     }
   }
+}
+
+export interface EffectOptions extends EntityOptions {
+  duration: number
+  power?: number
 }
 
 export enum EffectType {

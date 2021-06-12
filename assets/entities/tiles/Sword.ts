@@ -22,7 +22,7 @@ export class Sword extends Tile {
   }
 }
 
-export interface SwordOptions  extends TileOptions {
+export interface SwordOptions extends TileOptions {
   isBroken?: boolean
 }
 
