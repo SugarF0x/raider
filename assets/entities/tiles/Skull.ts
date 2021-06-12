@@ -81,6 +81,11 @@ export class Skull extends Tile {
     }
   }
 
+  onSelection() {
+    this.checkFatality(this.accessor.character.totalAttack)
+    super.onSelection()
+  }
+
   onDeselection() {
     this.checkFatality()
     super.onDeselection()

@@ -21,6 +21,11 @@ export class Sword extends Tile {
     }
   }
 
+  onSelection() {
+    this.accessor.dungeon.selectedTiles.forEach(tile => { if (isSkull(tile)) tile.checkFatality(this.accessor.character.totalAttack) })
+    super.onSelection()
+  }
+
   onDeselection() {
     this.accessor.dungeon.selectedTiles.forEach(tile => { if (isSkull(tile)) tile.checkFatality(this.accessor.character.totalAttack) })
     super.onDeselection()
