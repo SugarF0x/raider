@@ -9,23 +9,22 @@
         :config="config"
       )
 
-      shop-levelup(v-if="type === ShopType.LEVELUP")
-      //shop-upgrade(v-else-if="type === ShopType.UPGRADE")
-      //shop-merchant(v-else-if="type === ShopType.MERCHANT")
+      shop-levelup(v-if="shop === ShopType.LEVELUP")
+      //shop-upgrade(v-else-if="shop === ShopType.UPGRADE")
+      //shop-merchant(v-else-if="shop === ShopType.MERCHANT")
 </template>
 
 <script lang="ts">
 import { computed, defineComponent } from '@nuxtjs/composition-api'
 import { useAccessor } from "~/assets/hooks"
 import { KONVA } from "~/assets/consts"
-import { StageType } from "~/store/instance"
-import { ShopType } from "~/store/shop"
+import { StageType, ShopType } from "~/store/instance"
 
 export default defineComponent({
   setup() {
-    const { instance, shop } = useAccessor()
+    const { instance } = useAccessor()
     const stage = computed(() => instance.stage)
-    const type = computed(() => shop.type)
+    const shop = computed(() => instance.shop)
 
     const layerConfig = {
       listening: true
@@ -82,7 +81,7 @@ export default defineComponent({
       frameConfigs,
       stage,
       StageType,
-      type,
+      shop,
       ShopType
     }
   },

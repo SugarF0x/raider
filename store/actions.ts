@@ -15,7 +15,6 @@ export const actions = actionTree({ state, getters, mutations }, {
     accessor.character.RESET_STATE()
     accessor.instance.RESET_STATE()
     accessor.dungeon.RESET_STATE()
-    accessor.shop.RESET_STATE()
     accessor.dungeon.populate()
   },
 })
