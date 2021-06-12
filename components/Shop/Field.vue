@@ -44,32 +44,32 @@ export default defineComponent({
   setup(props) {
     const { position } = toRefs(props)
 
-    const baseItemFrameConfig = useMarkdownEnhancer(`0/66:1-382/53;T`)
-    const baseSelectedItemFrameConfig = useMarkdownEnhancer(`0/66:55-382/53;T`)
+    const baseItemFrameConfig = useMarkdownEnhancer(`0/64:1-382/53;T`)
+    const baseSelectedItemFrameConfig = useMarkdownEnhancer(`0/64:55-382/53;T`)
     const baseSelectedItemBackgroundConfig = {
-      begin: useMarkdownEnhancer(`0/6-73:309-380/3-55;T`),
-      mid: useMarkdownEnhancer(`0/380-73:312-380/3-55;T`),
-      end: useMarkdownEnhancer(`0/6-73:315-380/3-55;T`)
+      begin: useMarkdownEnhancer(`0/6-71:309-380/3-55;T`),
+      mid: useMarkdownEnhancer(`0/380-71:312-380/3-55;T`),
+      end: useMarkdownEnhancer(`0/6-71:315-380/3-55;T`)
     }
     const baseCurrentItemBackgroundConfig = {
-      begin: useMarkdownEnhancer(`0/6-73:319-380/3-55;T`),
-      mid: useMarkdownEnhancer(`0/380-73:322-380/3-55;T`),
-      end: useMarkdownEnhancer(`0/6-73:325-380/3-55;T`)
+      begin: useMarkdownEnhancer(`0/6-71:319-380/3-55;T`),
+      mid: useMarkdownEnhancer(`0/380-71:322-380/3-55;T`),
+      end: useMarkdownEnhancer(`0/6-71:325-380/3-55;T`)
     }
 
-    const hitboxConfig = useMarkdownEnhancer(`51-${163 + 73 * position.value}/392-73`)
+    const hitboxConfig = useMarkdownEnhancer(`51-${164 + 73 * position.value}/392-71`)
 
-    const itemFrameConfig = computed(() => ({ ...baseItemFrameConfig, x: 55, y: 167 + 73 * position.value }))
-    const selectedItemFrameConfig = computed(() => ({ ...baseSelectedItemFrameConfig, x: 55, y: 167 + 73 * position.value }))
+    const itemFrameConfig = computed(() => ({ ...baseItemFrameConfig, x: 55, y: 168 + 73 * position.value }))
+    const selectedItemFrameConfig = computed(() => ({ ...baseSelectedItemFrameConfig, x: 55, y: 168 + 73 * position.value }))
     const selectedItemBackgroundConfig = computed(() => ({
-      begin: { ...baseSelectedItemBackgroundConfig.begin, x: 51, y: 163 + 73 * position.value },
-      mid: { ...baseSelectedItemBackgroundConfig.mid, x: 57, y: 163 + 73 * position.value },
-      end: { ...baseSelectedItemBackgroundConfig.end, x: 437, y: 163 + 73 * position.value }
+      begin: { ...baseSelectedItemBackgroundConfig.begin, x: 51, y: 165 + 73 * position.value },
+      mid: { ...baseSelectedItemBackgroundConfig.mid, x: 57, y: 165 + 73 * position.value },
+      end: { ...baseSelectedItemBackgroundConfig.end, x: 437, y: 165 + 73 * position.value }
     }))
     const currentItemBackgroundConfig = computed(() => ({
-      begin: { ...baseCurrentItemBackgroundConfig.begin, x: 51, y: 163 + 73 * position.value },
-      mid: { ...baseCurrentItemBackgroundConfig.mid, x: 57, y: 163 + 73 * position.value },
-      end: { ...baseCurrentItemBackgroundConfig.end, x: 437, y: 163 + 73 * position.value }
+      begin: { ...baseCurrentItemBackgroundConfig.begin, x: 51, y: 165 + 73 * position.value },
+      mid: { ...baseCurrentItemBackgroundConfig.mid, x: 57, y: 165 + 73 * position.value },
+      end: { ...baseCurrentItemBackgroundConfig.end, x: 437, y: 165 + 73 * position.value }
     }))
 
     return {
