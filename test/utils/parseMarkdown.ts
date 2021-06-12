@@ -1,10 +1,5 @@
 import { parseMarkdown } from '~/assets/utils'
 import { BACKGROUND_COLOR, STROKE_COLOR } from "~/assets/consts/konva"
-import { defineComponent, h } from '@nuxtjs/composition-api'
-import Vuex from 'vuex'
-import { shallowMount, createLocalVue } from "@vue/test-utils"
-import { useAccessor } from "typed-vuex"
-import Vue from 'vue'
 
 export function parseMarkdownTest() {
   describe('parseMarkdown', () => {

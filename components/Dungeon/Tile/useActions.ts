@@ -2,12 +2,8 @@ import Konva from "konva"
 import { getCanvasCoords } from "~/assets/utils"
 import { computed, ComputedRef, onMounted, Ref, watchEffect } from "@nuxtjs/composition-api"
 import { Tile, TileState } from "~/assets/entities/tiles"
-import { useAccessor } from "~/assets/hooks"
 
 export function useActions(tile: ComputedRef<Tile>, tileElement: Ref<null>) {
-  const accessor = useAccessor()
-  const { dungeon } = accessor
-
   const tileNode = computed(() => (tileElement as any).value.getNode() as Konva.Node | undefined)
 
   const shiftTile = () => {

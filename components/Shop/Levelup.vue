@@ -19,12 +19,10 @@ import { computed, defineComponent, onMounted, reactive } from '@nuxtjs/composit
 import { FieldType } from "~/components/Shop/Field.vue"
 import { useAcceptButton } from "~/components/Shop/useAcceptButton"
 import { useTitle } from "~/components/Shop/useTitle"
-import { useAccessor } from "~/assets/hooks"
 import { Attribute } from "~/assets/entities/attributes/Attribute"
 
 export default defineComponent({
   setup() {
-    const { character } = useAccessor()
     const { titleConfig, descriptionConfig } = useTitle( 'Level Up!', 'Choose 2 skills to improve', '#26ff00')
 
     const entries = reactive({

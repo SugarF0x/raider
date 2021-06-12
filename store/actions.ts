@@ -8,8 +8,8 @@ export const actions = actionTree({ state, getters, mutations }, {
     state.assets.icons.onload = () => accessor.SET_ASSET_LOADED_STATE()
     accessor.LOAD_ASSETS()
   },
-  async resetStore({ commit }): Promise<void> {
-    // commit('RESET_STATE')
+  async resetStore(): Promise<void> {
+    // accessor.RESET_STATE()
     // await accessor.initAssetsLoading()
     const accessor = useStoreAccessor(this)
     accessor.character.RESET_STATE()
