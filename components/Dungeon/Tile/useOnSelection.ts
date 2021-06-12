@@ -10,14 +10,8 @@ export function useOnSelection(tile: Ref<Tile>) {
 
   return () => {
     switch(tile.value.type) {
-      case TileType.SWORD: return (() => {
-        dungeon.selectedTiles.forEach(tile => { if (isSkull(tile)) dungeon.MUTATE_TILE(() => { tile.checkFatality(totalAttack.value) }) })
-      })()
-      case TileType.SKULL: return (() => {
-        dungeon.MUTATE_TILE(() => {
-          (tile.value as Skull).checkFatality(totalAttack.value)
-        })
-      })()
+      case TileType.SWORD: return (() => { dungeon.selectedTiles.forEach(tile => { if (isSkull(tile)) tile.checkFatality(totalAttack.value) }) })()
+      case TileType.SKULL: return (() => { (tile.value as Skull).checkFatality(totalAttack.value) })()
       default: return (() => {
         // TODO: add estimated gains calculation (e.g. transparent overlay of how much gold/exp/upgrade/health will have on collection)
       })()

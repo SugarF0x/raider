@@ -19,10 +19,8 @@ export function useActions(tile: ComputedRef<Tile>, tileElement: Ref<null>) {
       duration: .5,
       easing: Konva.Easings.EaseInOut,
       onFinish: async () => {
-        await dungeon.MUTATE_TILE(() => {
-          tile.value.setPosition(tile.value.destination)
-          tile.value.setState(TileState.IDLE)
-        })
+        await tile.value.setPosition(tile.value.destination)
+        await tile.value.setState(TileState.IDLE)
         tween.reset()
       },
 

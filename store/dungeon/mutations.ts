@@ -12,9 +12,7 @@ export const mutations = mutationTree(state, {
   },
   SELECT_TILE: (state, id: number) => { if (!state.selected.includes(id)) state.selected.push(id) },
   // mutation wrapper for when tile is to be mutated from within itself
-  MUTATE_TILE: (state, mutation: () => void) => {
-    mutation()
-  },
+  MUTATE_TILE: (state, mutation: () => void) => { mutation() },
   POP_SELECTION: state => { state.selected.pop() },
   CLEAR_SELECTION: state => { state.selected = [] },
 })

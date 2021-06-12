@@ -31,9 +31,7 @@ export const actions = actionTree({ state, getters, mutations }, {
     await accessor.instance.SET_STAGE(StageType.COLLECTION)
 
     // set selected tiles for collection
-    state.selected.forEach(id => commit("MUTATE_TILE", () => {
-      findTile(state, id).setState(TileState.COLLECTING)
-    }))
+    state.selected.forEach(id => { findTile(state, id).setState(TileState.COLLECTING) })
 
     /** this is a hacky way of solving generating happening before collection finishes */
     await sleep(0)
@@ -46,10 +44,8 @@ export const actions = actionTree({ state, getters, mutations }, {
           for (let row = y - 1; row >= 0; row--) {
             let nextTopTile = state.tiles.find(tile => tile.isDestinationMatch({ x, y: row }))
             if (nextTopTile) {
-              commit("MUTATE_TILE", () => {
-                nextTopTile?.setDestination({ x, y })
-                nextTopTile?.setState(TileState.MOVING)
-              })
+              nextTopTile?.setDestination({ x, y })
+              nextTopTile?.setState(TileState.MOVING)
               break
             }
           }
@@ -81,11 +77,7 @@ export const actions = actionTree({ state, getters, mutations }, {
     else await sleep(500)
 
     // effects action stage
-    state.tiles.forEach(tile => {
-      commit('MUTATE_TILE', () => {
-        tile.executeEffects()
-      })
-    })
+    state.tiles.forEach(tile => tile.executeEffects())
 
     accessor.instance.INC_TURN()
     accessor.instance.SET_STAGE(StageType.PLAYER_TURN)

@@ -43,23 +43,25 @@ export class Skull extends Tile {
 
   checkFatality(value: number): boolean {
     const isFatal = this.currentState.health + this.currentState.armor <= value
-    if (isFatal) this.addEffect(EffectType.VULNERABLE)
-    else this.removeEffect(EffectType.VULNERABLE)
+    if (isFatal) this.accessor.dungeon.MUTATE_TILE(() => { this.addEffect(EffectType.VULNERABLE) })
+    else this.accessor.dungeon.MUTATE_TILE(() => { this.removeEffect(EffectType.VULNERABLE) })
     return isFatal
   }
 
   applyDamage(value: number): void {
-    let overkill = value - this.currentState.armor
-    if (overkill < 0) overkill = 0;
+    this.accessor.dungeon.MUTATE_TILE(() => {
+      let overkill = value - this.currentState.armor
+      if (overkill < 0) overkill = 0;
 
-    for (let i = 0; i < value - overkill; i++) {
-      if (Math.random() > BASE_ARMOR_BREAK_CHANCE) this.currentState.armor--
-    }
+      for (let i = 0; i < value - overkill; i++) {
+        if (Math.random() > BASE_ARMOR_BREAK_CHANCE) this.currentState.armor--
+      }
 
-    if (overkill > 0) this.currentState.health -= overkill;
-    if (this.currentState.health <= 0) {
-      this.currentState.health = 0;
-    }
+      if (overkill > 0) this.currentState.health -= overkill;
+      if (this.currentState.health <= 0) {
+        this.currentState.health = 0;
+      }
+    })
   }
   
   collect() {

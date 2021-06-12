@@ -29,36 +29,42 @@ export class Tile extends Entity {
     }
   }
 
-  setPosition(position: XY) { this.position = position }
+  setPosition(position: XY) { this.accessor.dungeon.MUTATE_TILE(() => this.position = position) }
 
-  setDestination(position: XY) { this.destination = position }
+  setDestination(position: XY) { this.accessor.dungeon.MUTATE_TILE(() => this.destination = position) }
 
-  setState(state: TileState) { this.state = state }
+  setState(state: TileState) { this.accessor.dungeon.MUTATE_TILE(() => this.state = state) }
 
   addEffect(effect: EffectType) {
-    const newEffect = (() => {
-      switch(effect) {
-        case EffectType.VULNERABLE: return new Vulnerable()
-        default: throw new Error(`Effect type ${effect} is not recognized`)
-      }
-    })()
+    this.accessor.dungeon.MUTATE_TILE(() => {
+      const newEffect = (() => {
+        switch(effect) {
+          case EffectType.VULNERABLE: return new Vulnerable()
+          default: throw new Error(`Effect type ${effect} is not recognized`)
+        }
+      })()
 
-    this.removeEffect(effect)
-    this.effects.push(newEffect)
+      this.removeEffect(effect)
+      this.effects.push(newEffect)
+    })
   }
 
   removeEffect(effect: EffectType) {
-    const currentEffect = this.effects.find(entry => entry.type === effect)
-    if (currentEffect) {
-      const index = this.effects.indexOf(currentEffect)
-      this.effects.splice(index)
-    }
+    this.accessor.dungeon.MUTATE_TILE(() => {
+      const currentEffect = this.effects.find(entry => entry.type === effect)
+      if (currentEffect) {
+        const index = this.effects.indexOf(currentEffect)
+        this.effects.splice(index)
+      }
+    })
   }
 
   executeEffects() {
-    this.effects.forEach(effect => {
-      effect.action()
-      if (effect.duration <= 0) this.removeEffect(effect.type)
+    this.accessor.dungeon.MUTATE_TILE(() => {
+      this.effects.forEach(effect => {
+        effect.action()
+        if (effect.duration <= 0) this.removeEffect(effect.type)
+      })
     })
   }
 
