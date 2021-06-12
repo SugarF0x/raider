@@ -41,7 +41,7 @@ export class Skull extends Tile {
     }
   }
 
-  checkFatality(value: number): boolean {
+  checkFatality(value = 0): boolean {
     const isFatal = this.currentState.health + this.currentState.armor <= value
     if (isFatal) this.accessor.dungeon.MUTATE_TILE(() => { this.addEffect(EffectType.VULNERABLE) })
     else this.accessor.dungeon.MUTATE_TILE(() => { this.removeEffect(EffectType.VULNERABLE) })
@@ -79,6 +79,11 @@ export class Skull extends Tile {
         this.setState(TileState.IDLE)
       })
     }
+  }
+
+  onDeselection() {
+    this.checkFatality()
+    super.onDeselection()
   }
 }
 

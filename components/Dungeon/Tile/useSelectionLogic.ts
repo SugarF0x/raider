@@ -3,7 +3,6 @@ import { isNear, isSelectableCheck } from "./utils"
 import { useAccessor } from "~/assets/hooks"
 import { computed, Ref, watch } from "@nuxtjs/composition-api"
 import { useOnSelection } from "./useOnSelection"
-import { useOnDeselection } from "./useOnDeselection"
 
 export function useSelectionLogic(tile: Ref<Tile>) {
   const accessor = useAccessor()
@@ -16,13 +15,12 @@ export function useSelectionLogic(tile: Ref<Tile>) {
   const isSelectable = computed(() => isSelectableCheck(selectedType.value, tile.value.type))
 
   const onSelection = useOnSelection(tile)
-  const onDeselection = useOnDeselection(tile)
 
   /** This section triggers (de)selection methods on selection change */
   const isTileSelected = computed(() => selected.value.includes(tile.value.id))
   watch(() => isTileSelected.value, () => {
     if (isTileSelected.value) onSelection()
-    else onDeselection()
+    else tile.value.onDeselection()
   })
 
   // timeout is to ensure MOUSE_DOWN event fires first

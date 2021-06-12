@@ -1,4 +1,4 @@
-import { Tile, TileOptions, TileType } from "~/assets/entities/tiles"
+import { isSkull, Tile, TileOptions, TileType } from "~/assets/entities/tiles"
 import { XY } from "~/assets/types"
 
 export class Sword extends Tile {
@@ -19,6 +19,11 @@ export class Sword extends Tile {
       x: (52) * (this.id % 8) + 1 + (this.id % 8),
       y: 213
     }
+  }
+
+  onDeselection() {
+    this.accessor.dungeon.selectedTiles.forEach(tile => { if (isSkull(tile)) tile.checkFatality(this.accessor.character.totalAttack) })
+    super.onDeselection()
   }
 }
 
