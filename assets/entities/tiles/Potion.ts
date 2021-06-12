@@ -14,6 +14,16 @@ export class Potion extends Tile {
       y: 1
     }
   }
+  
+  collect() {
+    const newHealthValue = this.accessor.character.health + 1
+
+    if (newHealthValue >= this.accessor.character.totalHealth) this.accessor.character.SET_HEALTH(this.accessor.character.totalHealth)
+    else this.accessor.character.SET_HEALTH(newHealthValue)
+
+    this.accessor.instance.INC_SCORE(1)
+    this.accessor.dungeon.REMOVE_TILE(this.id)
+  }
 }
 
 export interface PotionOptions extends TileOptions {

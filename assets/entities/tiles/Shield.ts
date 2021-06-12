@@ -20,6 +20,24 @@ export class Shield extends Tile {
       y: 160
     }
   }
+  
+  collect() {
+    const newArmorValue = this.accessor.character.armor + 1
+    const excessArmorValue = newArmorValue - this.accessor.character.totalArmor
+
+    if (newArmorValue <= this.accessor.character.totalArmor) {
+      this.accessor.character.SET_ARMOR(newArmorValue)
+    } else {
+      this.accessor.character.SET_ARMOR(this.accessor.character.totalArmor)
+
+      const newUpgradeValue = this.accessor.character.upgrade + excessArmorValue
+      if (newUpgradeValue >= 100) this.accessor.character.SET_UPGRADE(newUpgradeValue - 100)
+      else this.accessor.character.SET_UPGRADE(newUpgradeValue)
+    }
+
+    this.accessor.instance.INC_SCORE(1)
+    this.accessor.dungeon.REMOVE_TILE(this.id)
+  }
 }
 
 export interface ShieldOptions extends TileOptions {

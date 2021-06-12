@@ -15,6 +15,15 @@ export class Coin extends Tile {
     }
   }
 
+  collect() {
+    const newGoldValue = this.accessor.character.gold + 1
+
+    if (newGoldValue >= 100) this.accessor.character.SET_GOLD(newGoldValue - 100)
+    else this.accessor.character.SET_GOLD(newGoldValue)
+
+    this.accessor.instance.INC_SCORE(1)
+    this.accessor.dungeon.REMOVE_TILE(this.id)
+  }
 }
 
 export interface CoinOptions  extends TileOptions {

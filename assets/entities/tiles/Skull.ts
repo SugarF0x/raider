@@ -1,4 +1,4 @@
-import { Tile, TileOptions, TileType } from "~/assets/entities/tiles"
+import { Tile, TileOptions, TileState, TileType } from "~/assets/entities/tiles"
 import { XY } from "~/assets/types"
 import { BASE_ARMOR_BREAK_CHANCE } from "~/assets/consts/balance"
 import { Effect, EffectType, Fresh } from "~/assets/entities/effects"
@@ -59,6 +59,23 @@ export class Skull extends Tile {
     if (overkill > 0) this.currentState.health -= overkill;
     if (this.currentState.health <= 0) {
       this.currentState.health = 0;
+    }
+  }
+  
+  collect() {
+    if (this.effects.find(effect => effect.type === EffectType.VULNERABLE)) {
+      const newExperienceValue = this.accessor.character.experience + 1
+
+      if (newExperienceValue >= 100) this.accessor.character.SET_EXPERIENCE(newExperienceValue - 100)
+      else this.accessor.character.SET_EXPERIENCE(newExperienceValue)
+
+      this.accessor.instance.INC_SCORE(1)
+      this.accessor.dungeon.REMOVE_TILE(this.id)
+    } else {
+      this.accessor.dungeon.MUTATE_TILE(() => {
+        this.applyDamage(this.accessor.character.totalAttack)
+        this.setState(TileState.IDLE)
+      })
     }
   }
 }

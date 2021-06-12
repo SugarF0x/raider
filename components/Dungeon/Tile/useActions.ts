@@ -3,7 +3,6 @@ import { getCanvasCoords } from "~/assets/utils"
 import { computed, ComputedRef, onMounted, Ref, watchEffect } from "@nuxtjs/composition-api"
 import { Tile, TileState } from "~/assets/entities/tiles"
 import { useAccessor } from "~/assets/hooks"
-import { useCollectionLogic } from "./useCollectionLogic"
 
 export function useActions(tile: ComputedRef<Tile>, tileElement: Ref<null>) {
   const accessor = useAccessor()
@@ -34,14 +33,12 @@ export function useActions(tile: ComputedRef<Tile>, tileElement: Ref<null>) {
     return true
   }
 
-  const collect = useCollectionLogic(tile)
-
   onMounted(() => {
     const state = computed(() => tile.value.state)
     watchEffect(() => {
       switch(state.value) {
         case TileState.COLLECTING: {
-          collect()
+          tile.value.collect()
           break
         }
         case TileState.MOVING: {

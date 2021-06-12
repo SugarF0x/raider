@@ -63,6 +63,12 @@ export class Tile extends Entity {
   }
 
   isDestinationMatch(position: XY) { return this.destination.x === position.x && this.destination.y === position.y }
+
+  collect() { this.accessor.dungeon.REMOVE_TILE(this.id) }
+
+  // these are here just to type check existence of said functions on children
+  onSelection() { }
+  onDeselection() { }
 }
 
 export interface TileOptions extends EntityOptions {
