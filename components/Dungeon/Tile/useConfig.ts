@@ -15,43 +15,10 @@ export function useConfig(tile: Ref<Tile>) {
 
   const skullStateConfig = computed(() => getSkullStateConfig(tile.value))
   const groupConfig = computed(() => ({ opacity: isSelectable.value ? 1 : .5 }))
-  const imageConfig = computed(() => ({
-      ...getCanvasCoords(tile.value.position),
-      image: tileset.value,
-      width: 62,
-      height: 62,
-      crop: {
-        ...tile.value.getCropPosition(),
-        width: 52,
-        height: 52
-      },
-      offset: {
-        x: 31,
-        y: 31
-      },
-  }))
+  const imageConfig = computed(() => tile.value.getImageConfig())
   const effectConfigs = computed(() => {
     const effects: ImageConfig[] = []
-
-    tile.value.effects.forEach(effect => {
-      effects.push({
-        ...getCanvasCoords(tile.value.position),
-        image: tileset.value,
-        width: 62,
-        height: 62,
-        crop: {
-          ...effect.getCropPosition(),
-          width: 52,
-          height: 52
-        },
-        offset: {
-          x: 31,
-          y: 31
-        },
-        listening: false
-      })
-    })
-
+    tile.value.effects.forEach(effect => { effects.push(effect.getImageConfig(getCanvasCoords(tile.value.position))) })
     return effects
   })
 

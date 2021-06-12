@@ -10,7 +10,7 @@ export class Attribute extends Entity {
     short: 'DFT'
   }
 
-  constructor(options: AttributeOptions = { level: 1 }) {
+  constructor(options: AttributeOptions = { level: 0 }) {
     super(options)
     this.level = options.level
   }

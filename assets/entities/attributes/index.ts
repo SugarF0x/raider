@@ -1,5 +1,4 @@
-import { Attribute, AttributeType } from "~/assets/entities/attributes/Attribute"
-
+export * from './Attribute'
 export * from './Strength'
 export * from './Dexterity'
 export * from './Vitality'
@@ -18,18 +17,28 @@ import {
   Charisma,
   Damage,
   Defense,
+  AttributeType
 } from "./"
 
-export function getNewAttribute(type: AttributeType, level = 1) {
+export function getRandomAttribute() {
+  const attributes: AttributeType[] = []
+  for (let attribute in AttributeType) {
+    if (attribute !== 'DEFAULT')
+      // noinspection JSUnfilteredForInLoop
+      attributes.push(attribute.toLowerCase() as AttributeType)
+  }
+
+  const type = attributes[Math.floor(Math.random() * attributes.length)]
+
   switch(type) {
-    case AttributeType.CHARISMA: return new Charisma({ level })
-    case AttributeType.DAMAGE: return new Damage({ level })
-    case AttributeType.DEFENSE: return new Defense({ level })
-    case AttributeType.DEXTERITY: return new Dexterity({ level })
-    case AttributeType.HEALTH: return new Health({ level })
-    case AttributeType.LUCK: return new Luck({ level })
-    case AttributeType.STRENGTH: return new Strength({ level })
-    case AttributeType.VITALITY: return new Vitality({ level })
-    default: return new Attribute({ level })
+    case AttributeType.CHARISMA: return new Charisma()
+    case AttributeType.DAMAGE: return new Damage()
+    case AttributeType.DEFENSE: return new Defense()
+    case AttributeType.DEXTERITY: return new Dexterity()
+    case AttributeType.HEALTH: return new Health()
+    case AttributeType.LUCK: return new Luck()
+    case AttributeType.STRENGTH: return new Strength()
+    case AttributeType.VITALITY: return new Vitality()
+    default: throw new Error(`No attribute of type "${type}" found`)
   }
 }

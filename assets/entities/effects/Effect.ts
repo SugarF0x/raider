@@ -16,12 +16,11 @@ export class Effect extends Entity {
   action() {
     this.duration--
   }
-  
-  getCropPosition(): XY {
-    console.error(`Effect ${this.id} has not been assigned a crop`)
+
+  getImageConfig(position: XY) {
     return {
-      x: 1,
-      y: 928,
+      ...super.getImageConfig(position),
+      listening: false
     }
   }
 }

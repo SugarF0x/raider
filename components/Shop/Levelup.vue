@@ -20,9 +20,12 @@ import { FieldType } from "~/components/Shop/Field.vue"
 import { useAcceptButton } from "~/components/Shop/useAcceptButton"
 import { useTitle } from "~/components/Shop/useTitle"
 import { Attribute } from "~/assets/entities/attributes/Attribute"
+import { getRandomAttribute } from "~/assets/entities/attributes"
+import { useAccessor } from "~/assets/hooks"
 
 export default defineComponent({
   setup() {
+    const { character } = useAccessor()
     const { titleConfig, descriptionConfig } = useTitle( 'Level Up!', 'Choose 2 skills to improve', '#26ff00')
 
     const entries = reactive({
@@ -47,7 +50,10 @@ export default defineComponent({
     
     onMounted(() => {
       for (let i=0; i<4; i++) {
-
+        const newAttribute = getRandomAttribute()
+        const existingAttribute = character.attributes.find(attribute => attribute.type === newAttribute.type)
+        if (existingAttribute) entries.attributes.push(existingAttribute)
+        else entries.attributes.push(newAttribute)
       }
     })
 

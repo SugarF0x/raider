@@ -1,6 +1,7 @@
-import { XY } from "~/assets/types"
+import { ImageConfig, XY } from "~/assets/types"
 import { Effect, EffectType, Vulnerable } from "~/assets/entities/effects"
 import { Entity, EntityOptions } from "~/assets/entities"
+import { getCanvasCoords } from "~/assets/utils"
 
 export class Tile extends Entity {
   // Tile Type to be overridden by an actual Tile Type
@@ -21,13 +22,7 @@ export class Tile extends Entity {
     this.state = options.state || TileState.IDLE
   }
 
-  getCropPosition(): XY {
-    console.error(`Tile ${this.id} has not been assigned a type`)
-    return {
-      x: 1,
-      y: 928,
-    }
-  }
+  getImageConfig() { return super.getImageConfig(getCanvasCoords(this.position)) }
 
   setPosition(position: XY) { this.accessor.dungeon.MUTATE_TILE(() => this.position = position) }
 
