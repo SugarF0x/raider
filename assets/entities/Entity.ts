@@ -22,12 +22,12 @@ export class Entity {
     return {
       image: this.accessor.assets.tiles,
       ...position,
-      width: 62,
-      height: 62,
+      width: 60,
+      height: 60,
       crop: {
         ...this.getCropPosition(),
-        width: 52,
-        height: 52
+        width: 50,
+        height: 50
       }
     }
   }
