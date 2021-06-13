@@ -11,6 +11,13 @@
       :click="() => handleClick(n)"
     )
 
+    shop-content(
+      v-for="n in 4"
+      :key="`levelup-content-${n}`"
+      :item="entries.attributes[n-1]"
+      :position="n"
+    )
+
     v-image(:config="acceptButtonConfig")
 </template>
 
@@ -49,8 +56,9 @@ export default defineComponent({
     }
     
     onMounted(() => {
-      for (let i=0; i<4; i++) {
+      while (entries.attributes.length < 4) {
         const newAttribute = getRandomAttribute()
+        if (entries.attributes.find(attribute => attribute.type === newAttribute.type)) continue
         const existingAttribute = character.attributes.find(attribute => attribute.type === newAttribute.type)
         if (existingAttribute) entries.attributes.push(existingAttribute)
         else entries.attributes.push(newAttribute)

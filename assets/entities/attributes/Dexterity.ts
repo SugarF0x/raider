@@ -1,4 +1,5 @@
 import { Attribute, AttributeType } from "./Attribute"
+import { XY } from "~/assets/types"
 
 export class Dexterity extends Attribute {
   type = AttributeType.DEXTERITY
@@ -6,6 +7,13 @@ export class Dexterity extends Attribute {
     title: 'Dexterity',
     description: '(+1 repair, +5% shield)',
     short: 'DEX'
+  }
+
+  getCropPosition(): XY {
+    return {
+      x: 563,
+      y: 200
+    }
   }
 }
 

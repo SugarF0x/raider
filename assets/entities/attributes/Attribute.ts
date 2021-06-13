@@ -1,4 +1,5 @@
 import { Entity, EntityOptions } from "~/assets/entities"
+import { XY } from "~/assets/types"
 
 export class Attribute extends Entity {
   type = AttributeType.DEFAULT
@@ -13,6 +14,35 @@ export class Attribute extends Entity {
   constructor(options: AttributeOptions = { level: 0 }) {
     super(options)
     this.level = options.level
+  }
+
+  getTextConfigs(position: XY) {
+    const base = {
+      align: 'left',
+      width: 200,
+      fill: 'lightgray'
+    }
+    return {
+      titleConfig: {
+        text: this.text.title,
+        ...base,
+        ...position
+      },
+      descriptionConfig: {
+        text: this.text.description,
+        ...base,
+        fontSize: 14,
+        x: position.x,
+        y: position.y + 21
+      },
+      shortConfig: {
+        text: this.text.short,
+        ...base,
+        fontSize: 14,
+        x: position.x,
+        y: position.y + 43
+      }
+    }
   }
 }
 

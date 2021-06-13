@@ -1,24 +1,23 @@
 <template lang="pug">
-  v-group
+  v-group(:config="groupConfig")
     v-image(:config="imageConfig")
 
     util-text(:config="titleConfig")
     util-text(:config="descriptionConfig")
-    util-text(:config="comparisonConfig")
+    util-text(:config="shortConfig")
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, toRefs } from '@nuxtjs/composition-api'
-import { useAccessor } from "~/assets/hooks"
+import { defineComponent, PropType } from '@nuxtjs/composition-api'
 import { Attributes } from "~/assets/entities"
 
-type CombinedTypes = 
+type combinedTypes =
   | Attributes.Attribute
 
 export default defineComponent({
   props: {
     item: {
-      type: Object as PropType<CombinedTypes>,
+      type: Object as PropType<combinedTypes>,
       required: true
     },
     position: {
@@ -26,10 +25,22 @@ export default defineComponent({
       required: true
     },
   },
-  setup(props) {
-    const { position, item } = toRefs(props)
-    const accessor = useAccessor()
+  setup({ item, position }) {
+    const positionCoords = { x: 57, y: 171 + 73 * position }
 
+    const groupConfig = { listening: false }
+
+    const imageConfig = item.getImageConfig(positionCoords)
+
+    const { titleConfig, descriptionConfig, shortConfig } = item.getTextConfigs({ x: 130, y: 172 + 73 * position })
+
+    return {
+      groupConfig,
+      imageConfig,
+      titleConfig,
+      descriptionConfig,
+      shortConfig,
+    }
   },
 })
 </script>

@@ -1,4 +1,5 @@
 import { Attribute, AttributeType } from "./Attribute"
+import { XY } from "~/assets/types"
 
 export class Health extends Attribute {
   type = AttributeType.HEALTH
@@ -6,6 +7,13 @@ export class Health extends Attribute {
     title: 'Health',
     description: '+15 health',
     short: 'HP'
+  }
+
+  getCropPosition(): XY {
+    return {
+      x: 813,
+      y: 200
+    }
   }
 }
 

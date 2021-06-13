@@ -1,4 +1,5 @@
 import { Attribute, AttributeType } from "./Attribute"
+import { XY } from "~/assets/types"
 
 export class Damage extends Attribute {
   type = AttributeType.DAMAGE
@@ -6,6 +7,13 @@ export class Damage extends Attribute {
     title: 'Damage',
     description: 'Damage per sword',
     short: 'DMG'
+  }
+
+  getCropPosition(): XY {
+    return {
+      x: 713,
+      y: 200
+    }
   }
 }
 
