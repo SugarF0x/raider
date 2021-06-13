@@ -28,11 +28,7 @@ export class Entity {
         ...this.getCropPosition(),
         width: 52,
         height: 52
-      },
-      offset: {
-        x: 31,
-        y: 31
-      },
+      }
     }
   }
 }

@@ -8,15 +8,15 @@ export function getSkullStateConfig(tile: Tile) {
   const canvasCoords = getCanvasCoords(tile.position)
 
   const skullStateConfigBase = {
-    x: canvasCoords.x+7,
+    x: canvasCoords.x+38,
     width: 25,
     fontSize: 14,
     align: 'right'
   }
   return {
-    attack: Object.assign({ text: tile.currentState.attack, y: canvasCoords.y-25, fill: 'lightgray' }, skullStateConfigBase),
-    armor: Object.assign({ text: tile.currentState.armor, y: canvasCoords.y-5, fill: 'lightblue' }, skullStateConfigBase),
-    health: Object.assign({ text: tile.currentState.health, y: canvasCoords.y+15, fill: 'red' }, skullStateConfigBase),
+    attack: Object.assign({ text: tile.currentState.attack, y: canvasCoords.y+6, fill: 'lightgray' }, skullStateConfigBase),
+    armor: Object.assign({ text: tile.currentState.armor, y: canvasCoords.y+26, fill: 'lightblue' }, skullStateConfigBase),
+    health: Object.assign({ text: tile.currentState.health, y: canvasCoords.y+46, fill: 'red' }, skullStateConfigBase),
   }
 }
 

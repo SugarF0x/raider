@@ -1,8 +1,8 @@
 export const defaultState = () => ({
   turn: 0,
   score: 0,
-  stage: StageType.PLAYER_TURN,
-  shop: ShopType.NONE
+  stage: StageType.SHOP,
+  shop: ShopType.LEVELUP
 })
 
 export const state = () => (defaultState())

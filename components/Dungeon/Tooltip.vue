@@ -47,8 +47,8 @@ export default defineComponent({
 
       return {
         text: totalAttack.value + ' damage',
-        ...containText(lastSelectedTilePosition.value.x - 50),
-        y: lastSelectedTilePosition.value.y-50,
+        ...containText(lastSelectedTilePosition.value.x - 19),
+        y: lastSelectedTilePosition.value.y-19,
         fontSize: 24,
         fill: 'red',
         stroke: 'black',

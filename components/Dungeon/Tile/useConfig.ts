@@ -9,7 +9,6 @@ export function useConfig(tile: Ref<Tile>) {
   const accessor = useAccessor()
   const { dungeon } = accessor
 
-  const tileset = computed(() => accessor.assets.tiles)
   const selectedType = computed(() => dungeon.selectedType)
   const isSelectable = computed(() => isSelectableCheck(selectedType.value, tile.value.type))
 

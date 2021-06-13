@@ -29,7 +29,7 @@ export default defineComponent({
         const tile = tiles.value.find(tile => tile.id === id)
         if (!tile) throw new Error('Tile ID mismatch')
         const canvasCoords = getCanvasCoords(tile.position)
-        return [canvasCoords.x, canvasCoords.y]
+        return [canvasCoords.x+31, canvasCoords.y+31]
       })
 
       nextTick(() => {
