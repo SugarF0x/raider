@@ -1,6 +1,6 @@
 import { Entity, EntityOptions } from "~/assets/entities"
 import { TextConfig, XY } from "~/assets/types"
-import { measureText } from "~/assets/utils"
+import Konva from "konva"
 
 export class Attribute extends Entity {
   type = AttributeType.DEFAULT
@@ -55,24 +55,29 @@ export class Attribute extends Entity {
       fontSize: 14
     }
 
+    const text = new Konva.Text({
+      fontSize: 14,
+      fontFamily: 'Comic Sans MS'
+    })
+
     const base = {
       x: position.x,
       text: `${this.text.short}: `
     }
 
     const firstDigit = {
-      x: position.x + measureText(base.text, baseConfig.fontSize),
+      x: position.x + text.measureSize(base.text).width,
       text: `${this.level} `,
       fill: 'red'
     }
 
     const separator = {
-      x: firstDigit.x + measureText(firstDigit.text, baseConfig.fontSize),
+      x: firstDigit.x + text.measureSize(firstDigit.text).width,
       text: `>> `,
     }
 
     const lastDigit = {
-      x: separator.x + measureText(separator.text, baseConfig.fontSize),
+      x: separator.x + text.measureSize(separator.text).width,
       text: `${this.level + 1}`,
       fill: 'lightgreen'
     }
