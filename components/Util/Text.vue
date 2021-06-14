@@ -20,7 +20,6 @@ export default defineComponent({
       ...defaultProps, ...config.value, ...{
         text: config.value.text.toString(),
         wrap: 'none',
-        fontFamily: 'Comic Sans MS',
       },
     }))
 
@@ -37,6 +36,7 @@ const defaultProps: Partial<TextConfig> = {
   align: 'center',
   listening: false,
   fillAfterStrokeEnabled: true,
+  fontFamily: 'Comic Sans MS',
 }
 </script>
 

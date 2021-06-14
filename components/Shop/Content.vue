@@ -4,7 +4,11 @@
 
     util-text(:config="titleConfig")
     util-text(:config="descriptionConfig")
-    util-text(:config="shortConfig")
+    util-text(
+      v-for="(config, index) in comparisonConfigs"
+      :key="`comparison-text-${index}`"
+      :config="config"
+    )
 </template>
 
 <script lang="ts">
@@ -32,14 +36,15 @@ export default defineComponent({
 
     const imageConfig = item.getImageConfig(positionCoords)
 
-    const { titleConfig, descriptionConfig, shortConfig } = item.getTextConfigs({ x: 130, y: 172 + 73 * position })
+    const { titleConfig, descriptionConfig } = item.getTextConfigs({ x: 130, y: 172 + 73 * position })
+    const comparisonConfigs = item.getUpgradeTextConfig({ x: 130, y: 212 + 73 * position })
 
     return {
       groupConfig,
       imageConfig,
       titleConfig,
       descriptionConfig,
-      shortConfig,
+      comparisonConfigs,
     }
   },
 })

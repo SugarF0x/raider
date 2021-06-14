@@ -12,10 +12,10 @@
     )
 
     shop-content(
-      v-for="n in 4"
-      :key="`levelup-content-${n}`"
-      :item="entries.attributes[n-1]"
-      :position="n"
+      v-for="(entry, index) in entries.attributes"
+      :key="`levelup-content-${index+1}`"
+      :item="entry"
+      :position="index+1"
     )
 
     v-image(:config="acceptButtonConfig")

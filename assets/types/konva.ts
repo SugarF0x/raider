@@ -1,6 +1,6 @@
 import { WH, XY } from "~/assets/types/position"
 
-export interface ImageConfig extends XY, WH {
+export interface ImageConfig extends XY, Partial<WH> {
   image: HTMLImageElement
   crop?: XY & WH,
   offset?: XY,
@@ -15,6 +15,7 @@ export interface TextConfig extends XY {
   strokeWidth?: number
   fillAfterStrokeEnabled?: boolean
   fontSize?: number
+  fontFamily?: string
   align?: string
   listening?: boolean
 }

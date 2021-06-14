@@ -1,5 +1,6 @@
 import { Entity, EntityOptions } from "~/assets/entities"
-import { XY } from "~/assets/types"
+import { TextConfig, XY } from "~/assets/types"
+import { measureText } from "~/assets/utils"
 
 export class Attribute extends Entity {
   type = AttributeType.DEFAULT
@@ -27,22 +28,56 @@ export class Attribute extends Entity {
         text: this.text.title,
         ...base,
         ...position
-      },
+      } as TextConfig,
       descriptionConfig: {
         text: this.text.description,
         ...base,
         fontSize: 14,
         x: position.x,
         y: position.y + 21
-      },
+      } as TextConfig,
       shortConfig: {
         text: this.text.short,
         ...base,
         fontSize: 14,
         x: position.x,
         y: position.y + 43
-      }
+      } as TextConfig
     }
+  }
+
+  getUpgradeTextConfig(position: XY): TextConfig[] {
+    const baseConfig = {
+      y: position.y,
+      listening: false,
+      color: 'lightgray',
+      align: 'left',
+      fontSize: 14
+    }
+
+    const base = {
+      x: position.x,
+      text: `${this.text.short}: `
+    }
+
+    const firstDigit = {
+      x: position.x + measureText(base.text, baseConfig.fontSize),
+      text: `${this.level} `,
+      fill: 'red'
+    }
+
+    const separator = {
+      x: firstDigit.x + measureText(firstDigit.text, baseConfig.fontSize),
+      text: `>> `,
+    }
+
+    const lastDigit = {
+      x: separator.x + measureText(separator.text, baseConfig.fontSize),
+      text: `${this.level + 1}`,
+      fill: 'lightgreen'
+    }
+
+    return [base, firstDigit, separator, lastDigit].map(entry => ({ ...baseConfig, ...entry }))
   }
 }
 
