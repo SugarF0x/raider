@@ -4,6 +4,7 @@ import { getCanvasCoords } from "~/assets/utils"
 import { Tile } from "~/assets/entities/tiles"
 import { useAccessor } from "~/assets/hooks"
 import { ImageConfig } from "~/assets/types"
+import { EffectType } from "~/assets/entities/effects"
 
 export function useConfig(tile: Ref<Tile>) {
   const accessor = useAccessor()
@@ -16,8 +17,13 @@ export function useConfig(tile: Ref<Tile>) {
   const groupConfig = computed(() => ({ opacity: isSelectable.value ? 1 : .5 }))
   const imageConfig = computed(() => tile.value.getImageConfig())
   const effectConfigs = computed(() => {
-    const effects: ImageConfig[] = []
-    tile.value.effects.forEach(effect => { effects.push(effect.getImageConfig(getCanvasCoords(tile.value.position))) })
+    const effects: Array<ImageConfig & { type: EffectType }> = []
+    tile.value.effects.forEach(effect => {
+      effects.push({
+        ...effect.getImageConfig(getCanvasCoords(tile.value.position)),
+        type: effect.type
+      })
+    })
     return effects
   })
 

@@ -54,6 +54,17 @@ export default defineComponent({
       entries.selected.push(index)
       if (entries.selected.length > 2) entries.selected.shift()
     }
+
+    const handleConfirmation = () => {
+      const [one, two] = entries.selected
+      const selectedAttributes = [entries.attributes[one-1], entries.attributes[two-1]]
+      selectedAttributes.forEach(attribute => {
+        attribute.upgrade()
+        if (attribute.level <= 1) character.ADD_ATTRIBUTE(attribute)
+      })
+
+      instance.SET_SHOP(ShopType.NONE)
+    }
     
     onMounted(() => {
       while (entries.attributes.length < 4) {
