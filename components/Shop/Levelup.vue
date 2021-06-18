@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-group
+  v-group(:config="groupConfig")
     util-text(:config="titleConfig")
     util-text(:config="descriptionConfig")
 
@@ -18,7 +18,7 @@
       :position="index+1"
     )
 
-    v-image(:config="acceptButtonConfig")
+    v-image(:config="acceptButtonConfig" @click="handleConfirmation")
 </template>
 
 <script lang="ts">
@@ -29,11 +29,14 @@ import { useTitle } from "~/components/Shop/useTitle"
 import { Attribute } from "~/assets/entities/attributes/Attribute"
 import { getRandomAttribute } from "~/assets/entities/attributes"
 import { useAccessor } from "~/assets/hooks"
+import { ShopType } from "~/store/instance"
 
 export default defineComponent({
   setup() {
-    const { character } = useAccessor()
+    const { character, instance } = useAccessor()
     const { titleConfig, descriptionConfig } = useTitle( 'Level Up!', 'Choose 2 skills to improve', '#26ff00')
+
+    const groupConfig = { x: 450 }
 
     const entries = reactive({
       selected: [] as number[],
@@ -70,6 +73,7 @@ export default defineComponent({
       while (entries.attributes.length < 4) {
         const newAttribute = getRandomAttribute()
         if (entries.attributes.find(attribute => attribute.type === newAttribute.type)) continue
+
         const existingAttribute = character.attributes.find(attribute => attribute.type === newAttribute.type)
         if (existingAttribute) entries.attributes.push(existingAttribute)
         else entries.attributes.push(newAttribute)
@@ -77,12 +81,14 @@ export default defineComponent({
     })
 
     return {
+      groupConfig,
       entries,
       FieldType,
       acceptButtonConfig,
       titleConfig,
       descriptionConfig,
-      handleClick
+      handleClick,
+      handleConfirmation
     }
   },
 })
