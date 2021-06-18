@@ -77,20 +77,25 @@ export default defineComponent({
       return configs
     })
 
-    const displayEnemyTurn = () => {
-      if (!enemyTurnNode.value) throw new Error('Enemy Turn Layer not defined')
-      if (enemyDamage.value <= 0) return
+    const tween = computed(() => {
+      if (!enemyTurnNode.value) return undefined
 
-      const tween = new Konva.Tween({
+      const anim =  new Konva.Tween({
         node: enemyTurnNode.value,
         duration: ANIMATION.ENEMY_TURN_SCREEN_TIME/4,
         easing: Konva.Easings.EaseInOut,
-        onFinish: () => { setTimeout(() => tween.reverse(), ANIMATION.ENEMY_TURN_SCREEN_TIME/2 * 1000) },
+        onFinish: () => { setTimeout(() => { anim.reverse() }, ANIMATION.ENEMY_TURN_SCREEN_TIME/2 * 1000) },
 
         opacity: 1
       });
 
-      tween.play()
+      return anim
+    })
+
+    const displayEnemyTurn = () => {
+      if (enemyDamage.value <= 0) return
+      if (!tween.value) throw new Error('Enemy turn layer not defined')
+      tween.value.play()
     }
 
     const executeEnemyActions = () => {
@@ -108,9 +113,14 @@ export default defineComponent({
       stage,
       async () => {
       if (stage.value === StageType.ENEMY_TURN) {
+        if (enemyDamage.value <= 0) return instance.COMPLETE_STAGE()
+
         displayEnemyTurn()
         await sleep(ANIMATION.ENEMY_TURN_SCREEN_TIME/4 * 1000)
         executeEnemyActions()
+
+        await sleep(ANIMATION.ENEMY_TURN_SCREEN_TIME/4 * 3 * 1000)
+        instance.COMPLETE_STAGE()
       }
     })
 

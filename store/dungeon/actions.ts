@@ -28,8 +28,6 @@ export const actions = actionTree({ state, getters, mutations }, {
     const accessor = useStoreAccessor(this)
     const power = accessor.instance.enemyPower
 
-    await accessor.instance.SET_STAGE(StageType.COLLECTION)
-
     // set selected tiles for collection
     state.selected.forEach(id => { findTile(state, id).setState(TileState.COLLECTING) })
 
@@ -68,20 +66,7 @@ export const actions = actionTree({ state, getters, mutations }, {
         }))
       }
     }
-
-    if (accessor.dungeon.pendingEnemyDamage > 0) await sleep(500)
-    accessor.instance.SET_STAGE(StageType.ENEMY_TURN)
-    // TODO: add enemy turn or something
-
-    if (accessor.dungeon.pendingEnemyDamage > 0) await sleep(ANIMATION.ENEMY_TURN_SCREEN_TIME * 1000)
-    else await sleep(500)
-
-    // effects action stage
-    state.tiles.forEach(tile => tile.executeEffects())
-
-    accessor.instance.INC_TURN()
-    accessor.instance.SET_STAGE(StageType.PLAYER_TURN)
-  },
+  }
 })
 
 export default actions

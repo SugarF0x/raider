@@ -17,6 +17,14 @@ export class Attribute extends Entity {
     this.level = options.level
   }
 
+  upgrade() {
+    this.accessor.character.MUTATE_ATTRIBUTE(() => {
+      this.level++
+    })
+  }
+
+  // TODO: unite getTextConfig & getUpgradeTextConfig into one function
+
   getTextConfigs(position: XY) {
     const base = {
       align: 'left',

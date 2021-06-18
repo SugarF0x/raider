@@ -10,6 +10,7 @@
 <script lang="ts">
 import { onMounted, onUnmounted, nextTick, defineComponent, reactive } from "@nuxtjs/composition-api"
 import { KONVA } from "~/assets/consts"
+import { useStageMachine } from "~/components/useStageMachine"
 
 export default defineComponent({
   setup() {
@@ -56,6 +57,8 @@ export default defineComponent({
       }
       return false
     }
+
+    useStageMachine()
 
     onMounted(() => {
       // The initial resize as well as an event to handle any future resizes

@@ -33,7 +33,7 @@ export default defineComponent({
     const startDrag = () => { if (stage.value === StageType.PLAYER_TURN) accessor.SET_MOUSE_DOWN() }
     const dropDrag = () => {
       accessor.SET_MOUSE_UP()
-      if (selectedAmount.value >= 3) dungeon.collect()
+      if (selectedAmount.value >= 3) instance.COMPLETE_STAGE()
       else dungeon.CLEAR_SELECTION()
     }
 

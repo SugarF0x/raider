@@ -1,7 +1,8 @@
 import { Tile, TileOptions, TileState, TileType } from "~/assets/entities/tiles"
 import { XY } from "~/assets/types"
-import { BASE_ARMOR_BREAK_CHANCE } from "~/assets/consts/balance"
+import { BASE_ARMOR_BREAK_CHANCE, EXPERIENCE_THRESHOLD } from "~/assets/consts/balance"
 import { Effect, EffectType, Fresh } from "~/assets/entities/effects"
+import { ShopType, StageType } from "~/store/instance"
 
 export class Skull extends Tile {
   type = TileType.SKULL
@@ -68,8 +69,11 @@ export class Skull extends Tile {
     if (this.effects.find(effect => effect.type === EffectType.VULNERABLE)) {
       const newExperienceValue = this.accessor.character.experience + 1
 
-      if (newExperienceValue >= 100) this.accessor.character.SET_EXPERIENCE(newExperienceValue - 100)
-      else this.accessor.character.SET_EXPERIENCE(newExperienceValue)
+      if (newExperienceValue < EXPERIENCE_THRESHOLD) this.accessor.character.SET_EXPERIENCE(newExperienceValue)
+      else {
+        this.accessor.character.SET_EXPERIENCE(newExperienceValue - EXPERIENCE_THRESHOLD)
+        this.accessor.instance.SET_SHOP(ShopType.LEVELUP)
+      }
 
       this.accessor.instance.INC_SCORE(1)
       this.accessor.dungeon.REMOVE_TILE(this.id)
