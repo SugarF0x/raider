@@ -33,14 +33,6 @@ export function useActions(tile: ComputedRef<Tile>, tileElement: Ref<null>) {
       return anim
     })
 
-    /** Pause watcher */
-    watchEffect(() => {
-      if (state.value === TileState.MOVING && tween.value) {
-        if (isPaused.value) tween.value.pause()
-        else tween.value.play()
-      }
-    })
-
     /** State change watcher */
     watchEffect(() => {
       switch(state.value) {
@@ -54,6 +46,14 @@ export function useActions(tile: ComputedRef<Tile>, tileElement: Ref<null>) {
           tween.value.play()
           break
         }
+      }
+    })
+
+    /** Pause watcher */
+    watchEffect(() => {
+      if (state.value === TileState.MOVING && tween.value) {
+        if (isPaused.value) tween.value.pause()
+        else tween.value.play()
       }
     })
   })
