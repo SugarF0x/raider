@@ -18,7 +18,7 @@
       :position="index+1"
     )
 
-    v-image(:config="acceptButtonConfig" @click="handleConfirmation")
+    v-image(:config="acceptButtonConfig" @mousedown="handleConfirmation" @touchstart="handleConfirmation")
 </template>
 
 <script lang="ts">

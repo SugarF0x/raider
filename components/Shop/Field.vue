@@ -19,7 +19,7 @@
     )
 
     // hitbox
-    v-rect(:config="hitboxConfig" @click="click")
+    v-rect(:config="hitboxConfig" @mousedown="click" @touchstart="click")
 </template>
 
 <script lang="ts">
