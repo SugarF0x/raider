@@ -4,7 +4,7 @@ import Konva from "konva"
 
 export class Attribute extends Entity {
   type = AttributeType.DEFAULT
-  level: number
+  level = 0
 
   text = {
     title: 'Default Attribute',
@@ -12,9 +12,9 @@ export class Attribute extends Entity {
     short: 'DFT'
   }
 
-  constructor(options: AttributeOptions = { level: 0 }) {
+  constructor(options?: AttributeOptions) {
     super(options)
-    this.level = options.level
+    if (options?.level) this.level = options.level
   }
 
   upgrade() {
@@ -95,7 +95,7 @@ export class Attribute extends Entity {
 }
 
 export interface AttributeOptions extends EntityOptions {
-  level: number
+  level?: number
 }
 
 export enum AttributeType {

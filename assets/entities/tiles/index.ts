@@ -1,6 +1,6 @@
 import * as Tiles from "."
 import { SPAWN_WEIGHT } from "~/assets/consts/balance"
-import { SkullOptions, TileOptions } from "."
+import { Skull, SkullOptions, TileOptions, TileType } from "."
 
 export * from './Tile'
 export * from './Coin'
@@ -19,13 +19,17 @@ export function getRandomTile({ weights, ...options }: randomTileProps): Tiles.T
   })
 
   const result = poll[Math.floor(Math.random() * poll.length)]
-  switch (result) {
+  return getNewTile(result, options)
+}
+
+export function getNewTile(type: TileType, options: TileOptions & SkullOptions) {
+  switch (type) {
     case Tiles.TileType.COIN: return new Tiles.Coin(options)
     case Tiles.TileType.POTION: return new Tiles.Potion(options)
     case Tiles.TileType.SHIELD: return new Tiles.Shield(options)
     case Tiles.TileType.SKULL: return new Tiles.Skull(options)
     case Tiles.TileType.SWORD: return new Tiles.Sword(options)
-    default: throw new Error(`No tile of type "${result}" found`)
+    default: throw new Error(`No tile of type "${type}" found`)
   }
 }
 

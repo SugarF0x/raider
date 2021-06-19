@@ -1,12 +1,11 @@
 import { accessorType } from "~/store"
 import { ImageConfig, XY } from "~/assets/types"
-import { getCanvasCoords } from "~/assets/utils"
 
 export class Entity {
   id: number
   accessor: typeof accessorType = window.$nuxt.$accessor
 
-  constructor(options: EntityOptions) {
+  constructor(options?: EntityOptions) {
     this.id = Math.floor(Math.random() * 1000000)
   }
 
