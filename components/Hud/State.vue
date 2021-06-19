@@ -14,7 +14,7 @@ export default defineComponent({
     const { character, instance } = useAccessor()
     const armor = computed(() => character.armor)
     const totalArmor = computed(() => character.totalArmor)
-    const totalAttack = computed(() => 1)
+    const totalAttack = computed(() => character.swordPower)
     const enemyPower = computed(() => instance.enemyPower)
 
     return {

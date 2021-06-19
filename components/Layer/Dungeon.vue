@@ -34,7 +34,7 @@ export default defineComponent({
     const dropDrag = () => {
       accessor.SET_MOUSE_UP()
       if (selectedAmount.value >= 3) instance.COMPLETE_STAGE()
-      else dungeon.CLEAR_SELECTION()
+      else if (selectedAmount.value > 0) dungeon.CLEAR_SELECTION()
     }
 
     const bindEvents = () => {
