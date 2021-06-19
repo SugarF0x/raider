@@ -17,66 +17,6 @@ You can fiddle around with it yourself [here](http://raid.sugarfox.ru).
 
 ![snippet.gif](https://raw.githubusercontent.com/SugarF0x/raider/master/git/snippet.gif)
 
-## Roadmap
-
-This is my current roadmap of things to do that's **not** in any strict order.
-Given my lack of experience if this field, every point here is subject to change.
-
-###  Goal for Alpha:
-
-- [X] Setup canvas
-    - [X] Add responsive resize
-- [X] Setup dungeon field
-    - [X] Add tiles render
-    - [X] Add tile differentiation
-    - [X] Add tiles' arrow selection
-        - [X] Add backtracking
-        - [X] Add type check
-            - [X] Let same types match
-            - [X] Let skulls match with swords
-        - [X] Add proximity check
-    - [X] Add tiles' collection
-        - [X] Delete tiles on collection
-        - [X] Generate new tiles
-            - [X] Generate tiles ontop the old ones
-            - [X] Shift old ones down
-        - [X] Add functionality to tiles' collection
-            - [X] Handle coin collection
-            - [X] Handle potion collection
-            - [X] Handle sword collection
-            - [X] Handle skull collection
-            - [X] Handle shield collection
-- [ ] (?) Setup header field
-- [ ] (?) Setup footer field
-- [ ] Setup skills field
-- [ ] Setup menus field
-- [ ] Setup save/load mechanics
-- [X] Setup status field
-    - [X] Setup coin display
-    - [X] Setup health display
-    - [X] Setup power display
-        - [X] Setup current weapon power display
-        - [X] Setup current armor display
-        - [X] Setup current enemy power display
-    - [X] Setup level progression display
-    - [X] Setup upgrade progression display
-- [ ] Setup baseline gameplay necessities
-    - [X] Add shop handling
-    - [X] Add upgrade handling
-    - [ ] Add levelup handling
-    - [ ] Add difficulty progression
-        - [X] Add increasing difficulty curve
-        - [ ] Add bosses
-            - [ ] Boss mechanics
-            - [ ] Actual bosses
-    - [X] Add skull state handling
-    - [ ] Add perks (not the ones on new game screen, but like STR VIT DEX)
-    - [ ] Add spells
-        - [ ] Spell mechanics
-        - [ ] Actual spells
-    - [ ] Add buffs
-        - [X] Buff mechanics
-        - [ ] Actual buffs
 ## Build Setup
 
 ```bash
@@ -114,8 +54,10 @@ Commit syntax is subjective. Committer is to pick most appropriate commit catego
 The source code is being distributed under **MIT license** - feel free to fork and modify any files.
 Any pull requests are more than welcome, just please follow commit syntax above.
 
-If you don't know where to start, there are always low-priority [issues](https://github.com/SugarF0x/raider/issues)
-to be tackled - go ahead and pick one!
+If you don't know where to start, there may very well be low-priority
+[issues](https://github.com/SugarF0x/raider/issues) to be tackled - go ahead and pick one!
+Otherwise, you can just mess around yourself and perhaps come up with a clever solution to something - any 
+PR is a welcome PR.
 
 If you like this project and want to support its development in a way other than committing - feel free 
 to buy me a coffee :point_right::point_left:
