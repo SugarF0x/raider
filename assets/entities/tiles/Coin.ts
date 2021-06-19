@@ -1,5 +1,6 @@
 import { Tile, TileOptions, TileType } from "~/assets/entities/tiles"
 import { XY } from "~/assets/types"
+import { GOLD_THRESHOLD } from "~/assets/consts/balance"
 
 export class Coin extends Tile {
   type = TileType.COIN
@@ -18,7 +19,7 @@ export class Coin extends Tile {
   collect() {
     const newGoldValue = this.accessor.character.gold + 1
 
-    if (newGoldValue >= 100) this.accessor.character.SET_GOLD(newGoldValue - 100)
+    if (newGoldValue >= GOLD_THRESHOLD) this.accessor.character.SET_GOLD(newGoldValue - GOLD_THRESHOLD)
     else this.accessor.character.SET_GOLD(newGoldValue)
 
     this.accessor.instance.INC_SCORE(1)

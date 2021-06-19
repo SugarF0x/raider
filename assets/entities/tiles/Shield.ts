@@ -1,5 +1,6 @@
 import { Tile, TileOptions, TileType } from "~/assets/entities/tiles"
 import { XY } from "~/assets/types"
+import { UPGRADE_THRESHOLD } from "~/assets/consts/balance"
 
 export class Shield extends Tile {
   type = TileType.SHIELD
@@ -31,7 +32,7 @@ export class Shield extends Tile {
       this.accessor.character.SET_ARMOR(this.accessor.character.totalArmor)
 
       const newUpgradeValue = this.accessor.character.upgrade + excessArmorValue
-      if (newUpgradeValue >= 100) this.accessor.character.SET_UPGRADE(newUpgradeValue - 100)
+      if (newUpgradeValue >= UPGRADE_THRESHOLD) this.accessor.character.SET_UPGRADE(newUpgradeValue - UPGRADE_THRESHOLD)
       else this.accessor.character.SET_UPGRADE(newUpgradeValue)
     }
 
