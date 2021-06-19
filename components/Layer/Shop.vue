@@ -9,17 +9,19 @@
         :config="config"
       )
 
-      shop-levelup(v-if="shop === ShopType.LEVELUP")
-      //shop-upgrade(v-else-if="shop === ShopType.UPGRADE")
-      //shop-merchant(v-else-if="shop === ShopType.MERCHANT")
+      shop-levelup(v-if="shop === ShopType.LEVELUP" @finish="hideShop")
+      //shop-upgrade(v-else-if="shop === ShopType.UPGRADE" @finish="hideShop")
+      //shop-merchant(v-else-if="shop === ShopType.MERCHANT" @finish="hideShop")
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, onMounted, reactive, ref, watch } from '@nuxtjs/composition-api'
 import { useAccessor } from "~/assets/hooks"
-import { ANIMATION, KONVA } from "~/assets/consts"
+import { KONVA } from "~/assets/consts"
 import { StageType, ShopType } from "~/store/instance"
 import Konva from "konva"
+import { SHOP_ANIMATION_TIME } from "~/assets/consts/animation"
+import { sleep } from "~/assets/utils"
 
 export default defineComponent({
   setup() {
@@ -73,7 +75,7 @@ export default defineComponent({
       if (!backgroundNode.value) return undefined
       return new Konva.Tween({
         node: backgroundNode.value,
-        duration: ANIMATION.SHOP_ANIMATION_TIME,
+        duration: SHOP_ANIMATION_TIME,
         easing: Konva.Easings.EaseInOut,
 
         opacity: .5
@@ -83,35 +85,42 @@ export default defineComponent({
       if (!frameNode.value) return undefined
       return new Konva.Tween({
         node: frameNode.value,
-        duration: ANIMATION.SHOP_ANIMATION_TIME,
+        duration: SHOP_ANIMATION_TIME,
         easing: Konva.Easings.EaseInOut,
 
         offsetX: KONVA.WIDTH
       })
     })
 
+    const hideShop = async () => {
+      layerConfig.listening = false
+      backgroundTween.value?.reverse()
+      frameTween.value?.reverse()
+      await sleep(SHOP_ANIMATION_TIME/4*3 * 1000)
+      instance.SET_SHOP(ShopType.NONE)
+    }
+
+    const showShop = () => {
+      layerConfig.listening = true
+      backgroundTween.value?.play()
+      frameTween.value?.play()
+    }
+
     watch(shop, () => {
-      if (shop.value === ShopType.NONE) {
-        layerConfig.listening = false
-        backgroundTween.value?.reverse()
-        frameTween.value?.reverse()
-      } else {
-        layerConfig.listening = true
-        backgroundTween.value?.play()
-        frameTween.value?.play()
-      }
+      if (shop.value !== ShopType.NONE) showShop()
     })
 
     return {
-      backgroundElement,
-      shopFrameElement,
-      layerConfig,
-      backgroundConfig,
-      frameConfigs,
-      stage,
+      ShopType,
       StageType,
+      backgroundConfig,
+      backgroundElement,
+      frameConfigs,
+      hideShop,
+      layerConfig,
       shop,
-      ShopType
+      shopFrameElement,
+      stage,
     }
   },
 })

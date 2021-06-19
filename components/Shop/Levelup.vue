@@ -32,7 +32,8 @@ import { useAccessor } from "~/assets/hooks"
 import { ShopType } from "~/store/instance"
 
 export default defineComponent({
-  setup() {
+  emits: ['finish'],
+  setup(props, { emit }) {
     const { character, instance } = useAccessor()
     const { titleConfig, descriptionConfig } = useTitle( 'Level Up!', 'Choose 2 skills to improve', '#26ff00')
 
@@ -68,7 +69,7 @@ export default defineComponent({
         if (attribute.level <= 1) character.ADD_ATTRIBUTE(attribute)
       })
 
-      instance.SET_SHOP(ShopType.NONE)
+      emit('finish')
     }
     
     onMounted(() => {
