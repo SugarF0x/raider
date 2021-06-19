@@ -1,7 +1,7 @@
 import { TileType } from "~/assets/entities/tiles"
 
 export const UPGRADE_THRESHOLD = 100
-export const EXPERIENCE_THRESHOLD = 100
+export const EXPERIENCE_THRESHOLD = 5
 export const GOLD_THRESHOLD = 100
 export const SPAWN_WEIGHT: Record<TileType, number> = {
   default: 0,

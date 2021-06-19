@@ -15,6 +15,11 @@ export class Defense extends Attribute {
       y: 200
     }
   }
+
+  upgrade() {
+    super.upgrade()
+    this.accessor.character.SET_ARMOR(this.accessor.character.armor + 1)
+  }
 }
 
 export function isDefense(attribute: Attribute): attribute is Defense {

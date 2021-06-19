@@ -15,6 +15,11 @@ export class Vitality extends Attribute {
       y: 200
     }
   }
+
+  upgrade() {
+    super.upgrade()
+    this.accessor.character.SET_HEALTH(this.accessor.character.health + 5)
+  }
 }
 
 export function isVitality(attribute: Attribute): attribute is Vitality {

@@ -15,6 +15,11 @@ export class Health extends Attribute {
       y: 200
     }
   }
+
+  upgrade() {
+    super.upgrade()
+    this.accessor.character.SET_HEALTH(this.accessor.character.health + 15)
+  }
 }
 
 export function isHealth(attribute: Attribute): attribute is Health {
