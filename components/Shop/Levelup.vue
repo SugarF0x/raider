@@ -59,6 +59,8 @@ export default defineComponent({
     }
 
     const handleConfirmation = () => {
+      if (entries.selected.length < 2) return
+
       const [one, two] = entries.selected
       const selectedAttributes = [entries.attributes[one-1], entries.attributes[two-1]]
       selectedAttributes.forEach(attribute => {
