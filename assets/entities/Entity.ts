@@ -13,7 +13,7 @@ export class Entity {
     console.error(`Entity ${this.id} crop has not been reassigned.`)
     return {
       x: 1,
-      y: 928,
+      y: 929,
     }
   }
 

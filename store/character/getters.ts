@@ -12,7 +12,13 @@ export const getters = getterTree(state, {
     for (const type of getEnumKeys(AttributeType)) {
       const fixedType = type.toLowerCase() as AttributeType
       switch(fixedType) {
-        // TODO: add special filters for strength, dexterity, vitality & luck since they can be also present on equipment
+        case AttributeType.VITALITY: {
+          let vitality = 0
+          vitality += state.attributes.find(attr => attr.type === AttributeType.VITALITY)?.level || 0
+          vitality += state.items.find(item => item.type === ItemType.ACCESSORY)?.stat.level || 0
+          attributes[AttributeType.VITALITY] = vitality
+          break
+        }
         case AttributeType.DAMAGE: {
           let damage = 0
           damage += state.attributes.find(attr => attr.type === AttributeType.DAMAGE)?.level || 0

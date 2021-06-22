@@ -2,8 +2,11 @@
   v-group(:config="groupConfig")
     v-image(:config="imageConfig")
 
-    util-text(:config="titleConfig")
-    util-text(:config="descriptionConfig")
+    util-text(
+      v-for="(config, index) in textConfigs"
+      :key="`item-text-config-${index}`"
+      :config="config"
+    )
     util-text(
       v-for="(config, index) in comparisonConfigs"
       :key="`comparison-text-${index}`"
@@ -12,11 +15,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@nuxtjs/composition-api'
-import { Attributes } from "~/assets/entities"
+import { computed, defineComponent, PropType, toRefs } from '@nuxtjs/composition-api'
+import { Attributes, Items } from "~/assets/entities"
 
 type combinedTypes =
   | Attributes.Attribute
+  | Items.Item
 
 export default defineComponent({
   props: {
@@ -29,21 +33,21 @@ export default defineComponent({
       required: true
     },
   },
-  setup({ item, position }) {
-    const positionCoords = { x: 57, y: 171 + 73 * position }
+  setup(props) {
+    const { item, position } = toRefs(props)
+    const positionCoords = { x: 57, y: 171 + 73 * position.value }
 
     const groupConfig = { listening: false }
 
-    const imageConfig = item.getImageConfig(positionCoords)
+    const imageConfig = computed(() => item.value.getImageConfig(positionCoords))
 
-    const { titleConfig, descriptionConfig } = item.getTextConfigs({ x: 130, y: 172 + 73 * position })
-    const comparisonConfigs = item.getUpgradeTextConfig({ x: 130, y: 212 + 73 * position })
+    const textConfigs = computed(() => item.value.getTextConfigs({ x: 130, y: 172 + 73 * position.value }))
+    const comparisonConfigs = computed(() => item.value.getUpgradeTextConfigs({ x: 130, y: 212 + 73 * position.value }))
 
     return {
       groupConfig,
       imageConfig,
-      titleConfig,
-      descriptionConfig,
+      textConfigs,
       comparisonConfigs,
     }
   },

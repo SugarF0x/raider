@@ -1,7 +1,8 @@
 import { Entity, EntityOptions } from "~/assets/entities"
-import { Attribute } from "~/assets/entities/attributes"
+import { Attribute, getNewAttribute } from "~/assets/entities/attributes"
 import { BASE_DOUBLE_UPGRADE_CHANCE } from "~/assets/consts/balance"
-import { ImageConfig, XY } from "~/assets/types"
+import { ImageConfig, TextConfig, XY } from "~/assets/types"
+import Konva from "konva"
 
 export class Item extends Entity {
   type = ItemType.DEFAULT
@@ -11,14 +12,18 @@ export class Item extends Entity {
 
   constructor(options?: ItemOptions) {
     super(options)
-    this.name = `${this.type} #${this.id%80+1}`
+    this.name = `Placeholder #${this.id%80+1}`
 
     // mutations based
     if (options?.sourceItem) {
       Object.assign(this.buffs, options.sourceItem.buffs)
-      this.stat.upgrade()
-      // double upgrade chance
-      if (Math.random() < BASE_DOUBLE_UPGRADE_CHANCE) this.stat.upgrade()
+      const newLevel = options.sourceItem.stat.level
+        // base upgrade
+        + 1
+        // double upgrade chance
+        + (Math.random() < BASE_DOUBLE_UPGRADE_CHANCE ? 1 : 0)
+
+      this.stat = getNewAttribute(options.sourceItem.stat.type, { level: newLevel })
     }
   }
 
@@ -41,19 +46,55 @@ export class Item extends Entity {
     })
   }
 
-  getIconConfig(position: XY): ImageConfig {
-    if (this.type === ItemType.DEFAULT) throw new Error(`item ${this.id} does not have an assigned icon config`)
+  getTextConfigs(position: XY): TextConfig[] {
+    const base = {
+      align: 'left',
+      width: 200,
+      fill: 'lightgray'
+    }
+
+    const titleConfig = {
+      text: this.name,
+      ...base,
+      ...position
+    }
+
+    return [titleConfig]
+  }
+
+  getUpgradeTextConfigs(position: XY, comparison?: Item): TextConfig[] {
+    const baseConfig = {
+      y: position.y,
+      listening: false,
+      color: 'lightgray',
+      align: 'left',
+      fontSize: 14
+    }
+
+    const text = new Konva.Text({
+      fontSize: 14,
+      fontFamily: 'Comic Sans MS'
+    })
+
+    const configs = []
+
+    const mainStat = this.stat.level > 0 ? {
+      x: position.x,
+      text: `${this.stat.text.short} ${this.stat.level} `
+    } : undefined
+    if (mainStat) configs.push(mainStat)
+
+    this.buffs.forEach(buff => {
+      // TODO: add buff text w/ possible comparison once buffs are in
+    })
+
+    return configs.map(entry => ({ ...baseConfig, ...entry }))
+  }
+
+  getImageConfig(position: XY): ImageConfig {
     return {
-      ...position,
-      image: this.accessor.assets.icons,
-      width: 62,
-      height: 62,
-      crop: {
-        x: 0,
-        y: 0,
-        width: 50,
-        height: 50
-      }
+      ...super.getImageConfig(position),
+      image: this.accessor.assets.icons
     }
   }
 }

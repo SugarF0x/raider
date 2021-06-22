@@ -9,6 +9,9 @@ export const defaultState = () => ({
   upgrade: 0,
   experience: 0,
   level: 1,
+
+  // TODO: refactor these to be explicitly set objects since they dont really change much? question mark?
+
   attributes: [] as Attribute[],
   items: [] as Item[]
 })

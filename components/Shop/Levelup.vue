@@ -29,12 +29,11 @@ import { useTitle } from "~/components/Shop/useTitle"
 import { Attribute } from "~/assets/entities/attributes/Attribute"
 import { getRandomAttribute } from "~/assets/entities/attributes"
 import { useAccessor } from "~/assets/hooks"
-import { ShopType } from "~/store/instance"
 
 export default defineComponent({
   emits: ['finish'],
   setup(props, { emit }) {
-    const { character, instance } = useAccessor()
+    const { character } = useAccessor()
     const { titleConfig, descriptionConfig } = useTitle( 'Level Up!', 'Choose 2 skills to improve', '#26ff00')
 
     const groupConfig = { x: 450 }

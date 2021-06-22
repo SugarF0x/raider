@@ -20,5 +20,5 @@ export enum ShopType {
   NONE = "none",
   LEVELUP = 'levelup',
   UPGRADE = 'upgrade',
-  MERCHANT = 'merchant'
+  ITEM = 'item'
 }

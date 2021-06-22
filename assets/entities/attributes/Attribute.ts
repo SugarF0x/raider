@@ -25,36 +25,37 @@ export class Attribute extends Entity {
 
   // TODO: unite getTextConfig & getUpgradeTextConfig into one function
 
-  getTextConfigs(position: XY) {
+  getTextConfigs(position: XY): TextConfig[] {
     const base = {
       align: 'left',
       width: 200,
       fill: 'lightgray'
     }
-    return {
-      titleConfig: {
-        text: this.text.title,
-        ...base,
-        ...position
-      } as TextConfig,
-      descriptionConfig: {
-        text: this.text.description,
-        ...base,
-        fontSize: 14,
-        x: position.x,
-        y: position.y + 21
-      } as TextConfig,
-      shortConfig: {
-        text: this.text.short,
-        ...base,
-        fontSize: 14,
-        x: position.x,
-        y: position.y + 43
-      } as TextConfig
+
+    const titleConfig = {
+      text: this.text.title,
+      ...base,
+      ...position
     }
+    const descriptionConfig = {
+      text: this.text.description,
+      ...base,
+      fontSize: 14,
+      x: position.x,
+      y: position.y + 21
+    }
+    // const shortConfig = {
+    //   text: this.text.short,
+    //   ...base,
+    //   fontSize: 14,
+    //   x: position.x,
+    //   y: position.y + 43
+    // }
+
+    return [titleConfig, descriptionConfig]
   }
 
-  getUpgradeTextConfig(position: XY): TextConfig[] {
+  getUpgradeTextConfigs(position: XY): TextConfig[] {
     const baseConfig = {
       y: position.y,
       listening: false,

@@ -17,7 +17,7 @@ import {
   Charisma,
   Damage,
   Defense,
-  AttributeType
+  AttributeType, AttributeOptions,
 } from "./"
 
 export function getRandomAttribute() {
@@ -29,16 +29,19 @@ export function getRandomAttribute() {
   }
 
   const type = attributes[Math.floor(Math.random() * attributes.length)]
+  return getNewAttribute(type)
+}
 
+export function getNewAttribute(type: AttributeType, options?: AttributeOptions) {
   switch(type) {
-    case AttributeType.CHARISMA: return new Charisma()
-    case AttributeType.DAMAGE: return new Damage()
-    case AttributeType.DEFENSE: return new Defense()
-    case AttributeType.DEXTERITY: return new Dexterity()
-    case AttributeType.HEALTH: return new Health()
-    case AttributeType.LUCK: return new Luck()
-    case AttributeType.STRENGTH: return new Strength()
-    case AttributeType.VITALITY: return new Vitality()
+    case AttributeType.CHARISMA: return new Charisma(options)
+    case AttributeType.DAMAGE: return new Damage(options)
+    case AttributeType.DEFENSE: return new Defense(options)
+    case AttributeType.DEXTERITY: return new Dexterity(options)
+    case AttributeType.HEALTH: return new Health(options)
+    case AttributeType.LUCK: return new Luck(options)
+    case AttributeType.STRENGTH: return new Strength(options)
+    case AttributeType.VITALITY: return new Vitality(options)
     default: throw new Error(`No attribute of type "${type}" found`)
   }
 }

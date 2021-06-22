@@ -14,8 +14,9 @@ export const mutations = mutationTree(state, {
   ADD_ITEM: (state, item: Item) => {
     const currentItem = state.items.find(entry => entry.type === item.type)
     if (currentItem) {
+      // TODO: perform item stat and buffs comparison to adjust for VIT/HEALTH/DEFENSE changes
       const index = state.items.indexOf(currentItem)
-      if (index) state.items.splice(index,1)
+      if (index > -1) state.items.splice(index,1)
     }
     state.items.push(item)
   },

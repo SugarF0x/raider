@@ -1,6 +1,7 @@
 import { Tile, TileOptions, TileType } from "~/assets/entities/tiles"
 import { XY } from "~/assets/types"
 import { GOLD_THRESHOLD } from "~/assets/consts/balance"
+import { ShopType } from "~/store/instance"
 
 export class Coin extends Tile {
   type = TileType.COIN
@@ -19,8 +20,11 @@ export class Coin extends Tile {
   collect() {
     const newGoldValue = this.accessor.character.gold + 1
 
-    if (newGoldValue >= GOLD_THRESHOLD) this.accessor.character.SET_GOLD(newGoldValue - GOLD_THRESHOLD)
-    else this.accessor.character.SET_GOLD(newGoldValue)
+    if (newGoldValue < GOLD_THRESHOLD) this.accessor.character.SET_GOLD(newGoldValue)
+    else {
+      this.accessor.character.SET_GOLD(newGoldValue - GOLD_THRESHOLD)
+      this.accessor.instance.SET_SHOP(ShopType.ITEM)
+    }
 
     this.accessor.instance.INC_SCORE(1)
     this.accessor.dungeon.REMOVE_TILE(this.id)
