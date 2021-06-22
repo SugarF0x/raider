@@ -8,7 +8,7 @@
       :key="`levelup-field-${n}`"
       :type="entries.selected.includes(n) ? FieldType.SELECTED : FieldType.DEFAULT"
       :position="n"
-      :click="() => handleClick(n)"
+      @click="handleClick(n)"
     )
 
     shop-content(

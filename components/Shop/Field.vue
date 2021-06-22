@@ -19,7 +19,7 @@
     )
 
     // hitbox
-    v-rect(:config="hitboxConfig" @mousedown="click" @touchstart="click")
+    v-rect(:config="hitboxConfig" @mousedown="handleClick" @touchstart="handleClick")
 </template>
 
 <script lang="ts">
@@ -35,14 +35,13 @@ export default defineComponent({
     position: {
       type: Number as PropType<number>,
       required: true
-    },
-    click: {
-      type: Function as PropType<() => void>,
-      default: () => {}
     }
   },
-  setup(props) {
+  emits: ['click'],
+  setup(props, { emit }) {
     const { position } = toRefs(props)
+
+    const handleClick = () => { emit('click') }
 
     const baseItemFrameConfig = useMarkdownEnhancer(`0/64:1-382/53;T`)
     const baseSelectedItemFrameConfig = useMarkdownEnhancer(`0/64:55-382/53;T`)
@@ -78,7 +77,8 @@ export default defineComponent({
       selectedItemBackgroundConfig,
       currentItemBackgroundConfig,
       hitboxConfig,
-      FieldType
+      FieldType,
+      handleClick
     }
   },
 })
