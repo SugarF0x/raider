@@ -20,7 +20,8 @@ export const mutations = mutationTree(state, {
     state.items.push(item)
   },
   MUTATE_ATTRIBUTE: (state, callback: () => void) => { callback() },
-  MUTATE_ITEM: (state, callback: () => void) => { callback() }
+  MUTATE_ITEM: (state, callback: () => void) => { callback() },
+  LEVELUP: state => { state.level++ }
 })
 
 export default mutations

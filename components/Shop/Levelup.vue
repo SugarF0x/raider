@@ -69,6 +69,8 @@ export default defineComponent({
         if (attribute.level <= 1) character.ADD_ATTRIBUTE(attribute)
       })
 
+      character.LEVELUP()
+      character.SET_HEALTH(character.totalHealth)
       emit('finish')
     }
     
