@@ -1,6 +1,6 @@
 <template lang="pug">
   v-group
-    util-text(:config="{ x: 20, y: 597, fill: 'yellow', text: `${gold}/100` }")
+    util-text(:config="{ x: 20, y: 597, fill: 'yellow', text: `${gold}/${GOLD_THRESHOLD}` }")
 
     v-image(
       v-for="(column, index) in getGoldColumns()"
@@ -13,6 +13,7 @@
 import { defineComponent, computed } from "@nuxtjs/composition-api"
 import { useAccessor } from "~/assets/hooks"
 import { useMarkdownEnhancer } from "~/assets/hooks/useMarkdownEnhancer"
+import { GOLD_THRESHOLD } from "~/assets/consts/balance"
 
 export default defineComponent({
   setup() {
@@ -22,11 +23,12 @@ export default defineComponent({
     const getGoldColumns = () => {
       let cropped = []
 
-      let columns = Math.floor(gold.value / 20)
-      if (gold.value % 20 > 0) columns++
+      const singleColumnVolume = GOLD_THRESHOLD / 5
+      let columns = Math.floor(gold.value / singleColumnVolume)
+      if (gold.value % singleColumnVolume > 0) columns++
 
       for (let i = 0; i < columns; i++) {
-        let fill = (gold.value - Math.floor(gold.value / 20) * 20) / 20 || 1
+        let fill = (gold.value - Math.floor(gold.value / singleColumnVolume) * singleColumnVolume) / singleColumnVolume || 1
         cropped.push(getColumn(i, i+1 === columns ? fill : 1))
       }
 
@@ -36,6 +38,7 @@ export default defineComponent({
     return {
       getGoldColumns,
       gold,
+      GOLD_THRESHOLD
     }
   },
 })
