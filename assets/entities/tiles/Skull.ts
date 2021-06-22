@@ -78,10 +78,8 @@ export class Skull extends Tile {
       this.accessor.instance.INC_SCORE(1)
       this.accessor.dungeon.REMOVE_TILE(this.id)
     } else {
-      this.accessor.dungeon.MUTATE_TILE(() => {
-        this.applyDamage(this.accessor.character.totalAttack)
-        this.setState(TileState.IDLE)
-      })
+      this.applyDamage(this.accessor.character.totalAttack)
+      this.setState(TileState.IDLE)
     }
   }
 
