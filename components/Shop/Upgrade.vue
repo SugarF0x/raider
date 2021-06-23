@@ -58,7 +58,13 @@ export default defineComponent({
     const handleConfirmation = () => {
       if (entries.selected === 0) return
 
-      // character.ADD_ITEM(entries.items[entries.selected-1])
+      const buffEntry = entries.buffs[entries.selected-1]
+      const targetItem = character.items.find(item => item.type === buffEntry.target)
+      if (!targetItem) throw new Error(`No item of type ${buffEntry.target} found on character`)
+
+      if (buffEntry.buff.level === 0) character.MUTATE_ITEM(() => { targetItem.addBuff(buffEntry.buff) })
+      buffEntry.buff.upgrade()
+
       entries.selected = 0
 
       emit('finish')
@@ -75,7 +81,7 @@ export default defineComponent({
 
         const currentBuff = currentItem.buffs.find(buff => buff.type === buffType)
         if (currentBuff) entries.buffs.push({ target, buff: currentBuff })
-        else entries.buffs.push({ target, buff: getNewBuff(buffType) })
+        else entries.buffs.push({ target, buff: getNewBuff(buffType, { level: 0 }) })
       }
     })
 
