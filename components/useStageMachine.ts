@@ -1,5 +1,5 @@
 import { useAccessor } from "~/assets/hooks"
-import { computed, ref, watch, watchEffect } from "@nuxtjs/composition-api"
+import { computed, ref, watchEffect } from "@nuxtjs/composition-api"
 import { StageType } from "~/store/instance"
 import { sleep } from "~/assets/utils"
 import { ANIMATION } from "~/assets/consts"

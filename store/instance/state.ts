@@ -13,7 +13,8 @@ export default state
 export enum StageType {
   PLAYER_TURN = 'player turn',
   ENEMY_TURN = 'enemy turn',
-  COLLECTION = 'collection'
+  COLLECTION = 'collection',
+  GAME_OVER = 'game over'
 }
 
 export enum ShopType {

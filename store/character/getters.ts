@@ -4,7 +4,6 @@ import { TileType } from "~/assets/entities/tiles"
 import { AttributeType } from "~/assets/entities/attributes"
 import { BASE_HEALTH_VALUE } from "~/assets/consts/balance"
 import { getEnumKeys } from "~/assets/utils"
-import { ItemType } from "~/assets/entities/items"
 import { BuffType } from "~/assets/entities/buffs"
 
 export const getters = getterTree(state, {
@@ -16,28 +15,40 @@ export const getters = getterTree(state, {
         case AttributeType.STRENGTH: {
           let strength = 0
           strength += state.attributes.find(attr => attr.type === AttributeType.STRENGTH)?.level || 0
-          strength += state.items.filter(item => item.assignableBuffs.includes(BuffType.STRENGTH)).reduce((acc, item) => acc + item.buffs[0].level, 0)
+          strength += state.items
+            .filter(item => !!item.buffs.find(buff => buff.type === BuffType.STRENGTH))
+            .map(item => item.buffs.find(buff => buff.type === BuffType.STRENGTH))
+            .reduce((acc, buff) => acc + (buff?.level || 0), 0)
           attributes[AttributeType.STRENGTH] = strength
           break
         }
         case AttributeType.VITALITY: {
           let vitality = 0
           vitality += state.attributes.find(attr => attr.type === AttributeType.VITALITY)?.level || 0
-          vitality += state.items.filter(item => item.assignableBuffs.includes(BuffType.VITALITY)).reduce((acc, item) => acc + item.buffs[0].level, 0)
+          vitality += state.items
+            .filter(item => !!item.buffs.find(buff => buff.type === BuffType.VITALITY))
+            .map(item => item.buffs.find(buff => buff.type === BuffType.VITALITY))
+            .reduce((acc, buff) => acc + (buff?.level || 0), 0)
           attributes[AttributeType.VITALITY] = vitality
           break
         }
         case AttributeType.DAMAGE: {
           let damage = 0
           damage += state.attributes.find(attr => attr.type === AttributeType.DAMAGE)?.level || 0
-          damage += state.items.filter(item => item.assignableBuffs.includes(BuffType.DAMAGE)).reduce((acc, item) => acc + item.buffs[0].level, 0)
+          damage += state.items
+            .filter(item => !!item.buffs.find(buff => buff.type === BuffType.DAMAGE))
+            .map(item => item.buffs.find(buff => buff.type === BuffType.DAMAGE))
+            .reduce((acc, buff) => acc + (buff?.level || 0), 0)
           attributes[AttributeType.DAMAGE] = damage
           break
         }
         case AttributeType.DEFENSE: {
           let defense = 0
           defense += state.attributes.find(attr => attr.type === AttributeType.DEFENSE)?.level || 0
-          defense += state.items.filter(item => item.assignableBuffs.includes(BuffType.DEFENSE)).reduce((acc, item) => acc + item.buffs[0].level, 0)
+          defense += state.items
+            .filter(item => !!item.buffs.find(buff => buff.type === BuffType.DEFENSE))
+            .map(item => item.buffs.find(buff => buff.type === BuffType.DEFENSE))
+            .reduce((acc, buff) => acc + (buff?.level || 0), 0)
           attributes[AttributeType.DEFENSE] = defense
           break
         }

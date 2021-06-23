@@ -5,6 +5,7 @@
     layer-dungeon
     layer-enemy-turn
     layer-shop
+    layer-game-over
 </template>
 
 <script lang="ts">

@@ -120,7 +120,7 @@ export default defineComponent({
         executeEnemyActions()
 
         await sleep(ANIMATION.ENEMY_TURN_SCREEN_TIME/4 * 3 * 1000)
-        instance.COMPLETE_STAGE()
+        if (stage.value === StageType.ENEMY_TURN) instance.COMPLETE_STAGE()
       }
     })
 
