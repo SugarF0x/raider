@@ -75,7 +75,7 @@ export class Skull extends Tile {
         this.accessor.instance.SET_SHOP(ShopType.LEVELUP)
       }
 
-      this.accessor.instance.INC_SCORE(1)
+      this.accessor.instance.INC_SCORE(10)
       this.accessor.dungeon.REMOVE_TILE(this.id)
     } else {
       this.applyDamage(this.accessor.character.totalAttack)
