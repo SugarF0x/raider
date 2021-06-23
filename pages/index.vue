@@ -20,10 +20,7 @@ export default defineComponent({
     const loadedAssets = computed(() => accessor.loadedAssets)
     const totalAssets = computed(() => accessor.totalAssets)
 
-    onMounted(async() => {
-      await accessor.initAssetsLoading()
-      await accessor.resetStore()
-    })
+    onMounted(() => { accessor.resetStore() })
     onUnmounted(accessor.resetStore)
 
     return {

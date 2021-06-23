@@ -10,9 +10,10 @@ export const actions = actionTree({ state, getters, mutations }, {
     accessor.LOAD_ASSETS()
   },
   async resetStore(): Promise<void> {
-    // accessor.RESET_STATE()
-    // await accessor.initAssetsLoading()
     const accessor = useStoreAccessor(this)
+    accessor.RESET_STATE()
+    await accessor.initAssetsLoading()
+
     accessor.character.RESET_STATE()
     accessor.instance.RESET_STATE()
     accessor.dungeon.RESET_STATE()

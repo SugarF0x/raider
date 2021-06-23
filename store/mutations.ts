@@ -2,7 +2,7 @@ import { mutationTree } from "typed-vuex"
 import { state, defaultState } from "./"
 
 export const mutations = mutationTree(state, {
-  // RESET_STATE: state => { Object.assign(state, defaultState()) },
+  RESET_STATE: state => { Object.assign(state, defaultState()) },
   LOAD_ASSETS: state => {
     state.assets.tiles.src = require('~/assets/tileset/tiles-custom.png')
     state.assets.icons.src = require('~/assets/tileset/icons.png')
