@@ -5,6 +5,12 @@ export class GoldPerCoin extends Buff {
   type = BuffType.GOLD_PER_COIN
   maxLevel = 4
 
+  text = {
+    title: 'Gold per coin',
+    description: '+25% gold per coin collected',
+    short: 'GPC'
+  }
+
   constructor(options?: GoldPerCoinOptions) {
     super(options)
   }

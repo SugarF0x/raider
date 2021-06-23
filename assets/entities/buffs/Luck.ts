@@ -4,6 +4,12 @@ import { XY } from "~/assets/types"
 export class Luck extends Buff {
   type = BuffType.LUCK
 
+  text = {
+    title: 'Luck',
+    description: '+5% bonus coin chance',
+    short: 'LCK'
+  }
+
   constructor(options?: LuckOptions) {
     super(options)
   }

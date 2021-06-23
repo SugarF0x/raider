@@ -4,6 +4,12 @@ import { XY } from "~/assets/types"
 export class Vitality extends Buff {
   type = BuffType.VITALITY
 
+  text = {
+    title: 'Vitality',
+    description: '+5 health & +5% bonus potion chance',
+    short: 'DFT'
+  }
+
   constructor(options?: VitalityOptions) {
     super(options)
   }

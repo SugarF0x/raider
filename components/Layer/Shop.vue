@@ -11,7 +11,7 @@
 
       shop-levelup(v-if="shop === ShopType.LEVELUP" @finish="hideShop")
       shop-item(v-else-if="shop === ShopType.ITEM" @finish="hideShop")
-      //shop-upgrade(v-else-if="shop === ShopType.UPGRADE" @finish="hideShop")
+      shop-upgrade(v-else-if="shop === ShopType.UPGRADE" @finish="hideShop")
 </template>
 
 <script lang="ts">

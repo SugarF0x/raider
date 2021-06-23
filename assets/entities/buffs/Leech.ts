@@ -4,6 +4,12 @@ import { XY } from "~/assets/types"
 export class Leech extends Buff {
   type = BuffType.LEECH
 
+  text = {
+    title: 'Leech',
+    description: '+5% damage dealt restores health',
+    short: 'LCH'
+  }
+
   constructor(options?: LeechOptions) {
     super(options)
   }

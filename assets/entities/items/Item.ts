@@ -3,12 +3,14 @@ import { Attribute, getNewAttribute } from "~/assets/entities/attributes"
 import { BASE_DOUBLE_UPGRADE_CHANCE } from "~/assets/consts/balance"
 import { ImageConfig, TextConfig, XY } from "~/assets/types"
 import Konva from "konva"
+import { Buff, BuffType } from "~/assets/entities/buffs"
 
 export class Item extends Entity {
   type = ItemType.DEFAULT
   stat = new Attribute()
-  buffs: any[] = []
+  buffs: Buff[] = []
   name: string
+  assignableBuffs: BuffType[] = []
 
   constructor(options?: ItemOptions) {
     super(options)
@@ -27,16 +29,14 @@ export class Item extends Entity {
     }
   }
 
-  addBuff(buff: any) {
+  addBuff(buff: Buff) {
     this.accessor.character.MUTATE_ITEM(() => {
-      const newBuff: any = 'aids'
-
-      this.removeBuff(buff)
-      this.buffs.push(newBuff)
+      this.removeBuff(buff.type)
+      this.buffs.push(buff)
     })
   }
 
-  removeBuff(buff: any) {
+  removeBuff(buff: BuffType) {
     this.accessor.character.MUTATE_ITEM(() => {
       const currentBuff = this.buffs.find(entry => entry.type === buff)
       if (currentBuff) {
@@ -46,6 +46,7 @@ export class Item extends Entity {
     })
   }
 
+  // TODO: refactor getTextConfigs & getUpgradeTextConfigs into a singe function
   getTextConfigs(position: XY): TextConfig[] {
     const base = {
       align: 'left',

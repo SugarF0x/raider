@@ -1,9 +1,11 @@
 import { Item, ItemOptions, ItemType } from "~/assets/entities/items/Item"
 import { Vitality } from "~/assets/entities/attributes"
 import { XY } from "~/assets/types"
+import { BuffType } from "~/assets/entities/buffs"
 
 export class Accessory extends Item {
   type = ItemType.ACCESSORY
+  assignableBuffs: BuffType[] = [BuffType.VITALITY, BuffType.QUICK, BuffType.LUCK, BuffType.REGENERATION]
 
   constructor(options?: AccessoryOptions) {
     super(options)

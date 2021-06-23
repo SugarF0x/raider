@@ -4,6 +4,12 @@ import { XY } from "~/assets/types"
 export class Strength extends Buff {
   type = BuffType.STRENGTH
 
+  text = {
+    title: 'Strength',
+    description: '+1 base damage & +5% bonus xp chance',
+    short: 'STR'
+  }
+
   constructor(options?: StrengthOptions) {
     super(options)
   }

@@ -4,6 +4,12 @@ import { XY } from "~/assets/types"
 export class BaseDamage extends Buff {
   type = BuffType.BASE_DAMAGE
 
+  text = {
+    title: 'Base Damage',
+    description: 'Damage from bare hands',
+    short: 'BDM'
+  }
+
   constructor(options?: BaseDamageOptions) {
     super(options)
   }

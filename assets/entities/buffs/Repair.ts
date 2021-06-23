@@ -4,6 +4,12 @@ import { XY } from "~/assets/types"
 export class Repair extends Buff {
   type = BuffType.REPAIR
 
+  text = {
+    title: 'Repair',
+    description: 'Armor restored per shield',
+    short: 'RPR'
+  }
+
   constructor(options?: RepairOptions) {
     super(options)
   }

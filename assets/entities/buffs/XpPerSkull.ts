@@ -5,6 +5,12 @@ export class XpPerSkull extends Buff {
   type = BuffType.XP_PER_SKULL
   maxLevel = 4
 
+  text = {
+    title: 'XP per skull',
+    description: '+25% xp per skull',
+    short: 'XPS'
+  }
+
   constructor(options?: XpPerSkullOptions) {
     super(options)
   }

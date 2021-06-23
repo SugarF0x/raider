@@ -4,6 +4,12 @@ import { XY } from "~/assets/types"
 export class Blunting extends Buff {
   type = BuffType.BLUNTING
 
+  text = {
+    title: 'Blunting',
+    description: 'Enemy attack reduction',
+    short: 'BLT'
+  }
+
   constructor(options?: BluntingOptions) {
     super(options)
   }

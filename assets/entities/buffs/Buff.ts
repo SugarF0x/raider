@@ -1,9 +1,17 @@
 import { Entity, EntityOptions } from "~/assets/entities"
+import { TextConfig, XY } from "~/assets/types"
+import Konva from "konva"
 
 export class Buff extends Entity {
   type = BuffType.DEFAULT
   level = 1
   maxLevel = 99
+
+  text = {
+    title: 'Default Buff',
+    description: 'Default description',
+    short: 'DFT'
+  }
 
   constructor(options?: BuffOptions) {
     super(options)
@@ -12,6 +20,61 @@ export class Buff extends Entity {
 
   upgrade() {
     this.accessor.character.MUTATE_BUFF(() => { if (this.level + 1 <= this.maxLevel) this.level++ })
+  }
+
+  getTextConfigs(position: XY): TextConfig[] {
+    const base = {
+      align: 'left',
+      width: 200,
+      fill: 'lightgray'
+    }
+
+    const titleConfig = {
+      text: this.text.title,
+      ...base,
+      ...position
+    }
+
+    return [titleConfig]
+  }
+
+  getUpgradeTextConfigs(position: XY): TextConfig[] {
+    const baseConfig = {
+      y: position.y,
+      listening: false,
+      color: 'lightgray',
+      align: 'left',
+      fontSize: 14
+    }
+
+    const text = new Konva.Text({
+      fontSize: 14,
+      fontFamily: 'Comic Sans MS'
+    })
+
+    const base = {
+      x: position.x,
+      text: `${this.text.short}: `
+    }
+
+    const firstDigit = {
+      x: position.x + text.measureSize(base.text).width,
+      text: `${this.level} `,
+      fill: 'red'
+    }
+
+    const separator = {
+      x: firstDigit.x + text.measureSize(firstDigit.text).width,
+      text: `>> `,
+    }
+
+    const lastDigit = {
+      x: separator.x + text.measureSize(separator.text).width,
+      text: `${this.level + 1}`,
+      fill: 'lightgreen'
+    }
+
+    return [base, firstDigit, separator, lastDigit].map(entry => ({ ...baseConfig, ...entry }))
   }
 }
 

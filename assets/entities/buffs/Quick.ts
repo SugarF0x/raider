@@ -5,6 +5,12 @@ export class Quick extends Buff {
   type = BuffType.QUICK
   maxLevel = 1
 
+  text = {
+    title: 'Quick',
+    description: '-1 cooldown reduction',
+    short: 'QCK'
+  }
+
   constructor(options?: QuickOptions) {
     super(options)
   }

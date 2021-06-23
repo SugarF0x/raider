@@ -5,6 +5,12 @@ export class ArmorStrength extends Buff {
   type = BuffType.ARMOR_STRENGTH
   maxLevel = 5
 
+  text = {
+    title: 'Armor Strength',
+    description: 'Chance for armor to not break',
+    short: 'AST'
+  }
+
   constructor(options?: ArmorStrengthOptions) {
     super(options)
   }

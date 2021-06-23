@@ -5,6 +5,12 @@ export class ArmorPiercing extends Buff {
   type = BuffType.ARMOR_PIERCING
   maxLevel = 5
 
+  text = {
+    title: 'Armor Piercing',
+    description: 'Amount of enemy armor ignored',
+    short: 'APC'
+  }
+
   constructor(options?: ArmorPiercingOptions) {
     super(options)
   }

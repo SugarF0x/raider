@@ -5,6 +5,12 @@ export class UpgradePerShield extends Buff {
   type = BuffType.UPGRADE_PER_SHIELD
   maxLevel = 4
 
+  text = {
+    title: 'Upgrade per shield',
+    description: '+25% upgrade per shield',
+    short: 'UPS'
+  }
+
   constructor(options?: UpgradePerShieldOptions) {
     super(options)
   }

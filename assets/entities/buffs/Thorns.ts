@@ -4,6 +4,12 @@ import { XY } from "~/assets/types"
 export class Thorns extends Buff {
   type = BuffType.THORNS
 
+  text = {
+    title: 'Thorns',
+    description: 'Damage applied to attackers',
+    short: 'THS'
+  }
+
   constructor(options?: ThornsOptions) {
     super(options)
   }

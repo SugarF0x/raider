@@ -4,6 +4,12 @@ import { XY } from "~/assets/types"
 export class Regeneration extends Buff {
   type = BuffType.REGENERATION
 
+  text = {
+    title: 'Regeneration',
+    description: 'Health restored each turn',
+    short: 'RGN'
+  }
+
   constructor(options?: RegenerationOptions) {
     super(options)
   }

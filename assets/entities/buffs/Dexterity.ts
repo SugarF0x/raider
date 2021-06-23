@@ -4,6 +4,12 @@ import { XY } from "~/assets/types"
 export class Dexterity extends Buff {
   type = BuffType.DEXTERITY
 
+  text = {
+    title: 'Dexterity',
+    description: '+1 repair & +5% bonus shield chance',
+    short: 'DEX'
+  }
+
   constructor(options?: DexterityOptions) {
     super(options)
   }

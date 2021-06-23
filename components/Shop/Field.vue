@@ -18,6 +18,18 @@
       :config="itemFrameConfig"
     )
 
+    v-group(v-if="upgrade")
+      v-image(:config="plusConfig")
+
+      v-image(
+        v-if="type === FieldType.SELECTED"
+        :config="{ ...selectedItemFrameConfig, x: 162 }"
+      )
+      v-image(
+        :config="{ ...itemFrameConfig, x: 162 }"
+        v-else
+      )
+
     // hitbox
     v-rect(:config="hitboxConfig" @mousedown="handleClick" @touchstart="handleClick")
 </template>
@@ -35,7 +47,8 @@ export default defineComponent({
     position: {
       type: Number as PropType<number>,
       required: true
-    }
+    },
+    upgrade: Boolean
   },
   emits: ['click'],
   setup(props, { emit }) {
@@ -56,6 +69,8 @@ export default defineComponent({
       end: useMarkdownEnhancer(`0/6-71:325-380/3-55;T`)
     }
 
+    const plusConfig = useMarkdownEnhancer(`123-${184 + 73 * position.value}/35:490-92.5/22;T`)
+
     const hitboxConfig = useMarkdownEnhancer(`51-${164 + 73 * position.value}/392-71`)
 
     const itemFrameConfig = computed(() => ({ ...baseItemFrameConfig, x: 55, y: 168 + 73 * position.value }))
@@ -72,13 +87,14 @@ export default defineComponent({
     }))
 
     return {
+      plusConfig,
       itemFrameConfig,
       selectedItemFrameConfig,
       selectedItemBackgroundConfig,
       currentItemBackgroundConfig,
       hitboxConfig,
       FieldType,
-      handleClick
+      handleClick,
     }
   },
 })

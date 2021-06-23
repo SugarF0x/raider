@@ -4,6 +4,12 @@ import { XY } from "~/assets/types"
 export class Poison extends Buff {
   type = BuffType.POISON
 
+  text = {
+    title: 'Poison',
+    description: 'Damage applied each turn',
+    short: 'PSN'
+  }
+
   constructor(options?: PoisonOptions) {
     super(options)
   }
