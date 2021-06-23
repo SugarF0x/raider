@@ -21,15 +21,25 @@ export interface BuffOptions extends EntityOptions {
 
 export enum BuffType {
   DEFAULT = 'default',
-  ARMOR_STRENGTH = 'armor strength',
-  GOLD_PER_COIN = 'gold per coin',
-  THORNS = 'thorns',
-  UPGRADE_PER_SHIELD = 'upgrade per shield',
-  BLUNTING = 'blunting',
+
+  DAMAGE = 'damage',
+  BASE_DAMAGE = 'base damage',
   LEECH = 'leech',
   POISON = 'poison',
   ARMOR_PIERCING = 'armor piercing',
-  XP_PER_SKULL = 'xp per skull',
   QUICK = 'quick',
-  REGENERATION = 'regeneration'
+  XP_PER_SKULL = 'xp per skull',
+  GOLD_PER_COIN = 'gold per coin',
+  STRENGTH = 'strength',
+  LUCK = 'luck',
+  REGENERATION = 'regeneration',
+  DEFENSE = 'defense',
+  THORNS = 'thorns',
+  UPGRADE_PER_SHIELD = 'upgrade per shield',
+  ARMOR_STRENGTH = 'armor strength',
+  BLUNTING = 'blunting',
+  REPAIR = 'repair',
+  HEALING = 'healing',
+  DEXTERITY = 'dexterity',
+  VITALITY = 'vitality'
 }
