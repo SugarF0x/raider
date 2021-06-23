@@ -5,6 +5,7 @@ import { AttributeType } from "~/assets/entities/attributes"
 import { BASE_HEALTH_VALUE } from "~/assets/consts/balance"
 import { getEnumKeys } from "~/assets/utils"
 import { ItemType } from "~/assets/entities/items"
+import { BuffType } from "~/assets/entities/buffs"
 
 export const getters = getterTree(state, {
   totalAttributes: state => {
@@ -15,21 +16,21 @@ export const getters = getterTree(state, {
         case AttributeType.VITALITY: {
           let vitality = 0
           vitality += state.attributes.find(attr => attr.type === AttributeType.VITALITY)?.level || 0
-          vitality += state.items.find(item => item.type === ItemType.ACCESSORY)?.stat.level || 0
+          vitality += state.items.find(item => item.type === ItemType.ACCESSORY)?.buffs[0].level || 0
           attributes[AttributeType.VITALITY] = vitality
           break
         }
         case AttributeType.DAMAGE: {
           let damage = 0
           damage += state.attributes.find(attr => attr.type === AttributeType.DAMAGE)?.level || 0
-          damage += state.items.find(item => item.type === ItemType.WEAPON)?.stat.level || 0
+          damage += state.items.find(item => item.type === ItemType.WEAPON)?.buffs[0].level || 0
           attributes[AttributeType.DAMAGE] = damage
           break
         }
         case AttributeType.DEFENSE: {
           let defense = 0
           defense += state.attributes.find(attr => attr.type === AttributeType.DEFENSE)?.level || 0
-          defense += state.items.filter(item => item.stat.type === AttributeType.DEFENSE).reduce((acc, item) => acc + item.stat.level, 0)
+          defense += state.items.filter(item => item.buffs[0].type === BuffType.DEFENSE).reduce((acc, item) => acc + item.buffs[0].level, 0)
           attributes[AttributeType.DEFENSE] = defense
           break
         }

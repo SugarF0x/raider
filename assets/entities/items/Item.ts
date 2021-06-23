@@ -1,13 +1,11 @@
 import { Entity, EntityOptions } from "~/assets/entities"
-import { Attribute, getNewAttribute } from "~/assets/entities/attributes"
 import { BASE_DOUBLE_UPGRADE_CHANCE } from "~/assets/consts/balance"
 import { ImageConfig, TextConfig, XY } from "~/assets/types"
 import Konva from "konva"
-import { Buff, BuffType } from "~/assets/entities/buffs"
+import { Buff, BuffType, getNewBuff } from "~/assets/entities/buffs"
 
 export class Item extends Entity {
   type = ItemType.DEFAULT
-  stat = new Attribute()
   buffs: Buff[] = []
   name: string
   assignableBuffs: BuffType[] = []
@@ -18,14 +16,14 @@ export class Item extends Entity {
 
     // mutations based
     if (options?.sourceItem) {
-      Object.assign(this.buffs, options.sourceItem.buffs)
-      const newLevel = options.sourceItem.stat.level
+      options.sourceItem.buffs.forEach(buff => {
+        this.buffs.push(getNewBuff(buff.type, { level: buff.level }))
+      })
+      this.buffs[0].level = this.buffs[0].level
         // base upgrade
         + 1
         // double upgrade chance
         + (Math.random() < BASE_DOUBLE_UPGRADE_CHANCE ? 1 : 0)
-
-      this.stat = getNewAttribute(options.sourceItem.stat.type, { level: newLevel })
     }
   }
 
@@ -79,9 +77,9 @@ export class Item extends Entity {
 
     const configs = []
 
-    const mainStat = this.stat.level > 0 ? {
+    const mainStat = this.buffs[0].level > 0 ? {
       x: position.x,
-      text: `${this.stat.text.short} ${this.stat.level} `
+      text: `${this.buffs[0].text.short} ${this.buffs[0].level} `
     } : undefined
     if (mainStat) configs.push(mainStat)
 

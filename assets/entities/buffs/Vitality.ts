@@ -7,7 +7,7 @@ export class Vitality extends Buff {
   text = {
     title: 'Vitality',
     description: '+5 health & +5% bonus potion chance',
-    short: 'DFT'
+    short: 'VIT'
   }
 
   constructor(options?: VitalityOptions) {

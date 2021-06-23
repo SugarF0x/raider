@@ -1,7 +1,6 @@
 import { Item, ItemOptions, ItemType } from "~/assets/entities/items/Item"
-import { Defense } from "~/assets/entities/attributes"
 import { XY } from "~/assets/types"
-import { BuffType } from "~/assets/entities/buffs"
+import { BuffType, Defense } from "~/assets/entities/buffs"
 
 export class Torso extends Item {
   type = ItemType.TORSO
@@ -9,7 +8,9 @@ export class Torso extends Item {
 
   constructor(options?: TorsoOptions) {
     super(options)
-    if (!options?.sourceItem) this.stat = new Defense({ level: 1 })
+    if (!options?.sourceItem) this.buffs = [
+      new Defense({ level: 1 })
+    ]
   }
 
   getCropPosition(): XY {

@@ -1,7 +1,6 @@
 import { Item, ItemOptions, ItemType } from "~/assets/entities/items/Item"
-import { Vitality } from "~/assets/entities/attributes"
 import { XY } from "~/assets/types"
-import { BuffType } from "~/assets/entities/buffs"
+import { BuffType, Vitality } from "~/assets/entities/buffs"
 
 export class Accessory extends Item {
   type = ItemType.ACCESSORY
@@ -9,7 +8,9 @@ export class Accessory extends Item {
 
   constructor(options?: AccessoryOptions) {
     super(options)
-    if (!options?.sourceItem) this.stat = new Vitality({ level: 0 })
+    if (!options?.sourceItem) this.buffs = [
+      new Vitality({ level: 0 })
+    ]
   }
 
   getCropPosition(): XY {

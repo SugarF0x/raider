@@ -4,7 +4,7 @@ import Konva from "konva"
 
 export class Buff extends Entity {
   type = BuffType.DEFAULT
-  level = 1
+  level: number
   maxLevel = 99
 
   text = {
@@ -15,7 +15,7 @@ export class Buff extends Entity {
 
   constructor(options?: BuffOptions) {
     super(options)
-    if (options?.level) this.level = options.level
+    this.level = options?.level ?? 1
   }
 
   upgrade() {
