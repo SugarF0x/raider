@@ -22,6 +22,7 @@ export const mutations = mutationTree(state, {
   },
   MUTATE_ATTRIBUTE: (state, callback: () => void) => { callback() },
   MUTATE_ITEM: (state, callback: () => void) => { callback() },
+  MUTATE_BUFF: (state, callback: () => void) => { callback() },
   LEVELUP: state => { state.level++ }
 })
 

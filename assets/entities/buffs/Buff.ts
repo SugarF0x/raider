@@ -11,7 +11,7 @@ export class Buff extends Entity {
   }
 
   upgrade() {
-    if (this.level + 1 <= this.maxLevel) this.level++
+    this.accessor.character.MUTATE_BUFF(() => { if (this.level + 1 <= this.maxLevel) this.level++ })
   }
 }
 
