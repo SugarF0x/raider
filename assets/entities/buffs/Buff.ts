@@ -32,6 +32,7 @@ export enum BuffType {
   GOLD_PER_COIN = 'gold per coin',
   STRENGTH = 'strength',
   LUCK = 'luck',
+
   REGENERATION = 'regeneration',
   DEFENSE = 'defense',
   THORNS = 'thorns',

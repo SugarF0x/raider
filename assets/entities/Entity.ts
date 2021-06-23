@@ -9,6 +9,7 @@ export class Entity {
     this.id = Math.floor(Math.random() * 1000000)
   }
 
+  // TODO: refactor this into a constant since it does not really do calculations? question mark?
   getCropPosition(): XY {
     console.error(`Entity ${this.id} crop has not been reassigned.`)
     return {
