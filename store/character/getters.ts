@@ -13,24 +13,31 @@ export const getters = getterTree(state, {
     for (const type of getEnumKeys(AttributeType)) {
       const fixedType = type.toLowerCase() as AttributeType
       switch(fixedType) {
+        case AttributeType.STRENGTH: {
+          let strength = 0
+          strength += state.attributes.find(attr => attr.type === AttributeType.STRENGTH)?.level || 0
+          strength += state.items.filter(item => item.assignableBuffs.includes(BuffType.STRENGTH)).reduce((acc, item) => acc + item.buffs[0].level, 0)
+          attributes[AttributeType.STRENGTH] = strength
+          break
+        }
         case AttributeType.VITALITY: {
           let vitality = 0
           vitality += state.attributes.find(attr => attr.type === AttributeType.VITALITY)?.level || 0
-          vitality += state.items.find(item => item.type === ItemType.ACCESSORY)?.buffs[0].level || 0
+          vitality += state.items.filter(item => item.assignableBuffs.includes(BuffType.VITALITY)).reduce((acc, item) => acc + item.buffs[0].level, 0)
           attributes[AttributeType.VITALITY] = vitality
           break
         }
         case AttributeType.DAMAGE: {
           let damage = 0
           damage += state.attributes.find(attr => attr.type === AttributeType.DAMAGE)?.level || 0
-          damage += state.items.find(item => item.type === ItemType.WEAPON)?.buffs[0].level || 0
+          damage += state.items.filter(item => item.assignableBuffs.includes(BuffType.DAMAGE)).reduce((acc, item) => acc + item.buffs[0].level, 0)
           attributes[AttributeType.DAMAGE] = damage
           break
         }
         case AttributeType.DEFENSE: {
           let defense = 0
           defense += state.attributes.find(attr => attr.type === AttributeType.DEFENSE)?.level || 0
-          defense += state.items.filter(item => item.buffs[0].type === BuffType.DEFENSE).reduce((acc, item) => acc + item.buffs[0].level, 0)
+          defense += state.items.filter(item => item.assignableBuffs.includes(BuffType.DEFENSE)).reduce((acc, item) => acc + item.buffs[0].level, 0)
           attributes[AttributeType.DEFENSE] = defense
           break
         }
